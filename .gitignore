@@ -1,3 +1,7 @@
-DistributedComputationSystem/.vs/**
-DistributedComputationSystem/FrontendService/bin/**
-DistributedComputationSystem/FrontendService/obj/**
+src/.vs/**
+src/FrontendService/bin/**
+src/FrontendService/obj/**
+src/FrontendService/FrontendService.csproj.user
+src/ComputeService/bin/**
+src/ComputeService/obj/**
+src/ComputeService/ComputeService.csproj.user
