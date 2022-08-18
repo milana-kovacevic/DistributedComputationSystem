@@ -6,18 +6,18 @@ namespace Frontend.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class JobController : ControllerBase
+    public class JobsController : ControllerBase
     {
-        private readonly ILogger<JobController> _logger;
+        private readonly ILogger<JobsController> _logger;
         private readonly IFrontendConfiguration config;
 
-        public JobController(ILogger<JobController> logger, IFrontendConfiguration feConfig)
+        public JobsController(ILogger<JobsController> logger, IFrontendConfiguration feConfig)
         {
             _logger = logger;
             config = feConfig;
         }
 
-        [HttpGet(Name = "GetJobs")]
+        [HttpGet("All")]
         public IEnumerable<Job> Get()
         {
             _logger.LogInformation("Getting jobs");
