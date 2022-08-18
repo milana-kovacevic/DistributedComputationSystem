@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  frontendservice:
+    image: ${DOCKER_REGISTRY-}frontend
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: Frontend/Dockerfile
+    ports:
+        - "80:80"

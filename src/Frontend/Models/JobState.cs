@@ -1,4 +1,4 @@
-﻿namespace FrontendService.Models
+﻿namespace Frontend.Models
 {
     public enum JobState
     {

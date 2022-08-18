@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-frontend-rel
+  namespace: distributed-system-dev-ns
+  labels:
+    app: frontendservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: frontend-rel-pod
+  template:
+    metadata:
+      labels:
+        app: frontend-rel-pod
+        service: frontend-rel-pod
+    spec:
+      containers:
+        - name: frontendservice-container
+          image: matfmastercr.azurecr.io/frontend-rel:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: WebApiBaseAddress
+              value: http://webapi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-rel-service
+  namespace: distributed-system-dev-ns
+  labels:
+    app: frontendrel
+    service: frontendrel
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    service: frontend-rel-pod

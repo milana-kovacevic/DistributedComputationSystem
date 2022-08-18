@@ -1,7 +1,7 @@
-using FrontendService.Models;
+using Frontend.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FrontendService.Controllers
+namespace Frontend.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -21,7 +21,7 @@ namespace FrontendService.Controllers
             {
                 StartTime = DateTime.UtcNow,
                 EndTime = null,
-                State = JobState.NotRan
+                State = JobState.Succeeded
             })
             .ToArray();
         }

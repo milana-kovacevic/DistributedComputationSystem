@@ -1,7 +1,9 @@
 src/.vs/**
-src/FrontendService/bin/**
-src/FrontendService/obj/**
-src/FrontendService/FrontendService.csproj.user
-src/ComputeService/bin/**
-src/ComputeService/obj/**
-src/ComputeService/ComputeService.csproj.user
+src/bin/**
+src/obj/**
+src/Frontend/bin/**
+src/Frontend/obj/**
+src/Frontend/Frontend.csproj.user
+src/ComputeNode/bin/**
+src/ComputeNode/obj/**
+src/ComputeNode/ComputeNode.csproj.user
