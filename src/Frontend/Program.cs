@@ -1,7 +1,6 @@
 using Frontend;
 
 var builder = WebApplication.CreateBuilder(args);
-
 ContainerBootstraper.ConfigureServices(builder.Services);
 
 var app = builder.Build();
@@ -14,6 +13,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+//app.UseAuthentication();
 
 app.UseAuthorization();
 
