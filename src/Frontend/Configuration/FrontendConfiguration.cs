@@ -5,8 +5,8 @@ namespace Frontend.Configuration
     public class FrontendConfiguration : IFrontendConfiguration
     {
         private readonly IConfiguration config;
-        private readonly Lazy<DatabaseSettings> dbSettings;
         private readonly Lazy<AuthenticationSettings> authSettings;
+        private readonly Lazy<DatabaseSettings> dbSettings;
 
         public FrontendConfiguration(IConfiguration configuration)
         {
