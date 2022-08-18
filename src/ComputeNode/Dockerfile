@@ -7,14 +7,14 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["ComputeService/ComputeService.csproj", "ComputeService/"]
-RUN dotnet restore "ComputeService/ComputeService.csproj"
+COPY ["ComputeNode/ComputeNode.csproj", "ComputeNode/"]
+RUN dotnet restore "ComputeNode/ComputeNode.csproj"
 COPY . .
-WORKDIR "/src/ComputeService"
-RUN dotnet build "ComputeService.csproj" -c Release -o /app/build
+WORKDIR "/src/ComputeNode"
+RUN dotnet build "ComputeNode.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "ComputeService.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "ComputeNode.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

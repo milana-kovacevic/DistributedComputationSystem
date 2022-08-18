@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ComputeService.Models;
+using ComputeNode.Models;
 using System;
 
-namespace ComputeService.Controllers
+namespace ComputeNode.Controllers
 {
     [ApiController]
     [Route("[controller]")]

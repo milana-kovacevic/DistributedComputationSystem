@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Frontend", "Frontend\Frontend.csproj", "{A31020A0-C46C-4869-A764-310CBF9DD41C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeService", "ComputeService\ComputeService.csproj", "{D96C327C-28E4-4D1A-ACBC-7F025CDBDE6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeNode", "ComputeNode\ComputeNode.csproj", "{D96C327C-28E4-4D1A-ACBC-7F025CDBDE6E}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{5BB538D2-AD80-406D-96DF-58EBF96854A3}"
 EndProject

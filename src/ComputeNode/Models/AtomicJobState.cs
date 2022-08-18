@@ -1,4 +1,4 @@
-﻿namespace ComputeService.Models
+﻿namespace ComputeNode.Models
 {
     public enum AtomicJobState
     {

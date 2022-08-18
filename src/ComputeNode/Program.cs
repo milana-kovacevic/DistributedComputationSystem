@@ -1,4 +1,4 @@
-using ComputeService.Models;
+using ComputeNode.Models;
 using System.Text.Json.Serialization;
 using System.Xml.Schema;
 
