@@ -6,6 +6,7 @@
         InProgress,
         Succeeded,
         Failed,
+        PendingCancellation,
         Cancelled
     }
 }
