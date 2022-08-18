@@ -50,50 +50,27 @@ namespace Frontend.Controllers
             return job;
         }
 
-        // PUT: api/Jobs/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutJob(int id, Job job)
-        {
-            if (id != job.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(job).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!JobExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Jobs
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Job>> PostJob(Job job)
+        public async Task<ActionResult<Job>> PostJob([FromBody] string inputData)
         {
-          if (_context.Job == null)
-          {
-              return Problem("Entity set 'JobsContext.Job'  is null.");
-          }
-            _context.Job.Add(job);
+            if (_context.Job == null)
+            {
+                return Problem("Entity set 'JobsContext.Job'  is null.");
+            }
+
+            var newJob = new Job()
+            {
+                Data = inputData,
+                StartTime = DateTime.UtcNow,
+                State = JobState.Pending
+            };
+
+            // Using added job as id is auto-populated.
+            var addedJob = _context.Job.Add(newJob);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetJob", new { id = job.Id }, job);
+            return CreatedAtAction("GetJob", new { id = addedJob.Entity.Id }, addedJob.Entity);
         }
 
         // DELETE: api/Jobs/5

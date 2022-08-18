@@ -2,7 +2,7 @@
 {
     public enum JobState
     {
-        NotRan = 0,
+        Pending = 0,
         InProgress,
         Succeeded,
         Failed,
