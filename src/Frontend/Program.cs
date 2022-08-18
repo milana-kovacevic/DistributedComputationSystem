@@ -1,10 +1,8 @@
 using Frontend;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Frontend.Data;
 using Frontend.Models;
 using Frontend.Providers;
-using Frontend.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 ContainerBootstraper.ConfigureServices(builder.Services);
 
 // Configure database context.
-var connectionStringProvider = new AzureSqlDbConnectionStringProvider(builder.Configuration);
-builder.Services.AddDbContext<JobContext>(options =>
-    //options.UseSqlServer(builder.Configuration.GetConnectionString("JobsContext") ?? throw new InvalidOperationException("Connection string 'JobsContext' not found.")
-    options.UseSqlServer(connectionStringProvider.GetConnectionString()
-    ));
+{
+    var connectionStringProvider = new AzureSqlDbConnectionStringProvider(builder.Configuration);
+    builder.Services.AddDbContext<JobContext>(options => options.UseSqlServer(connectionStringProvider.GetConnectionString()));
+}
 
 // Configure authentication
 // TODO AAD Auth
@@ -25,7 +22,6 @@ builder.Services.AddDbContext<JobContext>(options =>
 //    builder.Configuration.Issuer,
 //    builder.Configuration.Audience
 //    );
-
 
 var app = builder.Build();
 
