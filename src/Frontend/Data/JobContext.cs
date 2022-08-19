@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Frontend.Models;
+using System.Xml;
 
 namespace Frontend.Data
 {
@@ -12,6 +13,19 @@ namespace Frontend.Data
         public JobContext (DbContextOptions<JobContext> options)
             : base(options)
         {
+        }
+
+        /// <summary>
+        /// Marking Id column as identity column. This column will be automatically generated on add.
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Job>(b =>
+            {
+                b.HasKey(e => e.Id);
+                b.Property(e => e.Id).ValueGeneratedOnAdd();
+            });
         }
 
         public DbSet<Frontend.Models.Job> Job { get; set; } = default!;

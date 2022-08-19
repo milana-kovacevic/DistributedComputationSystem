@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
+using System.Xml;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -24,12 +26,28 @@ namespace Frontend.Migrations
                 {
                     table.PrimaryKey("PK_Job", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "JobResult",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Result = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobResult", x => x.Id);
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Job");
+
+            migrationBuilder.DropTable(
+                name: "JobResult");
         }
     }
 }

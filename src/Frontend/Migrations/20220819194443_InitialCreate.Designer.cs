@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Frontend.Migrations
 {
     [DbContext(typeof(JobContext))]
-    [Migration("20220818181136_InitialCreate")]
+    [Migration("20220819194443_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,22 @@ namespace Frontend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Job");
+                });
+
+            modelBuilder.Entity("Frontend.Models.JobResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Result")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JobResult");
                 });
 #pragma warning restore 612, 618
         }

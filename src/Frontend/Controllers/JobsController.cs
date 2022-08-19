@@ -15,6 +15,7 @@ namespace Frontend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class JobsController : ControllerBase
     {
         private readonly JobContext _context;
@@ -73,8 +74,8 @@ namespace Frontend.Controllers
 
             // Using added job as id is auto-populated.
             var addedJob = _context.Job.Add(newJob);
-            _jobManager.AddNewJobToQueue(addedJob.Entity);
             await _context.SaveChangesAsync();
+            _jobManager.AddNewJobToQueue(addedJob.Entity);
 
             return AcceptedAtAction("GetJob", new { id = addedJob.Entity.Id }, addedJob.Entity);
         }
