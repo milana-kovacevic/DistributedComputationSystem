@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Frontend.Data;
 using Frontend.Models;
-using Frontend.DistributedOrchestrator;
 using Frontend.Managers;
 using Frontend.Extensions;
 
@@ -27,8 +21,8 @@ namespace Frontend.Controllers
             _jobManager = jobManager;
         }
 
-        // GET: api/Jobs
-        [HttpGet]
+        // GET: api/Jobs/All
+        [HttpGet("All")]
         public async Task<ActionResult<IEnumerable<Job>>> GetJob()
         {
           if (_context.Job == null)
@@ -56,8 +50,8 @@ namespace Frontend.Controllers
             return job;
         }
 
-        // POST: api/Jobs
-        [HttpPost]
+        // POST: api/Jobs/Create
+        [HttpPost("Create")]
         public async Task<ActionResult<Job>> PostJob([FromBody] string inputData)
         {
             if (_context.Job == null)
@@ -81,8 +75,7 @@ namespace Frontend.Controllers
         }
 
         // POST: api/Jobs/Cancel/5
-        [HttpPost]
-        [Route("api/[controller]/Cancel")]
+        [HttpPost("Cancel/{id}")]
         public async Task<ActionResult<Job>> CancelJob(int id)
         {
             if (_context.Job == null)
@@ -114,7 +107,7 @@ namespace Frontend.Controllers
         }
 
         // DELETE: api/Jobs/5
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteJob(int id)
         {
             if (_context.Job == null)

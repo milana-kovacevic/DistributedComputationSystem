@@ -45,7 +45,7 @@
         }
       }
     },
-    "/api/Jobs": {
+    "/api/Jobs/All": {
       "get": {
         "tags": [
           "Jobs"
@@ -65,7 +65,39 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/Jobs/{id}": {
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Jobs/Create": {
       "post": {
         "tags": [
           "Jobs"
@@ -103,8 +135,8 @@
         }
       }
     },
-    "/api/Jobs/{id}": {
-      "get": {
+    "/api/Jobs/Cancel/{id}": {
+      "post": {
         "tags": [
           "Jobs"
         ],
@@ -131,7 +163,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/Jobs/Delete/{id}": {
       "delete": {
         "tags": [
           "Jobs"
@@ -150,35 +184,6 @@
         "responses": {
           "200": {
             "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/Jobs/api/Jobs/Cancel": {
-      "post": {
-        "tags": [
-          "Jobs"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Job"
-                }
-              }
-            }
           }
         }
       }
