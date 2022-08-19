@@ -15,5 +15,7 @@ namespace Frontend.Data
         }
 
         public DbSet<Frontend.Models.Job> Job { get; set; } = default!;
+
+        public DbSet<Frontend.Models.JobResult>? JobResult { get; set; }
     }
 }
