@@ -1,3 +1,4 @@
+using ComputeNode.Executor;
 using ComputeNode.Models;
 using System.Text.Json.Serialization;
 using System.Xml.Schema;
@@ -11,6 +12,9 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 });
 
 // Add services to the container.
+
+builder.Services.AddSingleton<IJobExecutor, AtomicJobExecutor>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
