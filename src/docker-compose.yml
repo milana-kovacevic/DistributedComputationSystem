@@ -7,5 +7,10 @@ services:
     build:
       context: .
       dockerfile: Frontend/Dockerfile
-    ports:
-        - "80:80"
+
+  computenodeservice:
+    image: ${DOCKER_REGISTRY-}computenode
+    container_name: computenode
+    build:
+      context: .
+      dockerfile: ComputeNode/Dockerfile
