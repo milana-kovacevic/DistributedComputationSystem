@@ -10,7 +10,7 @@
         public async Task CancelJobAsync(int jobId)
         {
             Task.Delay(100);
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

@@ -15,29 +15,12 @@ namespace Frontend.Models
                 if (context.Job.Any())
                 {
                     // Populate internally Job manager with active jobs from the db.
-                    var allJobs = context.Job.AsEnumerable().Where(job => job.IsActive())
-                        .ToDictionary(job => job.Id);
-                    JobManager.Initialize(allJobs);
+                    // This is needed to reschedule unfinished jobs in case of the service restart.
+                    var activeJobs = context.Job.AsEnumerable().Where(job => job.IsActive());
+                    JobManager.Initialize(activeJobs);
 
                     return;   // DB has been seeded
                 }
-
-                context.Job.AddRange(
-                    new Job
-                    {
-                        StartTime = DateTime.UtcNow,
-                        EndTime = null,
-                        State = JobState.Succeeded
-                    },
-
-                    new Job
-                    {
-                        StartTime = DateTime.UtcNow,
-                        EndTime = null,
-                        State = JobState.Failed
-                    }
-                );
-                context.SaveChanges();
             }
         }
     }

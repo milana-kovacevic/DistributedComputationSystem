@@ -1,9 +1,9 @@
 ﻿using Frontend.Configuration;
-using Frontend.Data;
 using Frontend.DistributedOrchestrator;
+using Frontend.Engine;
 using Frontend.Managers;
 using Frontend.Providers;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Frontend.Topology;
 using System.Text.Json.Serialization;
 
 namespace Frontend
@@ -16,8 +16,14 @@ namespace Frontend
             services.AddSingleton<IConnectionStringProvider, AzureSqlDbConnectionStringProvider>();
             services.AddSingleton<IOrchestrator, DistributedOrchestrator.DistributedOrchestrator>();
             services.AddSingleton<IJobManager, JobManager>();
+            services.AddSingleton<JobQueue>();
+            services.AddSingleton<IToplogyManager, TopologyManager>();
+            services.AddSingleton<IScheduler, DistributedScheduler>();
 
             // Add services to the container.
+
+            // Add background task for job scheduler.
+            services.AddHostedService<SchedulerBackgroundService>();
 
             // Add controllers for MVC.
             services.AddControllers().AddJsonOptions(x =>

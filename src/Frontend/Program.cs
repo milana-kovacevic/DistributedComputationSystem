@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Frontend.Data;
 using Frontend.Models;
 using Frontend.Providers;
+using Frontend.Managers;
+using Frontend.Engine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,14 +27,18 @@ ContainerBootstraper.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 
-// Setup the database.
+// Setup the database and seed the data.
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     SeedData.Initialize(services);
 }
 
+// Start the distributed engine.
+//DistributedScheduler.Initialize();
+
 // Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

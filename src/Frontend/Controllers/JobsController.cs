@@ -4,6 +4,7 @@ using Frontend.Data;
 using Frontend.Models;
 using Frontend.Managers;
 using Frontend.Extensions;
+using Frontend.Exceptions;
 
 namespace Frontend.Controllers
 {
@@ -12,11 +13,16 @@ namespace Frontend.Controllers
     [Produces("application/json")]
     public class JobsController : ControllerBase
     {
+        private readonly ILogger<JobsController> _logger;
         private readonly JobContext _context;
         private readonly IJobManager _jobManager;
 
-        public JobsController(JobContext context, IJobManager jobManager)
+        public JobsController(
+            ILogger<JobsController> logger,
+            JobContext context,
+            IJobManager jobManager)
         {
+            _logger = logger;
             _context = context;
             _jobManager = jobManager;
         }
@@ -68,8 +74,14 @@ namespace Frontend.Controllers
 
             // Using added job as id is auto-populated.
             var addedJob = _context.Job.Add(newJob);
+
+            if (!_jobManager.TryAddJob(addedJob.Entity))
+            {
+                _logger.LogError("Failed to add new job to queue");
+                return Problem(ExceptionMessages.SystemTooBusy, statusCode: (int)StatusCodes.Status503ServiceUnavailable);
+            }
+
             await _context.SaveChangesAsync();
-            _jobManager.AddNewJobToQueue(addedJob.Entity);
 
             return AcceptedAtAction("GetJob", new { id = addedJob.Entity.Id }, addedJob.Entity);
         }
@@ -99,7 +111,7 @@ namespace Frontend.Controllers
             // TODO make this nicer.
             job.State = JobState.PendingCancellation;
             var updatedJob = _context.Job.Update(job);
-            _jobManager.CancelJob(job.Id);
+            await _jobManager.CancelJobAsync(job.Id);
 
             await _context.SaveChangesAsync();
 

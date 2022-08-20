@@ -1,34 +1,41 @@
-﻿using Frontend.Data;
-using Frontend.Extensions;
+﻿using Frontend.Engine;
 using Frontend.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using NuGet.Packaging;
-using System.Reflection;
 
 namespace Frontend.Managers
 {
     /// <summary>
-    /// Class that manages jobs submitted for distributed computation.
+    /// Class that manages jobs submitted for execution.
+    /// Also manages job cancellation.
     /// </summary>
     public class JobManager : IJobManager
     {
-        private static Dictionary<int, Job> activeJobs = new Dictionary<int, Job>();
+        private static readonly JobQueue jobQueue = new JobQueue();
 
-        public static void Initialize(Dictionary<int, Job> jobs)
+        /// <summary>
+        /// Initializes queue with unfinished jobs from the database.
+        /// </summary>
+        /// <param name="jobs">Jobs from the db.</param>
+        public static void Initialize(IEnumerable<Job> jobs)
         {
-            activeJobs.AddRange(jobs);
+            foreach (var job in jobs)
+            {
+                jobQueue.TryEnqueueJob(job);
+            }
         }
 
-        public void AddNewJobToQueue(Job job)
+        public bool TryAddJob(Job job)
         {
-            activeJobs.Add(job.Id, job);
+            return jobQueue.TryEnqueueJob(job);
         }
 
-        public void CancelJob(int id)
+        /// <summary>
+        /// Cancels job.
+        /// </summary>
+        /// <param name="id">Id of the job to be canceled.</param>
+        public async Task CancelJobAsync(int id)
         {
             // TODO
+            Task.Delay(100);
         }
     }
 }

@@ -9,7 +9,9 @@ namespace Frontend.Extensions
     {
         public static bool IsActive(this Job job)
         {
-            return job.State == JobState.Pending || job.State == JobState.InProgress;
+            return job.State == JobState.Pending
+                || job.State == JobState.Queued
+                || job.State == JobState.InProgress;
         }
     }
 }

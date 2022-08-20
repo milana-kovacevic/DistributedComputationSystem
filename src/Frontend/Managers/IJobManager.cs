@@ -4,8 +4,8 @@ namespace Frontend.Managers
 {
     public interface IJobManager
     {
-        void AddNewJobToQueue(Job job);
+        bool TryAddJob(Job job);
 
-        void CancelJob(int id);
+        Task CancelJobAsync(int id);
     }
 }
