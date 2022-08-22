@@ -14,7 +14,7 @@ $COMPUTENODE_NAME = 'computenode'
 if ($serviceType -eq $FRONTEND_NAME -or $serviceType -eq 'all')
 {
 	Write-Host "Running build for $FRONTEND_NAME ..."
-	docker build -f .\src\Frontend\Dockerfile --force-rm -t $FRONTEND_NAME ".\src"
+	docker build -t frontend -f .\src\Frontend\Dockerfile --force-rm -t $FRONTEND_NAME ".\src"
 
 	Write-Host "Running docker tag for $FRONTEND_NAME ..."
 	docker tag frontend:latest matfmastercr.azurecr.io/frontend:$tag
@@ -22,6 +22,7 @@ if ($serviceType -eq $FRONTEND_NAME -or $serviceType -eq 'all')
 	if ($push -eq $True)
 	{
 		Write-Host "Pushing image $FRONTEND_NAME to default repository ..."
+		Write-Host "Image: matfmastercr.azurecr.io/frontend:$tag"
 		docker push matfmastercr.azurecr.io/frontend:$tag
 	}
 }
@@ -31,7 +32,7 @@ if ($serviceType -eq $FRONTEND_NAME -or $serviceType -eq 'all')
 if ($serviceType -eq $COMPUTENODE_NAME -or $serviceType -eq 'all')
 {
 	Write-Host "Running build for $COMPUTENODE_NAME ..."
-	docker build -f .\src\ComputeNode\Dockerfile --force-rm -t computenode ".\src"
+	docker build -t computenode -f .\src\ComputeNode\Dockerfile --force-rm -t computenode ".\src"
 
 	Write-Host "Running docker tag for $COMPUTENODE_NAME ..."
 	docker tag computenode:latest matfmastercr.azurecr.io/computenode:$tag
@@ -39,6 +40,7 @@ if ($serviceType -eq $COMPUTENODE_NAME -or $serviceType -eq 'all')
 	if ($push -eq $True)
 	{
 		Write-Host "Pushing image $COMPUTENODE_NAME to default repository ..."
+		Write-Host "Image: matfmastercr.azurecr.io/computenode:$tag"
 		docker push matfmastercr.azurecr.io/computenode:$tag
 	}
 }

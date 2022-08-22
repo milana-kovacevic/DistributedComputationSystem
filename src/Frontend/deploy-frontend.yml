@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deploy-frontend
+  name: frontend
   namespace: distributed-system-dev-ns
   labels:
-    app: frontendservice
+    app: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: frontend-pod
+      app: frontend
+  strategy: {}
   template:
     metadata:
       labels:
-        app: frontend-pod
-        service: frontend-pod
+        app: frontend
     spec:
       containers:
-        - name: frontendservice-container
-          image: matfmastercr.azurecr.io/frontend:v2
+        - name: frontend-container
+          image: matfmastercr.azurecr.io/frontend:v3.4
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -32,23 +32,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: frontend
   namespace: distributed-system-dev-ns
-  annotations:
-    service.beta.kubernetes.io/azure-dns-label-name: distributed-calculation-system-matf
   labels:
     app: frontend
-    service: frontend
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
-    - port: 80
-      name: port80
-      targetPort: 80
-      protocol: TCP
-    - port: 443
-      name: port443
-      targetPort: 443
-      protocol: TCP
+  - port: 80
+    name: 80-80
+    protocol: TCP
+    targetPort: 80
   selector:
-    service: frontend-pod
+    app: frontend
