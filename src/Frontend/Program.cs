@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Frontend.Data;
 using Frontend.Models;
 using Frontend.Providers;
-using Frontend.Managers;
-using Frontend.Engine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +13,7 @@ ContainerBootstraper.ConfigureServices(builder.Services);
 {
     var connectionStringProvider = new AzureSqlDbConnectionStringProvider(builder.Configuration);
     builder.Services.AddDbContext<JobContext>(options => options.UseSqlServer(connectionStringProvider.GetConnectionString()));
+    //builder.Services.AddDbContextFactory<JobContext>(options => options.UseSqlServer(connectionStringProvider.GetConnectionString()));
 }
 
 // Configure authentication
@@ -25,6 +24,10 @@ ContainerBootstraper.ConfigureServices(builder.Services);
 //    builder.Configuration.Audience
 //    );
 
+// Initialize scheduler.
+// TODO
+//DistributedScheduler.Initialize(connectionStringProvider.GetConnectionString());
+
 var app = builder.Build();
 
 // Setup the database and seed the data.
@@ -34,9 +37,6 @@ using (var scope = app.Services.CreateScope())
     SeedData.Initialize(services);
 }
 
-// Start the distributed engine.
-//DistributedScheduler.Initialize();
-
 // Configure the HTTP request pipeline.
 
 if (app.Environment.IsDevelopment())
@@ -45,7 +45,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseHttpLogging();
+
+//app.UseHttpsRedirection();
 
 //app.UseAuthentication();
 

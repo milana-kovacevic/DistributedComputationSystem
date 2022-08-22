@@ -1,6 +1,7 @@
 # Script to build and tag docker images.
 # Example usage:
 # .\scripts\prepare_images.ps1 -serviceType computenode -tag v2 -push $True
+# .\scripts\prepare_images.ps1 -serviceType frontend -tag v3.5 -push $True
 param ($serviceType='frontend', $tag='v2', $push=$False)
 Write-Host "Running the build and tag for $serviceType using tag $tag"
 

@@ -4,6 +4,7 @@ metadata:
   name: frontend-tls
   namespace: distributed-system-dev-ns
   annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
     cert-manager.io/cluster-issuer: letsencrypt
 spec:
   ingressClassName: nginx

@@ -32,6 +32,12 @@ namespace Frontend
                 x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
+            // Enable https rederection once HTTPS is working.
+            services.AddHttpsRedirection(options =>
+            {
+                options.HttpsPort = 443;
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();

@@ -1,10 +1,10 @@
 # Script  push docker images to AKS.
 # Using predefined image repository.
 # Example usage:
-# .\scripts\deploy_images_to_aks.ps1 -serviceType computenode
-
+# .\scripts\deploy_images_to_aks.ps1 -serviceType frontend
 param ($serviceType='frontend', $namespace='distributed-system-dev-ns')
-Write-Host "Running the build and tag for $serviceType "
+
+Write-Host "Running the deploy tp AKS for $serviceType "
 
 $ROOT_PATH = 'C:\Users\v-milkov\Documents\private\faks\master_rad\DistributedComputationSystem\'
 cd $ROOT_PATH
