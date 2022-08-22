@@ -1,0 +1,24 @@
+﻿apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-tls
+  namespace: distributed-system-dev-ns
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - frontend-tls.matf-distr-comp-sys.westeurope.cloudapp.azure.com
+    secretName: tls-secret
+  rules:
+  - host: frontend-tls.matf-distr-comp-sys.westeurope.cloudapp.azure.com
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
