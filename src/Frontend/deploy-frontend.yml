@@ -28,8 +28,6 @@ spec:
               value: http://+:80
             - name: ASPNETCORE_HTTPS_PORT 
               value: http://+:443
-            - name: WebApiBaseAddress
-              value: http://webapi
 ---
 apiVersion: v1
 kind: Service

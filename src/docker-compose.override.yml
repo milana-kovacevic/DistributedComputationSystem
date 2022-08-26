@@ -5,6 +5,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - COMPUTENODE_SERVICE_HOST=http://host.docker.internal:8080/
     ports:
       - "51080:80"
       - "51443:443"

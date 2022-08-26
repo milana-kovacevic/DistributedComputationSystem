@@ -17,7 +17,7 @@ namespace Frontend
             services.AddSingleton<IOrchestrator, DistributedOrchestrator.DistributedOrchestrator>();
             services.AddSingleton<IJobManager, JobManager>();
             services.AddSingleton<JobQueue>();
-            services.AddSingleton<IToplogyManager, TopologyManager>();
+            services.AddSingleton<IAddressManager, AddressManager>();
             services.AddSingleton<IScheduler, DistributedScheduler>();
 
             // Add services to the container.

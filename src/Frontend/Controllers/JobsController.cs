@@ -8,8 +8,8 @@ using Frontend.Exceptions;
 
 namespace Frontend.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     [Produces("application/json")]
     public class JobsController : ControllerBase
     {
