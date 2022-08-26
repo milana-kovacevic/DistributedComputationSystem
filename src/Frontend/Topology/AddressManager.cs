@@ -6,7 +6,10 @@ namespace Frontend.Topology
     public class AddressManager : IAddressManager
     {
         private readonly ILogger<AddressManager> _logger;
-        private static readonly string ComputeNodeAddresEnvVariableName = "COMPUTENODE_SERVICE_HOST";
+        private static readonly string ComputeNodeServiceName = "COMPUTENODE_SERVICE";
+        private static readonly string ComputeNodeServiceHostEnvVariableName = $"{ComputeNodeServiceName}_HOST";
+        private static readonly string ComputeNodeServicePortEnvVariableName = $"{ComputeNodeServiceName}_PORT";
+        private static readonly int ComputeNodeServicePortDefaultValue = 80;
 
         private string _computeNodeServiceAddress = null;
 
@@ -17,17 +20,26 @@ namespace Frontend.Topology
             {
                 if (_computeNodeServiceAddress == null)
                 {
-                    _logger.LogInformation($"Fetching address for {ComputeNodeAddresEnvVariableName} from environment...");
+                    _logger.LogInformation($"Fetching address for {ComputeNodeServiceHostEnvVariableName} from environment...");
 
                     // Read value of environment variable which holds the address.
-                    _computeNodeServiceAddress = Environment.GetEnvironmentVariable(ComputeNodeAddresEnvVariableName);
+                    var host = Environment.GetEnvironmentVariable(ComputeNodeServiceHostEnvVariableName);
 
-                    if (_computeNodeServiceAddress == null)
+                    if (host == null)
                     {
-                        throw new NetworkException(ComputeNodeAddresEnvVariableName);
+                        throw new NetworkException(ComputeNodeServiceHostEnvVariableName);
                     }
 
-                    _logger.LogInformation($"Determined address for {ComputeNodeAddresEnvVariableName}: {_computeNodeServiceAddress}");
+                    string port = Environment.GetEnvironmentVariable(ComputeNodeServicePortEnvVariableName);
+                    if (port == null)
+                    {
+                        port = $"{ComputeNodeServicePortDefaultValue}";
+                        _logger.LogInformation($"{ComputeNodeServicePortEnvVariableName} not set. Using default value {port}.");
+                    }
+
+                    _computeNodeServiceAddress = $"http://{host}:{port}";
+
+                    _logger.LogInformation($"Determined address for {ComputeNodeServiceName}: {_computeNodeServiceAddress}");
                 }
 
                 return _computeNodeServiceAddress;

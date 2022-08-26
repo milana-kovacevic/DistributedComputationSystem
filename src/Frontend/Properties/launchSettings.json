@@ -6,7 +6,8 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "COMPUTENODE_SERVICE_HOST": "http://host.docker.internal:8080/"
+        "COMPUTENODE_SERVICE_HOST": "host.docker.internal",
+        "COMPUTENODE_SERVICE_PORT": "8080"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7188;http://localhost:5237"
@@ -17,7 +18,8 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "COMPUTENODE_SERVICE_HOST": "http://host.docker.internal:8080/"
+        "COMPUTENODE_SERVICE_HOST": "host.docker.internal",
+        "COMPUTENODE_SERVICE_PORT": "8080"
       }
     },
     "Docker": {
@@ -27,7 +29,8 @@
       "publishAllPorts": true,
       "useSSL": true,
       "environmentVariables": {
-        "COMPUTENODE_SERVICE_HOST": "http://host.docker.internal:8080/"
+        "COMPUTENODE_SERVICE_HOST": "host.docker.internal",
+        "COMPUTENODE_SERVICE_PORT": "8080"
       }
     }
   },
