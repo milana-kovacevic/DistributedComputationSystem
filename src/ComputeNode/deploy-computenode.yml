@@ -4,21 +4,21 @@ metadata:
   name: deploy-computenode
   namespace: distributed-system-dev-ns
   labels:
-    app: computenodeservice
+    app: computenode
 spec:
   replicas: 2
   selector:
     matchLabels:
-      service: computenode-pod
+      service: computenode
   template:
     metadata:
       labels:
-        app: computenode-pod
-        service: computenode-pod
+        app: computenode
+        service: computenode
     spec:
       containers:
-        - name: computenodeservice-container
-          image: matfmastercr.azurecr.io/computenode:v2.1
+        - name: computenode
+          image: matfmastercr.azurecr.io/computenode:v2.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -26,27 +26,18 @@ spec:
           env:
             - name: ASPNETCORE_URLS
               value: http://+:80
-            - name: WebApiBaseAddress
-              value: http://webapi
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: computenode-service
+  name: computenode
   namespace: distributed-system-dev-ns
   labels:
     app: computenode
-    service: computenode
 spec:
-  type: LoadBalancer
   ports:
-    - port: 80
-      name: port80
-      targetPort: 80
-      protocol: TCP
-    - port: 443
-      name: port443
-      targetPort: 443
-      protocol: TCP
+  - port: 80
+    protocol: TCP
   selector:
-    service: computenode-pod
+    app: computenode
+  internalTrafficPolicy: Local
