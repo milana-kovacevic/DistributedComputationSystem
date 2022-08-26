@@ -20,7 +20,7 @@ namespace ComputeNode.Controllers
             _executor = executor;
         }
 
-        [HttpGet(Name = "All")]
+        [HttpGet("All")]
         public IEnumerable<AtomicJob> GetRunningJobs()
         {
             return Enumerable.Range(1, 2).Select(index => new AtomicJob()
@@ -33,8 +33,10 @@ namespace ComputeNode.Controllers
         }
 
         [HttpPost("Run")]
-        public async Task<OkObjectResult> PostJob(int atomicJobId, int parentJobId, [FromBody] string inputData)
+        public AtomicJobResult PostJob(int atomicJobId, int parentJobId, [FromBody] string inputData)
         {
+            _logger.LogInformation($"Executing job with id {parentJobId}, atomic job id: {atomicJobId}");
+
             var newJob = new AtomicJob()
             {
                 Id = atomicJobId,
@@ -45,9 +47,7 @@ namespace ComputeNode.Controllers
             };
             
             // Run job.
-            var result = await _executor.ExecuteAsync(newJob);
-
-            return Ok(result);
+            return _executor.ExecuteAsync(newJob).GetAwaiter().GetResult();
         }
     }
 }
