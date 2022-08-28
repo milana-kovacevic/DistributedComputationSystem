@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: computenode
-          image: matfmastercr.azurecr.io/computenode:v2.2
+          image: matfmastercr.azurecr.io/computenode:v2.3
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

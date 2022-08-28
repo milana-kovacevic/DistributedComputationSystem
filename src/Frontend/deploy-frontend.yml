@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: frontend-container
-          image: matfmastercr.azurecr.io/frontend:v3.6
+          image: matfmastercr.azurecr.io/frontend:v4.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

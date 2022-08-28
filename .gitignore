@@ -1,9 +1,11 @@
-src/.vs/**
+.vs/**
 src/bin/**
 src/obj/**
 src/ClientApp/bin/**
 src/ClientApp/obj/**
 src/ClientApp/ClientApp.csproj.user
+src/DockerCompose/bin/**
+src/DockerCompose/obj/**
 src/Frontend/bin/**
 src/Frontend/obj/**
 src/Frontend/Frontend.csproj.user

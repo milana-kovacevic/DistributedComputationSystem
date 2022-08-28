@@ -6,11 +6,11 @@ services:
     container_name: frontend
     build:
       context: .
-      dockerfile: Frontend/Dockerfile
+      dockerfile: ../Frontend/Dockerfile
 
   computenodeservice:
     image: ${DOCKER_REGISTRY-}computenode
     container_name: computenode
     build:
       context: .
-      dockerfile: ComputeNode/Dockerfile
+      dockerfile: ../ComputeNode/Dockerfile
