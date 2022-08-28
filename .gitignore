@@ -12,3 +12,6 @@ src/Frontend/Frontend.csproj.user
 src/ComputeNode/bin/**
 src/ComputeNode/obj/**
 src/ComputeNode/ComputeNode.csproj.user
+tests/UnitTests/bin/**
+tests/UnitTests/obj/**
+tests/UnitTests/UnitTests.csproj.user
