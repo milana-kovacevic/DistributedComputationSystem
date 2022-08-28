@@ -28,11 +28,22 @@ namespace UnitTests.ComputeNode
         }
 
         [Fact]
-        public async Task IndexReturnsARedirectToIndexHomeWhenIdIsNull()
+        public async Task PostJob_Success()
         {
             var result = await controller.PostJob(1, 1, "123");
 
             Assert.IsType<AtomicJobResult>(result);
+            Assert.Equal(AtomicJobState.Succeeded, result.State);
+            Assert.Equal("6", result.Result);
+        }
+
+        [Fact]
+        public async Task PostJob_Failure()
+        {
+            var result = await controller.PostJob(1, 1, "aaa");
+
+            Assert.IsType<AtomicJobResult>(result);
+            Assert.Equal(AtomicJobState.Failed, result.State);
         }
     }
 }

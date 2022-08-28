@@ -11,7 +11,7 @@ namespace Frontend.Topology
         private static readonly string ComputeNodeServicePortEnvVariableName = $"{ComputeNodeServiceName}_PORT";
         private static readonly int ComputeNodeServicePortDefaultValue = 80;
 
-        private string _computeNodeServiceAddress = null;
+        private string? _computeNodeServiceAddress = null;
 
         /// <inheritdoc/>
         public string ComputeNodeServiceAddress
@@ -30,7 +30,7 @@ namespace Frontend.Topology
                         throw new NetworkException(ComputeNodeServiceHostEnvVariableName);
                     }
 
-                    string port = Environment.GetEnvironmentVariable(ComputeNodeServicePortEnvVariableName);
+                    string? port = Environment.GetEnvironmentVariable(ComputeNodeServicePortEnvVariableName);
                     if (port == null)
                     {
                         port = $"{ComputeNodeServicePortDefaultValue}";
@@ -55,18 +55,21 @@ namespace Frontend.Topology
         public async Task AddComputeNodeAsync()
         {
             // TODO: Implement with advanced ingress network setup.
+            await Task.Delay(100);
             throw new NotImplementedException();
         }
 
         public async Task DiscoverAllComputeNodesAsync()
         {
             // TODO: Implement with advanced ingress network setup.
+            await Task.Delay(100);
             throw new NotImplementedException();
         }
 
         public async Task RemoveComputeNodeAsync()
         {
             // TODO: Implement with advanced ingress network setup.
+            await Task.Delay(100);
             throw new NotImplementedException();
         }
     }
