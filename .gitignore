@@ -1,9 +1,6 @@
 .vs/**
 src/bin/**
 src/obj/**
-src/ClientApp/bin/**
-src/ClientApp/obj/**
-src/ClientApp/ClientApp.csproj.user
 src/DockerCompose/bin/**
 src/DockerCompose/obj/**
 src/Frontend/bin/**
@@ -15,3 +12,6 @@ src/ComputeNode/ComputeNode.csproj.user
 tests/UnitTests/bin/**
 tests/UnitTests/obj/**
 tests/UnitTests/UnitTests.csproj.user
+tests/FunctionalTests/bin/**
+tests/FunctionalTests/obj/**
+tests/FunctionalTests/FunctionalTests.csproj.user
