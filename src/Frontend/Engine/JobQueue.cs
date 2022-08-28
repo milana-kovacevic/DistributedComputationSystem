@@ -18,13 +18,14 @@ namespace Frontend.Engine
 
         /// <summary>
         /// Timeout for adding the job to the queue.
+        /// TODO: Add to configuration.
         /// </summary>
         public static readonly TimeSpan timeout = TimeSpan.FromSeconds(3);
 
         /// <summary>
         /// Blocking collection containing a list of jobs waiting for execution.
         /// </summary>
-        private static readonly BlockingCollection<Job> _jobQueue = new BlockingCollection<Job>(new ConcurrentQueue<Job>(), MaxJobs);
+        private readonly BlockingCollection<Job> _jobQueue = new(new ConcurrentQueue<Job>(), MaxJobs);
 
         /// <summary>
         /// Adds new job to the execution queue.
@@ -40,9 +41,18 @@ namespace Frontend.Engine
         /// Fetches next job in a queue.
         /// Waits if the queue is empty.
         /// </summary>
-        public Job DequeueJob()
+        /// <param name="cancellationToken">Cancellation Token</param>
+        public Job DequeueJob(CancellationToken cancellationToken)
         {
-            return _jobQueue.Take();
+            return _jobQueue.Take(cancellationToken);
+        }
+
+        /// <summary>
+        /// Returns number of jobs in the queue
+        /// </summary>
+        public int GetNumberOfJobs()
+        {
+            return _jobQueue.Count();
         }
     }
 }

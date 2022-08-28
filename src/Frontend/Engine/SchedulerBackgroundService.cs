@@ -33,7 +33,7 @@ namespace Frontend.Engine
                 {
                     // Fetch next job from the queue.
                     // This is blocking call. Wait here until there is job in a queue to be picked up.
-                    var jobToBeScheduled = _jobQueue.DequeueJob();
+                    var jobToBeScheduled = _jobQueue.DequeueJob(cancellationToken);
                     if (jobToBeScheduled == null)
                     {
                         _logger.LogWarning("jobToBeScheduled is null. This should never happen.");
@@ -51,13 +51,17 @@ namespace Frontend.Engine
                     _logger.LogInformation($"Scheduling job with id {jobToBeScheduled.Id}.");
                     await this._scheduler.ScheduleJobAsync(jobToBeScheduled);
                 }
+                catch (OperationCanceledException oce)
+                {
+                    _logger.LogWarning(oce, "Operation was canceled.");
+                }
                 catch (Exception e)
                 {
                     _logger.LogError(e, "Unhandled exception occurred.");
                 }
             }
 
-            _logger.LogInformation("Scheduler Background Service loop is canceled.");
+            _logger.LogInformation("Scheduler Background Service loop completed.");
 
             return Task.CompletedTask;
         });
