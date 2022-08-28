@@ -33,7 +33,7 @@ namespace ComputeNode.Controllers
         }
 
         [HttpPost("Run")]
-        public AtomicJobResult PostJob(int atomicJobId, int parentJobId, [FromBody] string inputData)
+        public async Task<AtomicJobResult> PostJob(int atomicJobId, int parentJobId, [FromBody] string inputData)
         {
             _logger.LogInformation($"Executing job with id {parentJobId}, atomic job id: {atomicJobId}");
 
@@ -47,7 +47,7 @@ namespace ComputeNode.Controllers
             };
             
             // Run job.
-            return _executor.ExecuteAsync(newJob).GetAwaiter().GetResult();
+            return await _executor.ExecuteAsync(newJob);
         }
     }
 }

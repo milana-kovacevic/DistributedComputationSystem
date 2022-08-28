@@ -1,4 +1,5 @@
-﻿using ComputeNode.Models;
+﻿using ComputeNode.Exceptions;
+using ComputeNode.Models;
 
 namespace ComputeNode.Executor
 {
@@ -25,7 +26,7 @@ namespace ComputeNode.Executor
                 }
                 else
                 {
-                    result.Error = $"Unable to calculate sum of digits for input: '{atomicJob.Data}'";
+                    result.Error = string.Format(ExceptionMessages.InvalidInputData, atomicJob.Data);
                     result.State = AtomicJobState.Failed;
                 }
             }
@@ -33,12 +34,12 @@ namespace ComputeNode.Executor
             return result;
         });
 
-        private bool TryCalculateSumOfDigits(string? data, out long result)
+        private static bool TryCalculateSumOfDigits(string? data, out long result)
         {
             result = -1;
             if (long.TryParse(data, out long number))
             {
-                result = CalculateSumOfDigits(number);
+                result = CalculateSumOfDigits(Abs(number));
 
                 return true;
             }
@@ -46,7 +47,7 @@ namespace ComputeNode.Executor
             return false;
         }
 
-        private long CalculateSumOfDigits(long number)
+        private static long CalculateSumOfDigits(long number)
         {
             long sumOfDigits = 0;
             while (number > 0)
@@ -56,6 +57,11 @@ namespace ComputeNode.Executor
             }
 
             return sumOfDigits;
+        }
+
+        private static long Abs(long number)
+        {
+            return number >= 0 ? number : -number;
         }
     }
 }
