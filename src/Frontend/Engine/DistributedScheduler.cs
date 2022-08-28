@@ -10,7 +10,7 @@ namespace Frontend.Engine
     {
         private readonly ILogger<DistributedScheduler> _logger;
         //private IDbContextFactory<JobContext> _contextFactory;
-        private readonly Dictionary<int, Job> inProgressTasks = new Dictionary<int, Job>();
+        private readonly Dictionary<int, Job> inProgressTasks = new();
         private IComputeNodeClientWrapper _computeNodeClientWrapper;
 
         public DistributedScheduler(
@@ -60,6 +60,11 @@ namespace Frontend.Engine
             {
                 _logger.LogError(e, $"Failed to schedule job with id {job.Id}");
             }
+        }
+
+        public IEnumerable<Job> GetInProgressTasks()
+        {
+            return this.inProgressTasks.Values;
         }
     }
 }
