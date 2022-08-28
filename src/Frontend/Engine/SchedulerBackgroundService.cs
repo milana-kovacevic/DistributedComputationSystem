@@ -63,7 +63,7 @@ namespace Frontend.Engine
 
             _logger.LogInformation("Scheduler Background Service loop completed.");
 
-            return Task.CompletedTask;
+            return cancellationToken.IsCancellationRequested ? Task.FromCanceled(cancellationToken) : Task.CompletedTask;
         });
     }
 }
