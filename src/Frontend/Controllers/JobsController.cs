@@ -58,7 +58,7 @@ namespace Frontend.Controllers
 
         // POST: api/Jobs/Create
         [HttpPost("Create")]
-        public async Task<ActionResult<Job>> PostJob([FromBody] string inputData)
+        public async Task<ActionResult<Job>> PostJob([FromBody] JobRequestData inputData)
         {
             if (_context.Job == null)
             {

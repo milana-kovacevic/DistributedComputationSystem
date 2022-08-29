@@ -1,4 +1,5 @@
-﻿using Frontend.Configuration;
+﻿using Frontend.ComputeNodeSwaggerClient;
+using Frontend.Configuration;
 using Frontend.DistributedOrchestrator;
 using Frontend.Engine;
 using Frontend.Managers;
@@ -18,6 +19,7 @@ namespace Frontend
             services.AddSingleton<IJobManager, JobManager>();
             services.AddSingleton<JobQueue>();
             services.AddSingleton<IAddressManager, AddressManager>();
+            services.AddSingleton<IComputeNodeClientWrapper, ComputeNodeClientWrapper>();
             services.AddSingleton<IScheduler, DistributedScheduler>();
 
             // Add services to the container.

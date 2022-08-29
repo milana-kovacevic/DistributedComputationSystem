@@ -32,19 +32,16 @@ namespace Frontend.Engine
         {
             try
             {
-                // Create tasks for atomic units of execution
-                string[] unitsOfWork = job.Data.Split(';');
-
                 // NOT DONE:
                 // [ADVANCED] use custom routing to available ComputeNodes using ingress setup
 
                 // Send units of execution to compute nodes
                 var result = new List<AtomicJobResult>();
                 int i = 0;
-                foreach (string unit in unitsOfWork)
+                foreach (var atomicJobUnit in job.Data.InputData)
                 {
                     i++;
-                    var r = await _computeNodeClientWrapper.RunAsync(i, job.Id, unit);
+                    var r = await _computeNodeClientWrapper.RunAsync(i, job.Id, atomicJobUnit.InputData);
                     result.Add(r);
                     _logger.LogInformation($"JobId {i}; AtomicJobId {job.Id}; ResultState: {r.State}; Result {r.Result}; Error {r.Error}");
                 }

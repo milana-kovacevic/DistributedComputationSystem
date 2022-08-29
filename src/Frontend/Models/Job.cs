@@ -5,8 +5,8 @@ namespace Frontend.Models
     public class Job
     {
         public int Id { get; set; }
-        
-        public string? Data { get; set; }
+
+        public JobRequestData Data { get; set; }
 
         public JobState State { get; set; }
 

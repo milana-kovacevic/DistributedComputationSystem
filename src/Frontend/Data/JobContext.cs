@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Frontend.Models;
 using System.Xml;
+using Newtonsoft.Json;
 
 namespace Frontend.Data
 {
@@ -25,11 +26,15 @@ namespace Frontend.Data
             {
                 b.HasKey(e => e.Id);
                 b.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                b.Property(p => p.Data).HasConversion(
+                    v => JsonConvert.SerializeObject(v),
+                    v => JsonConvert.DeserializeObject<JobRequestData>(v));
             });
         }
 
-        public DbSet<Frontend.Models.Job> Job { get; set; } = default!;
+        public DbSet<Job> Job { get; set; } = default!;
 
-        public DbSet<Frontend.Models.JobResult>? JobResult { get; set; }
+        public DbSet<JobResult>? JobResult { get; set; }
     }
 }

@@ -40,7 +40,12 @@ namespace UnitTests
                 Id = id,
                 StartTime = DateTime.Now,
                 State = JobState.Pending,
-                Data = inputData
+                Data = new JobRequestData() {
+                    InputData = new List<AtomicJobRequestData>()
+                    {
+                        new AtomicJobRequestData { InputData = inputData }
+                    }
+                }
             };
         }
     }
