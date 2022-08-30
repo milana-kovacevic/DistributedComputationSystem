@@ -19,14 +19,14 @@ namespace ComputeNode.Executor
 
             if (atomicJob.JobType == AtomicJobType.CalculateSumOfDigits)
             {
-                if (TryCalculateSumOfDigits(atomicJob.Data, out long sumOfDigits))
+                if (TryCalculateSumOfDigits(atomicJob.InputData, out long sumOfDigits))
                 {
                     result.Result = sumOfDigits.ToString();
                     result.State = AtomicJobState.Succeeded;
                 }
                 else
                 {
-                    result.Error = string.Format(ExceptionMessages.InvalidInputData, atomicJob.Data);
+                    result.Error = string.Format(ExceptionMessages.InvalidInputData, atomicJob.InputData);
                     result.State = AtomicJobState.Failed;
                 }
             }

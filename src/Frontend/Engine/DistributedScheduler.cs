@@ -3,6 +3,7 @@ using Frontend.ComputeNodeSwaggerClient;
 using Frontend.Data;
 using Frontend.Models;
 using Microsoft.EntityFrameworkCore;
+using AtomicJobResult = ComputeNodeSwaggerClient.AtomicJobResult;
 
 namespace Frontend.Engine
 {
@@ -38,7 +39,7 @@ namespace Frontend.Engine
                 // Send units of execution to compute nodes
                 var result = new List<AtomicJobResult>();
                 int i = 0;
-                foreach (var atomicJobUnit in job.Data.InputData)
+                foreach (var atomicJobUnit in job.AtomicJobs)
                 {
                     i++;
                     var r = await _computeNodeClientWrapper.RunAsync(i, job.Id, atomicJobUnit.InputData);

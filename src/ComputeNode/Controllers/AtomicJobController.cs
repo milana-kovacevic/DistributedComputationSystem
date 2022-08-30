@@ -27,7 +27,7 @@ namespace ComputeNode.Controllers
             {
                 StartTime = DateTime.Now.AddDays(index),
                 EndTime = null,
-                State = AtomicJobState.NotRan
+                AtomicJobResult = new AtomicJobResult() { State = AtomicJobState.NotRan }                
             })
             .ToArray();
         }
@@ -41,9 +41,9 @@ namespace ComputeNode.Controllers
             {
                 Id = atomicJobId,
                 ParentJobId = parentJobId,
-                Data = inputData,
+                InputData = inputData,
                 StartTime = DateTime.UtcNow,
-                State = AtomicJobState.NotRan
+                AtomicJobResult = new AtomicJobResult() { State = AtomicJobState.NotRan }
             };
             
             // Run job.

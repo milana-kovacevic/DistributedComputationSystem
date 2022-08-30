@@ -38,12 +38,14 @@ namespace UnitTests
             return new Job()
             {
                 Id = id,
-                StartTime = DateTime.Now,
-                State = JobState.Pending,
-                Data = new JobRequestData() {
-                    InputData = new List<AtomicJobRequestData>()
+                JobType = JobType.CalculateSumOfDigits,
+                AtomicJobs =  new List<AtomicJob>()
+                {
+                    new AtomicJob 
                     {
-                        new AtomicJobRequestData { InputData = inputData }
+                        JobId = id,
+                        AtomicJobId = id,
+                        InputData = inputData
                     }
                 }
             };

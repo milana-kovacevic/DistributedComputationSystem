@@ -6,7 +6,7 @@
 
         public int ParentJobId { get; set; }
 
-        public string? Data { get; set; }
+        public string InputData { get; set; }
 
         public AtomicJobType JobType { get; set; }
 
@@ -14,6 +14,6 @@
 
         public DateTime? EndTime { get; set; }
 
-        public AtomicJobState State { get; set; }
+        public AtomicJobResult AtomicJobResult { get; set; }
     }
 }

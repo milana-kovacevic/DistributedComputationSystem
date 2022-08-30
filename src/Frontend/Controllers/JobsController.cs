@@ -65,12 +65,9 @@ namespace Frontend.Controllers
                 return Problem("Entity set 'JobsContext.Job'  is null.");
             }
 
-            var newJob = new Job()
-            {
-                Data = inputData,
-                StartTime = DateTime.UtcNow,
-                State = JobState.Pending
-            };
+            var newJob = new Job(
+                inputData.JobType, 
+                inputData.InputData.Select(ajrd => new AtomicJob() { InputData = ajrd.InputData }).ToList());
 
             // Using added job as id is auto-populated.
             var addedJob = _context.Job.Add(newJob);
@@ -109,7 +106,7 @@ namespace Frontend.Controllers
 
             // Trying to cancel the job.
             // TODO make this nicer.
-            job.State = JobState.PendingCancellation;
+            job.JobResult.State = JobState.PendingCancellation;
             var updatedJob = _context.Job.Update(job);
             await _jobManager.CancelJobAsync(job.Id);
 

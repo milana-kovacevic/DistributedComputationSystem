@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Frontend.Models;
-using System.Xml;
 using Newtonsoft.Json;
 
 namespace Frontend.Data
@@ -22,19 +17,40 @@ namespace Frontend.Data
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Job>(b =>
-            {
-                b.HasKey(e => e.Id);
-                b.Property(e => e.Id).ValueGeneratedOnAdd();
+            // Setup primary keys & defaults.
+            modelBuilder.Entity<Job>().HasKey(e => e.Id);
+            modelBuilder.Entity<Job>().Property(e => e.Id).ValueGeneratedOnAdd();
 
-                b.Property(p => p.Data).HasConversion(
-                    v => JsonConvert.SerializeObject(v),
-                    v => JsonConvert.DeserializeObject<JobRequestData>(v));
-            });
+            modelBuilder.Entity<JobResult>().HasKey(aj => aj.JobId);
+
+            modelBuilder.Entity<AtomicJob>().HasKey(aj => new { aj.AtomicJobId, aj.JobId });
+            modelBuilder.Entity<AtomicJob>().Property(e => e.AtomicJobId).ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<AtomicJobResult>().HasKey(aj => new { aj.AtomicJobId, aj.JobId });
+
+            // Setup relationships.
+            modelBuilder.Entity<Job>()
+                .HasOne(j => j.JobResult)
+                .WithOne(jr => jr.Job)
+                .HasForeignKey<JobResult>(jr => jr.JobId);
+
+            modelBuilder.Entity<Job>()
+                .HasMany(j => j.AtomicJobs)
+                .WithOne(a => a.Job)
+                .HasForeignKey(a => a.JobId);
+
+            modelBuilder.Entity<AtomicJob>()
+                .HasOne(a => a.AtomicJobResult)
+                .WithOne(a => a.AtomicJob)
+                .HasForeignKey<AtomicJobResult>(a => new { a.AtomicJobId, a.JobId });
         }
 
         public DbSet<Job> Job { get; set; } = default!;
 
         public DbSet<JobResult>? JobResult { get; set; }
+
+        public DbSet<AtomicJob>? AtomicJob { get; set; }
+
+        public DbSet<AtomicJobResult>? AtomicJobResult { get; set; }
     }
 }
