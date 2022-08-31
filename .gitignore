@@ -15,3 +15,7 @@ tests/UnitTests/UnitTests.csproj.user
 tests/FunctionalTests/bin/**
 tests/FunctionalTests/obj/**
 tests/FunctionalTests/FunctionalTests.csproj.user
+paper/*.out
+paper/*.toc
+paper/*.pdf
+paper/*.gz
