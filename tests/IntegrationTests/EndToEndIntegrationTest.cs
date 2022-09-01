@@ -9,7 +9,7 @@ namespace FunctionalTests
     ///     1. Frontend service running locally at http://host.docker.internal:8081
     ///     2. ComputeNode service running at corresponding port (8080).
     /// </summary>
-    public class EndToEndTest
+    public class EndToEndIntegrationTest
     {
         [Fact]
         public async Task ListAllJobs_Success()

@@ -15,6 +15,12 @@ tests/UnitTests/UnitTests.csproj.user
 tests/FunctionalTests/bin/**
 tests/FunctionalTests/obj/**
 tests/FunctionalTests/FunctionalTests.csproj.user
+tests/IntegrationTests/bin/**
+tests/IntegrationTests/obj/**
+tests/IntegrationTests/IntegrationTests.csproj.user
+tests/TestCommons/bin/**
+tests/TestCommons/obj/**
+tests/TestCommons/TestCommons.csproj.user
 paper/*.out
 paper/*.toc
 paper/*.pdf

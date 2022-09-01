@@ -58,7 +58,7 @@ namespace UnitTests.Frontend
 
             await backgroundService.StartAsync(cts.Token);
 
-            var jobToBeScheduled = TestUtils.GetDummyJob();
+            var jobToBeScheduled = UnitTestUtils.GetDummyJob();
             var jobQueue = serviceProvider.GetService<JobQueue>();
 
             Assert.True(jobQueue.TryEnqueueJob(jobToBeScheduled), "Job failed to be added to the queue.");

@@ -20,7 +20,7 @@ namespace UnitTests.Frontend
             var jobManager = serviceProvider.GetService<IJobManager>();
 
             int numberOfJobs = 5;
-            var jobs = TestUtils.GetDummyJobs(numberOfJobs);
+            var jobs = UnitTestUtils.GetDummyJobs(numberOfJobs);
             jobManager.Initialize(jobs);
 
             Assert.Equal(numberOfJobs, jobManager.GetNumberOfJobs());

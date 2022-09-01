@@ -12,7 +12,7 @@ namespace UnitTests.Frontend
         public void JobQueue_EnqueueDequeue()
         {
             var jobQueue = new JobQueue();
-            var job = TestUtils.GetDummyJob();
+            var job = UnitTestUtils.GetDummyJob();
 
             jobQueue.TryEnqueueJob(job);
             Assert.Equal(1, jobQueue.GetNumberOfJobs());
@@ -54,7 +54,7 @@ namespace UnitTests.Frontend
             var jobQueue = new JobQueue();
 
             int numberOfJobs = jobQueueLimit;
-            var jobs = TestUtils.GetDummyJobs(numberOfJobs);
+            var jobs = UnitTestUtils.GetDummyJobs(numberOfJobs);
 
             foreach (var job in jobs)
             {
@@ -64,7 +64,7 @@ namespace UnitTests.Frontend
             Assert.Equal(jobQueueLimit, jobQueue.GetNumberOfJobs());
 
             // This one should fail as the queue is full.
-            var limitJob = TestUtils.GetDummyJob();
+            var limitJob = UnitTestUtils.GetDummyJob();
             var result = jobQueue.TryEnqueueJob(limitJob);
 
             Assert.False(result, "JobQueue should not accept more than jobQueueLimit jobs.");

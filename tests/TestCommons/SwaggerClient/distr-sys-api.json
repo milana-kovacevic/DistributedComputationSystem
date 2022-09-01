@@ -106,17 +106,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/JobRequestData"
               }
             },
             "text/json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/JobRequestData"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/JobRequestData"
               }
             }
           }
@@ -191,6 +191,92 @@
   },
   "components": {
     "schemas": {
+      "AtomicJob": {
+        "type": "object",
+        "properties": {
+          "atomicJobId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "jobId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "jobType": {
+            "$ref": "#/components/schemas/AtomicJobType"
+          },
+          "inputData": {
+            "type": "string",
+            "nullable": true
+          },
+          "atomicJobResult": {
+            "$ref": "#/components/schemas/AtomicJobResult"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AtomicJobRequestData": {
+        "required": [
+          "inputData"
+        ],
+        "type": "object",
+        "properties": {
+          "inputData": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AtomicJobResult": {
+        "type": "object",
+        "properties": {
+          "atomicJobId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "jobId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "$ref": "#/components/schemas/AtomicJobState"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AtomicJobState": {
+        "enum": [
+          "NotRan",
+          "InProgress",
+          "Succeeded",
+          "Failed",
+          "Cancelled"
+        ],
+        "type": "string"
+      },
+      "AtomicJobType": {
+        "enum": [
+          "CalculateSumOfDigits"
+        ],
+        "type": "string"
+      },
       "Job": {
         "type": "object",
         "properties": {
@@ -198,12 +284,57 @@
             "type": "integer",
             "format": "int32"
           },
-          "data": {
-            "type": "string",
+          "jobType": {
+            "$ref": "#/components/schemas/JobType"
+          },
+          "atomicJobs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AtomicJob"
+            },
             "nullable": true
+          },
+          "jobResult": {
+            "$ref": "#/components/schemas/JobResult"
           },
           "state": {
             "$ref": "#/components/schemas/JobState"
+          }
+        },
+        "additionalProperties": false
+      },
+      "JobRequestData": {
+        "required": [
+          "inputData",
+          "jobType"
+        ],
+        "type": "object",
+        "properties": {
+          "jobType": {
+            "$ref": "#/components/schemas/JobType"
+          },
+          "inputData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AtomicJobRequestData"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "JobResult": {
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "state": {
+            "$ref": "#/components/schemas/JobState"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
           },
           "startTime": {
             "type": "string",
@@ -217,29 +348,21 @@
         },
         "additionalProperties": false
       },
-      "JobResult": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "result": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "JobState": {
         "enum": [
           "Pending",
-          "Scheduled",
+          "Queued",
           "InProgress",
           "Succeeded",
           "Failed",
           "PendingCancellation",
           "Cancelled"
+        ],
+        "type": "string"
+      },
+      "JobType": {
+        "enum": [
+          "CalculateSumOfDigits"
         ],
         "type": "string"
       }

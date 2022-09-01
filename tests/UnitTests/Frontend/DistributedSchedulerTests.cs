@@ -33,7 +33,7 @@ namespace UnitTests.Frontend
             var scheduler = serviceProvider.GetService<IScheduler>();
             Assert.NotNull(scheduler);
 
-            var jobToBeScheduled = TestUtils.GetDummyJob();
+            var jobToBeScheduled = UnitTestUtils.GetDummyJob();
             await scheduler.ScheduleJobAsync(jobToBeScheduled);
 
             mockedComputeNodeClient.Verify(client => client.RunAsync(It.IsAny<int>(), jobToBeScheduled.Id, It.IsAny<string>()), Times.AtLeastOnce());
