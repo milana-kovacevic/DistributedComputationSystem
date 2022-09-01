@@ -13,7 +13,7 @@
 \usepackage[latinica]{matfmaster}
 
 % Datoteka sa literaturom u BibTex tj. BibLaTeX/Biber formatu
-\bib{matfmaster-primer}
+\bib{references}
 
 % Ime kandidata na srpskom jeziku (u odabranom pismu)
 \autor{Milana Kovačević}
@@ -64,9 +64,7 @@
 Uvod TODO
 
 %\section{Primeri korišćenja klasičnih \LaTeX{} elemenata}
-% Primeri citiranja
-%Ovo je rečenica u kojoj se javlja citat \cite{PetrovicMikic2015}.
-%Još jedan citat \cite{GuSh:243}.
+
 % Primer korišćenja fusnota
 %Iza ove rečenice sledi fusnota.\footnote{Ovo je fusnota.}
 % primer referisanja na poglavlja i strane poglavlja
@@ -77,7 +75,6 @@ Uvod TODO
 \chapter{Analiza postujićih sistema}
 \label{chp:analizapostojucihsistema}
 % ------------------------------------------------------------------------------
-
 Analiza postujićih sistema TODO
 Azure Functions pregled
 AWS rešenje?
@@ -265,26 +262,95 @@ Slučajevi upotrebe iz ugla klaster administratora su prikazani na slici \ref{fi
 \label{chp:opistehialata}
 % ------------------------------------------------------------------------------
 
-Za izradu programske realizacije sistema, korišćen je programski jezik C\#, i \emph{.NET Core 6.0} radni okvir. Korišćeno razvojno okruženje je eng. \emph{Microsoft Visual Studio 2022 - Community} i operativni sistem eng. \emph{Windows}.
+U ovom poglavlju biće opisane tehnologije i alati prilikom izrade programske realizacije sistema.
+Za implementaciju sistema je korišćen programski jezik C\#, i \emph{.NET Core 6.0} radni okvir. Korišćeno razvojno okruženje je \emph{Microsoft Visual Studio Community 2022} i operativni sistem \emph{Windows}.
+Izbor \emph{.NET Core} radnog okvira je omogućio pokretanje servisa na različitim platformama eng. \emph{Windows}, \emph{Mac} i \emph{Linux}, bez izmena izvornog koda.
+
+\section{Doker platforma}
+Za pokretanje aplikacija je korišćena Doker platforma (eng. \emph{Docker}) \cite{Docker}. Prednosti korišćenja ove platforme su monogstuke. Za početak, ona razdvaja razvijanje aplikacije od infrastrukture na kojoj će Sbiti pokrenuta. Aplikacija je spakovana u uzolovano okruženje koje se naziva kontejner (eng. \emph{container}). Kontejneri sadrže sve (u idealnom slučaju, jeduno) što je neophodno za pokretanje aplikacije u vidu strukture koja se naziva slika (eng. \emph{image}). To čini da su kontejneri lagani za prenošenje, za razliku od virtuelnih mašina koje mogu pružiti istu funkcionalnost. Spakovana aplikacija može biti pokrenuta neograničeni broj puta, u različitim okruženjima: prilikom ručnog i automatskog testiranja, u produkciji... Prilikom pokretanja kontejnera, može se dodatno specificirati njegova konfiguracija (na primer, mapiranje portova).
+
+Arhitektura platforme je predstavljena na slici \ref{fig:dockerarch} preuzetoj iz zvanične dokumentacije. 
+
+\begin{figure}[!ht]
+  \centering
+  \label{fig:dockerarch}
+  \includegraphics[width=1.0\textwidth]{./images/docker_architecture.png}
+  \caption{Arhitektura Doker platforme \cite{DockerArch}}
+\end{figure}
+
+Koraci potrebni da se napravi slika aplikacije se definišu u \emph{Dockerfile} datoteci. Svaka instrukcija u ovom fajlu kreira sloj slike (eng. \emph{layer}). U sličaju \emph{.NET Core} aplikacija, prvi korak je učitavanje željenog radnog okvira, zatim, na primer, pokretanje kompilacije izvornog koda. Krajnji korak je i samo pokretanje aplikacije. Bitno je naglasiti da tokom razvijanja aplikacije, Doker prepoznaje koji slojevi slike koji su se promenili, te samo njih ponovo kreira. Ovo čini generisanje slike efikasnom i brzom operacijom koja ne usporava programera. Kreirane slike se čuvaju u registru slika koji može biti lokalni ili i oblaku.
+
+Kontejner ima specifikaciju operativnog sistema na kojem se pokreće aplikacija, a u izradi su korišćeni \emph{Linux} kontejneri.
+
+Korišćeno okruženje za lokalno kreiranje i pokretanje kontejnera je \emph{Docker Desktop}.
+
+% Kubernetes detalji
+\section{Kubernetes platforma}
+
+Pokretanje distribuiranog sistema na praktičan i skalabilan način, omogućila je \emph{Kubernetes} platforma \cite{Kubernetes}. Ona pruža potrebnu infrastrukturu da se pokreću aplikacije zapakovane u Doker kontejnere, kao i da se upravlja njima i svim pratećim delovima sistema.
+
+Kubenetes omogućava:
+\begin{enumerate}
+\item Pronalaženje servisa koristeći DNS ime ili IP adresu,
+\item Balansiranje saobraćaja kroz mrežu u zavisnosti od opterećenosti,
+\item Korišćenje diska i drugih skladišta podataka,
+\item Automatsko ažuriranja verzija aplikacije kao i povratke na prethodnu verziju,
+\item Upravljanje resursima i pakovanje kontejnera na mašine,
+\item \emph{Self-healing} - automatski restartuj kontejnera koji ne ispunjavaju uslove zdravog servisa
+\item Upravljanje konfiguracijom, šiframa, sertifikatima i drugim osetljivim informacijama - uz samostalno ažuriranje bez potrebe za promenom slike kontejnera.
+\end{enumerate}
+
+\begin{figure}[!ht]
+  \centering
+  \label{fig:kubernetesarh}
+  \includegraphics[width=1.0\textwidth]{./images/kubernetes_architecture.png}
+  \caption{Arhitektura Kubernetes klastera \cite{KubernetesArchitecture}}
+\end{figure}
+
+Na slici \ref{fig:kubernetesarh} prikazana je arhitektura Kubernetes klastera, preuzeta iz zvanične dokumentacije.
+Kubernetes klaster se sastoji is dve celine: kontrolnog dela i skupa mašina (eng. \emph{nodes}). Mašine na sebi pokreću \emph{mahune} (eng. \emph{pod}) u okviru kojih je smešten jedan ili više kontejner u okviru kojeg se nalazi aplikacija. \emph{Pod} je najmanja jedinica koju je moguće kreirati i pokrenuti na klasteru, a kontejneri unutar njega imaju istu specifikaciju i dele lokalnu mrežu. Servis je apstrakcija koja povezuje \emph{pod}ove i definiše način na koji im se pristupa.
+
+U okviru svake mašine su pokrenuta dva procesa: 
+\begin{enumerate}
+\item \emph{kuberlet} - Zadužen za praćenje i održavanje rada kontejnera.
+\item \emph{kube-proxy} - Zadužen za podešavanje pravila mreže koja omogućavaju slanje i prijem poruka pokrenutim servisima.
+\end{enumerate}
+
+Kontrolni deo klastera služi za upravljanje klasterom, a funkcionalnosti su obezbeđene kroz nekoliko komponenti:
+\begin{enumerate}
+\item \emph{kube-apiserver} - Server API koji prima zahteve upućene klasteru.
+\item \emph{etcd} - Skladište za podatke u klasteru.
+\item \emph{kube-scheduler} - Zadužen za smeštanje novih \emph{pod}-ova na mašine u skladu sa dostupnim i traženim resursima, kao i drugim specifikacijama (na primer, međusobni afinitet servisa).
+\item \emph{kube-controller-manager} - Sastoji se od nekoliko kontrolera:
+	\begin{enumerate}
+	\item \emph{node-controller} - Omogućava reagovanje u slučajevima kada mašine postanu nedostupne.
+	\item \emph{job-controller} - izvšavaja dodatne poslove na klasteru.
+	\item \emph{endpoints-controller} - Podešava endpointe, tj. omogućava pronalaženje servisa i \emph{pod}ova koje obuhvata, a usput ažurira adrese u slučaju promena.
+	\item \emph{Servce Account \& Token Controller} - Resursi u okviru klastera se mogu podeliti po imenskim prostoima (eng. \emph{namespace}). Ovi kontroleri omogućavaju podešavaju prava pristupa u okviru imenshih prostora.
+	\end{enumerate}
+\item \emph{cloud-controller-manager} - Predstavlja vezu između klastera i cloud providera.
+\end{enumerate}
+Sve aplikacije su pokrenute na fizičkim mašinama koje su date na raspolaganju klasteru tokom njegovog kreiranja. Neki kontejneri/mahune mogu biti pokrenuti na istoj mašini, ali to zavisi od potražnje i raspodele resursa, kao i drugih specifikacija. Jedna od prednosti Kubernetesa je što on vodi računa o tome gde je koji proces pokrenut, te pokušava da obezbedi najbolju otpornost na greške u sistemu (na primer, restartovanje mašine) i time obezbedi visoku dostupnost pokrenutih servisa.
+
+Tool kubectl - client TODO
+
+\section{Azure platforma}
+
+Programska implementacija sistema je uključila njegovo pokretanje u oblaku, a za to je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Ova platforma pruža veliki broj softverskih i infrastrukturnih rešenja, kao i propratnih servisa i mogućnosti koje poboljšavaju iskustvo korišćenja.
+
+Najrelevantniji resursi korišćeni za pokretanje sistema u na \emph{Azure} platformi su:
+\begin{enumerate}
+\item \emph{Azure Kubernetes Service} \cite{AKS} - Resurs koji predstavlja \emph{Kubernetes} klaster.
+\item \emph{Azure SQL Database} \cite{AzureSQLDB} - Resurs koji predstavlja relacionu bazu podataka.
+\item \emph{Azure Active Directory} \cite{AAD} - Resurs koji omogućava kreiranje identiteta (npr. korisnike, grupe) i njihovo njegovo podešavanje (prava pristupa, login...).
+\item \emph{Azure Log Analytics}
+\end{enumerate}
+
+\section{Dodatni alati}
+
+\subsection{Swagger Open API}
 
 
-\section{Doker kontejneri}
-Izbor \emph{.NET Core} radnog okvira je omogućio pokretanje servisa u okviru Doker (eng. \emph{Docker}) kontejnera. 
-
-TODO vise od docker kontejnerima
-
-Postoji više prednosti ovog pristupa, a glavna je što čini servise lako prenosivim na različite platforme eng. \emph{Windows}, \emph{Mac} i \emph{Linux}. U realizaciji su koriškoristeći Linux kontejneri sa zapakovanim slikom (eng. \emph{image}) servisa.
-
-Okruženje za lokalno pokretanje kontejnera eng \emph{Docker Desktop}
-
-
-
-\section{Integracija sa Azure platformom}
-
-\subsection{Azure Kubernetes Service}
-
-\section{Kubernetes okrestrator}
-TODO link ka zvaničnoj dokumentaciji i vise info o samom orkestratoru
 
 
 % ------------------------------------------------------------------------------
@@ -350,6 +416,10 @@ TODO
 
 \section{Pokretanje u oblaku}
 TODO
+
+\subsection{Integracija sa Azure platformom}
+
+U realizaciji je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Za upravljanje i pristup resursima u okviru ove platforme koristi se  \emph{Azure portal} \cite{AzurePortal}.
 
 % ------------------------------------------------------------------------------
 \chapter{Testiranje sistema}
