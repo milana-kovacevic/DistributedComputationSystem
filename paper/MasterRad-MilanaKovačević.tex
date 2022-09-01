@@ -89,7 +89,7 @@ Funkcionalnosti su opisane u narednim sekcijama kroz slučajeve upotrebe, iz ugl
 
 \section{Izvršavanje poslova na zahtev}
 Glavna funkcionalnost sistema je obrada korisnikovih zahteva za izvršavanje poslova. 
-Slučajevi upotrebe iz ugla korisnika su prikazani na slici \ref{fig:slucajupotrebe_korisnik}, a opisani su u narednim podsekcijama.
+Slučajevi upotrebe iz ugla korisnika su prikazani na slici \ref{fig:slucajupotrebe_korisnik}, a detaljnije su opisani u narednim podsekcijama.
 
 \begin{figure}[!ht]
   \centering
@@ -104,13 +104,13 @@ Slučajevi upotrebe iz ugla korisnika su prikazani na slici \ref{fig:slucajupotr
 \item Naziv: Zakazivanje posla
 \item Akter: Korisnik koji želi da izvrši posao nad ulaznim podacima
 \item Kratak opis: Korisnik šalje zahtev za izvršavanje posla. Sistem validira zahtev i vraća potvrdu o uspešnosti zakazivanja.
-\item Preduslovi: Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji.
+\item Preduslovi: Korisnik ima pristup internetu. Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji.
 \item Postuslovi: Sistem je evidentirao novi zahtev za posao i prosledio ga na asinhrono izvršavanje.
 \item Tok događaja:
 	\begin{enumerate}
 	\item \label{zak:konstruisezahtev}Korisnik konstruiše zahtev za izvršavanje posla. Zahtev se sastoji od:
 		\begin{enumerate}
-		\item Specifikacije željenog tipa posla,
+		\item Specifikacije tipa posla,
 		\item Niza ulaznih podataka
 		\end{enumerate}
 	\item \label{zak:saljezahtev} Korisnik šalje zahtev sistemu preko interneta koristeći predefinisani interfejs.
@@ -125,14 +125,14 @@ Slučajevi upotrebe iz ugla korisnika su prikazani na slici \ref{fig:slucajupotr
 	\item Korisnik nema prava da podnese zahtev. Ukoliko u koraku \ref{zak:proveraprava} korisnik nema neophodna prava, sistem odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{zak:saljezahtev} glavnog toka.
 	\item Zahtev je nevalidan. Ukoliko u koraku \ref{zak:validacijazahteva} sistem prepozna nevalidan zahtev, odbija ga uz odgovarajuću grešku. Nevalidan zahtev može biti:
 		\begin{enumerate}
-		\item Nevalidna specifikacija tipa posla + tip posla mora biti podržan od strane sistema,
+		\item Nevalidna specifikacija tipa posla. Zahtevani tip posla mora biti podržan od strane sistema,
 		\item Format ulaznih podataka nije odgovarajući.
 		\end{enumerate}
 Proces se nastavlja u koraku \ref{zak:konstruisezahtev} glavnog toka.
 	\item Sistem je preopterećen i nema dovoljno resursa da zakaže novi posao. Ukoliko u koraku \ref{zak:asinhzakazivanje} sistem proceni da nema dovoljno resursa za izvršavanje posla, on odbija zahtev uz grešku da je sistem preopterećen i da korisnik pokuša kasnije. Proces se nastavlja u koraku \ref{zak:saljezahtev} glavnog toka.
 	\end{enumerate}
 \item Podtokovi: /
-\item Specijalni zahtevi: Korisnik ima neophodno znanje za generisanje zahteva i korišćenje interfejsa sistema.
+\item Specijalni zahtevi: Korisnik ima neophodno znanje za kreiranje zahteva i korišćenje interfejsa sistema.
 \item Dodatne informacije: /
 \end{enumerate}
 
@@ -142,7 +142,7 @@ Proces se nastavlja u koraku \ref{zak:konstruisezahtev} glavnog toka.
 \item Naziv: Preuzimanje rezultata posla
 \item Akter: Korisnik koji želi da pruzme rezultate prethodno zakazanog posla
 \item Kratak opis: Korisnik šalje zahtev za preuzimanje rezultata izvršavanja. Sistem validira zahtev i vraća tražene rezultate.
-\item Preduslovi: Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji. Posao je izvršen i rezultati su dostupni u bazi.
+\item Preduslovi: Korisnik ima pristup internetu. Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji. Posao je izvršen i rezultati su dostupni u bazi.
 \item Postuslovi: Sistem je prosledio rezultate izvršavanja korisniku.
 \item Tok događaja:
 	\begin{enumerate}
@@ -169,8 +169,8 @@ Proces se nastavlja u koraku \ref{zak:konstruisezahtev} glavnog toka.
 \item Naziv: Otkazivanje posla
 \item Akter: Korisnik koji želi da otkaže prethodno zakazani posao
 \item Kratak opis: Korisnik šalje zahtev za otkazivanje posla. Sistem validira zahtev i vraća potvrdu o uspešnosti otkazivanja.
-\item Preduslovi: Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji.
-\item Postuslovi: Sistem je otkazao posao i obrisao evidenciju o poslu u bazi.
+\item Preduslovi: Korisnik ima pristup internetu. Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji.
+\item Postuslovi: Sistem je otkazao posao i azurirao evidenciju posla u bazi.
 \item Tok događaja:
 	\begin{enumerate}
 	\item \label{otk:konstruisezahtev} Korisnik konstruiše zahtev za otkazivanje posla. Zahtev se sastoji od identifikatora posla koji želi da otkaže.
@@ -196,7 +196,7 @@ Proces se nastavlja u koraku \ref{zak:konstruisezahtev} glavnog toka.
 \item Naziv: Pregled poslova
 \item Akter: Korisnik koji želi da pruzme listu evidentiranih poslova u sistemu.
 \item Kratak opis: Korisnik šalje zahtev za izlistavanje evidentiranih poslova. Sistem validira zahtev i vraća tražene informacije o evidentiranim poslovima.
-\item Preduslovi: Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji. Posao je izvršen i rezultati su dostupni u bazi.
+\item Preduslovi: Korisnik ima pristup internetu. Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji. Posao je izvršen i rezultati su dostupni u bazi.
 \item Postuslovi: Sistem je prosledio rezultate izvršavanja korisniku.
 \item Tok događaja:
 	\begin{enumerate}
@@ -214,6 +214,7 @@ Proces se nastavlja u koraku \ref{zak:konstruisezahtev} glavnog toka.
 \item Specijalni zahtevi: Korisnik ima neophodno znanje za generisanje zahteva i korišćenje interfejsa sistema.
 \item Dodatne informacije: Rezultujuća lista poslova sadrži informacije o svakom evidentiranom poslu, i to:
 	\begin{enumerate}
+	\item Identifikator posla
 	\item Status posla
 	\item Vreme početka zvršavanja posla
 	\item Vreme završetka izvršavanja posla
@@ -228,14 +229,14 @@ Dodatne funkcionalnosti sistema uključuju slučajeve upotrebe u kojima je učes
 
 % AAD Admin
 \subsection{Podešavanja prava pristupa}
-Prava pristupa sistemu, tj. delovima sistema dodeljuje administrator bezbednosti. Prava pristupa pojedinačnim delovima sistema se kontrolišu kroz različta prava koja mogu biti dodeljena korisniku. Tipovi prava su:
+Prava pristupa sistemu, tj. delovima sistema dodeljuje administrator za bezbednost. Prava pristupa pojedinačnim delovima sistema se kontrolišu kroz različta prava koja mogu biti dodeljena korisniku. Tipovi prava su:
 	\begin{enumerate}
 	\item Iskustvo krajnjeg korisnika - Mogućnost slanja zahteva sistemu kroz definisani javni interfejs,
 	\item Pravo za praćenje rada sistema - Pristup telemetriji i logovima za praćenje rada sistema,
 	\item Administrator klastera - Pristup klasteru za devops akcije,
 	\item Administrator bezbednosti.
 	\end{enumerate}
-Slučajevi upotrebe iz ugla administratora za bezbednost su prikazani na slici \ref{fig:slucajupotrebe_aadadmin}. Detalji ovih slučajeva upotrebe su trivijana, te nisu opisani u nastavku.
+Slučajevi upotrebe iz ugla administratora za bezbednost su prikazani na slici \ref{fig:slucajupotrebe_aadadmin}. Ovih slučajevi upotrebe su jednostavni i intuitivni, te nisu opisani u nastavku.
 
 \begin{figure}[!ht]
   \centering
@@ -247,8 +248,9 @@ Slučajevi upotrebe iz ugla administratora za bezbednost su prikazani na slici \
 
 % Podešavanje AKS klastera
 \subsection{Podešavanje klastera}
-Klaster administrator ima mogućnost da menja konfiguraciju sistema kako bi ga prilagodio korisnikovim zahtevima. To uključuje skaliranje sistema (menjanje broja jedinica za izvršavanje), kao i ažuriranje konfiguracije kojim se dodeljuju fizički resursi delovima sistema.
-Slučajevi upotrebe iz ugla klaster administratora su prikazani na slici \ref{fig:slucajupotrebe_admin_klastera}. Detalji ovih slučajeva upotrebe su konceptualno jasni, a uključuju devops akcije, te nisu dalje razrađivani.
+Klaster administrator ima mogućnost da menja konfiguraciju sistema kako bi ga prilagodio potrebama krajnjeg korisnika. To uključuje horizontalno i vertikalno skaliranje sistema. Horizontalno skaliranje sistema podrazumeva menjanje broja pokrenutih servisa koji se koriste tokom izvršavanja posla. Vertikalno skaliranje podrazumeva ažuriranje konfiguracije kojom se dodeljuju resursi servisima (dostupna memorija i procesorsko vreme).
+
+Slučajevi upotrebe iz ugla klaster administratora su prikazani na slici \ref{fig:slucajupotrebe_admin_klastera}. Detalji ovih slučajeva upotrebe su konceptualno jasni, a uključuju poznavanje implementacionih detalja, te nisu dalje razrađivani.
 
 \begin{figure}[!ht]
   \centering
@@ -262,81 +264,106 @@ Slučajevi upotrebe iz ugla klaster administratora su prikazani na slici \ref{fi
 \label{chp:opistehialata}
 % ------------------------------------------------------------------------------
 
-U ovom poglavlju biće opisane tehnologije i alati prilikom izrade programske realizacije sistema.
-Za implementaciju sistema je korišćen programski jezik C\#, i \emph{.NET Core 6.0} radni okvir. Korišćeno razvojno okruženje je \emph{Microsoft Visual Studio Community 2022} i operativni sistem \emph{Windows}.
-Izbor \emph{.NET Core} radnog okvira je omogućio pokretanje servisa na različitim platformama eng. \emph{Windows}, \emph{Mac} i \emph{Linux}, bez izmena izvornog koda.
+U ovom poglavlju biće opisane tehnologije i alati korišćenih prilikom programske realizacije sistema.
+Za implementaciju je korišćen programski jezik C\#, i \emph{.NET Core 6.0} radni okvir. Korišćeno razvojno okruženje je \emph{Microsoft Visual Studio Community 2022} i operativni sistem \emph{Windows 10}.
 
 \section{Doker platforma}
-Za pokretanje aplikacija je korišćena Doker platforma (eng. \emph{Docker}) \cite{Docker}. Prednosti korišćenja ove platforme su monogstuke. Za početak, ona razdvaja razvijanje aplikacije od infrastrukture na kojoj će Sbiti pokrenuta. Aplikacija je spakovana u uzolovano okruženje koje se naziva kontejner (eng. \emph{container}). Kontejneri sadrže sve (u idealnom slučaju, jeduno) što je neophodno za pokretanje aplikacije u vidu strukture koja se naziva slika (eng. \emph{image}). To čini da su kontejneri lagani za prenošenje, za razliku od virtuelnih mašina koje mogu pružiti istu funkcionalnost. Spakovana aplikacija može biti pokrenuta neograničeni broj puta, u različitim okruženjima: prilikom ručnog i automatskog testiranja, u produkciji... Prilikom pokretanja kontejnera, može se dodatno specificirati njegova konfiguracija (na primer, mapiranje portova).
+Za pokretanje aplikacija je korišćena Doker platforma (eng. \emph{Docker}) \cite{Docker}. Prednosti korišćenja ove platforme su monogstuke. Za početak, ona razdvaja razvijanje aplikacije od infrastrukture na kojoj će biti pokrenuta. Aplikacija je spakovana u izolovano okruženje koje se naziva kontejner (eng. \emph{container}). Kontejneri sadrže sve (a u idealnom slučaju, samo) ono što je neophodno za pokretanje aplikacije, u vidu strukture koja se naziva slika (eng. \emph{image}). To čini da su kontejneri lagani za prenošenje, za razliku od virtuelnih mašina koje u teoriji mogu pružiti istu funkcionalnost. Spakovana aplikacija može biti pokrenuta neograničeni broj puta, u različitim okruženjima: prilikom ručnog i automatskog testiranja, u produkciji, itd. Prilikom pokretanja kontejnera, može se dodatno specificirati njegova konfiguracija (na primer, mapiranje portova).
 
-Arhitektura platforme je predstavljena na slici \ref{fig:dockerarch} preuzetoj iz zvanične dokumentacije. 
+Arhitektura platforme je predstavljena na slici \ref{fig:dockerarch}, preuzetoj iz zvanične dokumentacije \cite{DockerArch}. 
 
 \begin{figure}[!ht]
   \centering
   \label{fig:dockerarch}
   \includegraphics[width=1.0\textwidth]{./images/docker_architecture.png}
-  \caption{Arhitektura Doker platforme \cite{DockerArch}}
+  \caption{Arhitektura Doker platforme}
 \end{figure}
 
-Koraci potrebni da se napravi slika aplikacije se definišu u \emph{Dockerfile} datoteci. Svaka instrukcija u ovom fajlu kreira sloj slike (eng. \emph{layer}). U sličaju \emph{.NET Core} aplikacija, prvi korak je učitavanje željenog radnog okvira, zatim, na primer, pokretanje kompilacije izvornog koda. Krajnji korak je i samo pokretanje aplikacije. Bitno je naglasiti da tokom razvijanja aplikacije, Doker prepoznaje koji slojevi slike koji su se promenili, te samo njih ponovo kreira. Ovo čini generisanje slike efikasnom i brzom operacijom koja ne usporava programera. Kreirane slike se čuvaju u registru slika koji može biti lokalni ili i oblaku.
+Koraci potrebni da se napravi slika aplikacije se definišu u \emph{Dockerfile} datoteci. Svaka instrukcija u ovom fajlu kreira sloj slike (eng. \emph{layer}). U sličaju \emph{.NET Core} aplikacija, prvi korak je učitavanje željenog radnog okvira, zatim, (primera radi) pokretanje kompilacije izvornog koda i smeštanje izvršnog koda na željenu lokaciju. Krajnji korak je uglavnom definisanje komande za pokretanje aplikacije. Bitno je naglasiti da tokom razvijanja aplikacije, Doker prepoznaje koji slojevi slike koji su se promenili, te ponovo kreira samo njih i njihove naredne slojeve. Ovo čini generisanje slike efikasnom i brzom operacijom koja ne usporava programera, koji najčeće menja samo delove aplikacije. Kreirane slike se čuvaju u registru slika koji može biti lokalni ili negde u oblaku.
 
-Kontejner ima specifikaciju operativnog sistema na kojem se pokreće aplikacija, a u izradi su korišćeni \emph{Linux} kontejneri.
+Kontejner sadrži specifikaciju operativnog sistema na kojem se pokreće slika. Izbor \emph{.NET Core} radnog okvira omogućava pokretanje servisa na različitim platformama \emph{Windows}, \emph{Mac} i \emph{Linux}, bez izmena izvornog koda. Za izradu sistema su korišćeni \emph{Linux} kontejneri.
 
-Korišćeno okruženje za lokalno kreiranje i pokretanje kontejnera je \emph{Docker Desktop}.
+Korišćeno okruženje za lokalno kreiranje i pokretanje kontejnera je \emph{Docker Desktop} prikazan na slici \ref{fig:dockerdesktop} TODO mapiranje referenci.
+
+\begin{figure}[!ht]
+  \centering
+  \label{fig:dockerdesktop}
+  \includegraphics[width=1.0\textwidth]{./images/docker_desktop.png}
+  \caption{Docker Desktop}
+\end{figure}
 
 % Kubernetes detalji
 \section{Kubernetes platforma}
 
-Pokretanje distribuiranog sistema na praktičan i skalabilan način, omogućila je \emph{Kubernetes} platforma \cite{Kubernetes}. Ona pruža potrebnu infrastrukturu da se pokreću aplikacije zapakovane u Doker kontejnere, kao i da se upravlja njima i svim pratećim delovima sistema.
+Pokretanje sistema na praktičan i skalabilan način, omogućila je \emph{Kubernetes} platforma \cite{Kubernetes}. Ona pruža potrebnu infrastrukturu za pokretanje aplikacija zapakovanih u Doker kontejnere, kao i za upravljanje njima i ostalim pratećim delovima sistema.
 
 Kubenetes omogućava:
 \begin{enumerate}
 \item Pronalaženje servisa koristeći DNS ime ili IP adresu,
 \item Balansiranje saobraćaja kroz mrežu u zavisnosti od opterećenosti,
 \item Korišćenje diska i drugih skladišta podataka,
-\item Automatsko ažuriranja verzija aplikacije kao i povratke na prethodnu verziju,
+\item Automatsko ažuriranje (eng. \emph{update}) verzija aplikacije kao i vraćanje na prethodnu verziju,
 \item Upravljanje resursima i pakovanje kontejnera na mašine,
-\item \emph{Self-healing} - automatski restartuj kontejnera koji ne ispunjavaju uslove zdravog servisa
+\item \emph{Self-healing} - automatski restart kontejnera koji ne ispunjavaju uslove zrdravlja,
 \item Upravljanje konfiguracijom, šiframa, sertifikatima i drugim osetljivim informacijama - uz samostalno ažuriranje bez potrebe za promenom slike kontejnera.
 \end{enumerate}
+
+Na slici \ref{fig:kubernetesarh} prikazana je arhitektura Kubernetes klastera, preuzeta iz zvanične dokumentacije \cite{KubernetesArchitecture}.
 
 \begin{figure}[!ht]
   \centering
   \label{fig:kubernetesarh}
   \includegraphics[width=1.0\textwidth]{./images/kubernetes_architecture.png}
-  \caption{Arhitektura Kubernetes klastera \cite{KubernetesArchitecture}}
+  \caption{Arhitektura Kubernetes klastera}
 \end{figure}
 
-Na slici \ref{fig:kubernetesarh} prikazana je arhitektura Kubernetes klastera, preuzeta iz zvanične dokumentacije.
-Kubernetes klaster se sastoji is dve celine: kontrolnog dela i skupa mašina (eng. \emph{nodes}). Mašine na sebi pokreću \emph{mahune} (eng. \emph{pod}) u okviru kojih je smešten jedan ili više kontejner u okviru kojeg se nalazi aplikacija. \emph{Pod} je najmanja jedinica koju je moguće kreirati i pokrenuti na klasteru, a kontejneri unutar njega imaju istu specifikaciju i dele lokalnu mrežu. Servis je apstrakcija koja povezuje \emph{pod}ove i definiše način na koji im se pristupa.
+Kubernetes klaster se sastoji iz dve celine: kontrolnog dela i skupa radnih mašina (eng. \emph{nodes}). Radne mašine na sebi pokreću \emph{mahune} (eng. \emph{pod}) u okviru kojih je smešten jedan ili više kontejner, u okviru kojih se nalazi aplikacija. \emph{Pod} je najmanja jedinica koju je moguće kreirati i pokrenuti na klasteru, a kontejneri unutar njega imaju istu specifikaciju i dele lokalnu mrežu.
 
-U okviru svake mašine su pokrenuta dva procesa: 
+Kako bi pokrenute aplikacije bile dostupne na mreži, kreira se apstrakcija koja se naziva \emph{Servis}. Ova apstrakcija povezuje grupu \emph{pod}ova i definiše način na koji im se pristupa: koristeći jedinstveno DNS ime ili IP adresu (eng. \emph{Service endpointa}). Slanjem poruka na ovu adresu, Kubernetes sam usmerava i balansira saobraćaj ka \emph{pod}ovima, od kojih svaki ima jedinstvenu IP adresu.
+
+U okviru svake radne mašine je pokrenuto još nekoliko sistemskih procesa: 
 \begin{enumerate}
-\item \emph{kuberlet} - Zadužen za praćenje i održavanje rada kontejnera.
-\item \emph{kube-proxy} - Zadužen za podešavanje pravila mreže koja omogućavaju slanje i prijem poruka pokrenutim servisima.
+\item \emph{kuberlet} - Zadužen za pokretanje kontejnera na mašini, kao i za praćenje rada kontejnera i njegovog zdravlja.
+\item \emph{kube-proxy} - Zadužen za podešavanje pravila mreže koja omogućavaju slanje i prijem poruka \emph{pod}ovima, koristeći specifikacije definisane servisima.
+\item \emph{Container runtime} - Zadužen za pokretanje kontejnera.
 \end{enumerate}
 
 Kontrolni deo klastera služi za upravljanje klasterom, a funkcionalnosti su obezbeđene kroz nekoliko komponenti:
 \begin{enumerate}
 \item \emph{kube-apiserver} - Server API koji prima zahteve upućene klasteru.
-\item \emph{etcd} - Skladište za podatke u klasteru.
+\item \emph{etcd} - Služi za skladište podatka u klasteru.
 \item \emph{kube-scheduler} - Zadužen za smeštanje novih \emph{pod}-ova na mašine u skladu sa dostupnim i traženim resursima, kao i drugim specifikacijama (na primer, međusobni afinitet servisa).
 \item \emph{kube-controller-manager} - Sastoji se od nekoliko kontrolera:
 	\begin{enumerate}
 	\item \emph{node-controller} - Omogućava reagovanje u slučajevima kada mašine postanu nedostupne.
-	\item \emph{job-controller} - izvšavaja dodatne poslove na klasteru.
-	\item \emph{endpoints-controller} - Podešava endpointe, tj. omogućava pronalaženje servisa i \emph{pod}ova koje obuhvata, a usput ažurira adrese u slučaju promena.
-	\item \emph{Servce Account \& Token Controller} - Resursi u okviru klastera se mogu podeliti po imenskim prostoima (eng. \emph{namespace}). Ovi kontroleri omogućavaju podešavaju prava pristupa u okviru imenshih prostora.
+	\item \emph{job-controller} - Izvšava dodatne poslove na klasteru.
+	\item \emph{endpoints-controller} - Podešava endpointe, tj. omogućava pronalaženje servisa i \emph{pod}ova koje obuhvata. Ažurira adrese u slučaju promena (dodavanja i brisanja \emph{pod}ova).
+	\item \emph{Servce Account \& Token Controller} - Resursi u okviru klastera se mogu podeliti po imenskim prostoima (eng. \emph{namespace}). Ovi kontroleri omogućavaju podešavaju prava pristupa u okviru imenskih prostora.
 	\end{enumerate}
 \item \emph{cloud-controller-manager} - Predstavlja vezu između klastera i cloud providera.
 \end{enumerate}
-Sve aplikacije su pokrenute na fizičkim mašinama koje su date na raspolaganju klasteru tokom njegovog kreiranja. Neki kontejneri/mahune mogu biti pokrenuti na istoj mašini, ali to zavisi od potražnje i raspodele resursa, kao i drugih specifikacija. Jedna od prednosti Kubernetesa je što on vodi računa o tome gde je koji proces pokrenut, te pokušava da obezbedi najbolju otpornost na greške u sistemu (na primer, restartovanje mašine) i time obezbedi visoku dostupnost pokrenutih servisa.
+Sve aplikacije su pokrenute na fizičkim mašinama koje su date na raspolaganju klasteru tokom njegovog kreiranja ili ažuriranja. Neki kontejneri/podovi mogu biti pokrenuti na istoj mašini, ali to zavisi od potražnje i raspodele resursa, kao i od drugih specifikacija. Jedna od prednosti Kubernetesa je što on vodi računa o tome gde je koji proces pokrenut, te pokušava da obezbedi najbolju otpornost na greške u sistemu (na primer, restartovanje mašine) i time obezbedi visoku dostupnost pokrenutih servisa.
 
-Tool kubectl - client TODO
+Za definisanje resursa i njihovih specifikacija, kao i konfiguracije na klasteru koriste se datoteke sa ekstenzijom \emph{yaml}. Prosleđivanjem ovih datoteka klasteru se prave promene na klasteru.
+
+Za komunikaciju sa kontrolnim delom Kubernetes klastera se koristi kilijent \emph{kubectl}. Neke od komandi su predstavljene u nastavku.
+
+\begin{verbatim}
+// Opšti oblik komande
+kubectl [command] [TYPE] [NAME] [flags]
+// Kreiranje resursa i njihovih specifikacija definisane u deploy.yaml
+kubectl apply -f deploy.yaml
+// Izlistavanje servisa na klasteru
+kubectl get svc
+// Izlistavanje podova
+kubectl get pods
+// Pristup bash konzoli na mašini u okviru koje je pokrenut pod
+kubectl exec mypod-m96mk -it mypod-m96mk  -- /bin/bash
+\end{verbatim}
 
 \section{Azure platforma}
 
-Programska implementacija sistema je uključila njegovo pokretanje u oblaku, a za to je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Ova platforma pruža veliki broj softverskih i infrastrukturnih rešenja, kao i propratnih servisa i mogućnosti koje poboljšavaju iskustvo korišćenja.
+Programska implementacija sistema je uključila njegovo pokretanje u oblaku, a za to je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Ova platforma pruža veliki broj softverskih i infrastrukturnih rešenja, kao i propratnih servisa i mogućnosti koje poboljšavaju celokupno iskustvo korišćenja.
 
 Najrelevantniji resursi korišćeni za pokretanje sistema u na \emph{Azure} platformi su:
 \begin{enumerate}
@@ -349,9 +376,11 @@ Najrelevantniji resursi korišćeni za pokretanje sistema u na \emph{Azure} plat
 \section{Dodatni alati}
 
 \subsection{Swagger Open API}
+Servisi sistema imaju otvoreni serverski REST API ( todo link). Za automatsko generisanje klijenta za komuniciranje sa API-jevima, korišćen je paket .
+\cite{Swagger}
+Na osnovu datog \emph{json} fajla, on u toku kompilacije automatski generiše klijenta.
 
-
-
+TODO
 
 % ------------------------------------------------------------------------------
 \chapter{Implementacija}
