@@ -33,7 +33,11 @@ namespace ComputeNode.Controllers
         }
 
         [HttpPost("Run")]
-        public async Task<AtomicJobResult> PostJob(int atomicJobId, int parentJobId, [FromBody] string inputData)
+        public async Task<AtomicJobResult> PostJob(
+            int atomicJobId,
+            int parentJobId,
+            [FromBody] string inputData,
+            AtomicJobType jobType = AtomicJobType.CalculateSumOfDigits)
         {
             _logger.LogInformation($"Executing job with id {parentJobId}, atomic job id: {atomicJobId}");
 
@@ -41,6 +45,7 @@ namespace ComputeNode.Controllers
             {
                 Id = atomicJobId,
                 ParentJobId = parentJobId,
+                JobType = jobType,
                 InputData = inputData,
                 StartTime = DateTime.UtcNow,
                 AtomicJobResult = new AtomicJobResult() { State = AtomicJobState.NotRan }

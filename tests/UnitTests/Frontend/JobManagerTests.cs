@@ -1,4 +1,5 @@
-﻿using Frontend.Managers;
+﻿using Frontend.Engine;
+using Frontend.Managers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace UnitTests.Frontend
@@ -11,6 +12,7 @@ namespace UnitTests.Frontend
         {
             var services = new ServiceCollection();
             services.AddSingleton<IJobManager, JobManager>();
+            services.AddSingleton<JobQueue>();
             serviceProvider = services.BuildServiceProvider();
         }
 

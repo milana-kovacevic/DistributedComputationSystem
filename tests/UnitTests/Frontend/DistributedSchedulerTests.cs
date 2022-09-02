@@ -1,4 +1,5 @@
-﻿using Frontend.ComputeNodeSwaggerClient;
+﻿using ComputeNodeSwaggerClient;
+using Frontend.ComputeNodeSwaggerClient;
 using Frontend.Engine;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -18,7 +19,7 @@ namespace UnitTests.Frontend
             services.AddSingleton<ILogger<DistributedScheduler>, Logger<DistributedScheduler>>();
 
             // Setup mocked ComputeNodeClient
-            mockedComputeNodeClient.Setup(m => m.RunAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+            mockedComputeNodeClient.Setup(m => m.RunAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<AtomicJobType>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(new ComputeNodeSwaggerClient.AtomicJobResult()));
             services.AddScoped((services) => mockedComputeNodeClient.Object);
 
@@ -36,7 +37,7 @@ namespace UnitTests.Frontend
             var jobToBeScheduled = UnitTestUtils.GetDummyJob();
             await scheduler.ScheduleJobAsync(jobToBeScheduled);
 
-            mockedComputeNodeClient.Verify(client => client.RunAsync(It.IsAny<int>(), jobToBeScheduled.Id, It.IsAny<string>()), Times.AtLeastOnce());
+            mockedComputeNodeClient.Verify(client => client.RunAsync(It.IsAny<int>(), jobToBeScheduled.Id, It.IsAny<AtomicJobType>(), It.IsAny<string>()), Times.AtLeastOnce());
             Assert.NotEmpty(scheduler.GetInProgressTasks());
         }
     }

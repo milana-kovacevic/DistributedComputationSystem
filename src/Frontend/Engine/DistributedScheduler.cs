@@ -1,6 +1,7 @@
 ﻿using ComputeNodeSwaggerClient;
 using Frontend.ComputeNodeSwaggerClient;
 using Frontend.Data;
+using Frontend.Mappers;
 using Frontend.Models;
 using Microsoft.EntityFrameworkCore;
 using AtomicJobResult = ComputeNodeSwaggerClient.AtomicJobResult;
@@ -35,7 +36,7 @@ namespace Frontend.Engine
         public async Task ScheduleJobAsync(Job job)
         {
             try
-            {
+            {/*
                 // Create a new scope to retrieve scoped services
                 using (var scope = _serviceProvider.CreateScope())
                 {
@@ -43,7 +44,7 @@ namespace Frontend.Engine
                     var myDbContext = scope.ServiceProvider.GetRequiredService<JobContext>();
 
                     //TODO update job state
-                }
+                }*/
 
                 _logger.LogInformation($"Scheduling job with id {job.Id}...");
                 // NOT DONE:
@@ -55,7 +56,12 @@ namespace Frontend.Engine
                 foreach (var atomicJobUnit in job.AtomicJobs)
                 {
                     i++;
-                    var r = await _computeNodeClientWrapper.RunAsync(i, job.Id, atomicJobUnit.InputData);
+                    var r = await _computeNodeClientWrapper.RunAsync(
+                        i, // TODO
+                        job.Id,
+                        AtomicJobTypeMapper.Map(atomicJobUnit.JobType),
+                        atomicJobUnit.InputData);
+
                     result.Add(r);
                     _logger.LogInformation($"JobId {i}; AtomicJobId {job.Id}; ResultState: {r.State}; Result {r.Result}; Error {r.Error}");
                 }

@@ -18,9 +18,9 @@ namespace Frontend.ComputeNodeSwaggerClient
             _computeNodeClient = new ComputeNodeClient(computeNodeServiceAddress, _httpClient);
         }
 
-        public async Task<AtomicJobResult> RunAsync(int atomicJobId, int parentJobId, string inputData)
+        public async Task<AtomicJobResult> RunAsync(int atomicJobId, int parentJobId, AtomicJobType atomicJobType, string inputData)
         {
-            return await _computeNodeClient.RunAsync(atomicJobId, parentJobId, inputData);
+            return await _computeNodeClient.RunAsync(atomicJobId, parentJobId, atomicJobType, inputData);
         }
     }
 }

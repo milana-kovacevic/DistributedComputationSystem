@@ -1,15 +1,11 @@
 ﻿using ComputeNode.Exceptions;
 using ComputeNode.Models;
 
-namespace ComputeNode.Executor
+namespace ComputeNode.Executors
 {
-    /// <summary>
-    /// Atomic job executor.
-    /// TODO: Execute upcoming atomic jobs using thread pool.
-    /// </summary>
-    public class AtomicJobExecutor : IJobExecutor
+    public class CalculateNumberOfDigitsExecutor : ISpecificJobExecutor
     {
-        public async Task<AtomicJobResult> ExecuteAsync(AtomicJob atomicJob) => await Task.Run(() =>
+        public async Task<AtomicJobResult> ExecuteAsync(AtomicJob atomicJob)
         {
             var result = new AtomicJobResult()
             {
@@ -17,24 +13,19 @@ namespace ComputeNode.Executor
                 ParentJobId = atomicJob.ParentJobId
             };
 
-            if (atomicJob.JobType == AtomicJobType.CalculateSumOfDigits)
+            if (TryCalculateSumOfDigits(atomicJob.InputData, out long sumOfDigits))
             {
-                if (TryCalculateSumOfDigits(atomicJob.InputData, out long sumOfDigits))
-                {
-                    result.Result = sumOfDigits.ToString();
-                    result.State = AtomicJobState.Succeeded;
-                }
-                else
-                {
-                    result.Error = string.Format(ExceptionMessages.InvalidInputData, atomicJob.InputData);
-                    result.State = AtomicJobState.Failed;
-                }
+                result.Result = sumOfDigits.ToString();
+                result.State = AtomicJobState.Succeeded;
+            }
+            else
+            {
+                result.Error = string.Format(ExceptionMessages.InvalidInputData, atomicJob.InputData);
+                result.State = AtomicJobState.Failed;
             }
 
-            throw new Exception("Unhandled exception in ExecuteAsync in ComputeNode!");
-
             return result;
-        });
+        }
 
         private static bool TryCalculateSumOfDigits(string? data, out long result)
         {

@@ -1,16 +1,28 @@
 ﻿using ComputeNode.Exceptions;
 using ComputeNode.Executor;
+using ComputeNode.Executors;
 using ComputeNode.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace UnitTests.ComputeNode
 {
     public class AtomicJobExecutor_ExecuteAsync_Should
     {
+        private readonly ServiceProvider serviceProvider;
         private readonly IJobExecutor _executor;
 
         public AtomicJobExecutor_ExecuteAsync_Should()
         {
-            this._executor = new AtomicJobExecutor();
+            var services = new ServiceCollection();
+            services.AddSingleton<ILoggerFactory, LoggerFactory>();
+            services.AddSingleton<ILogger<AtomicJobExecutor>, Logger<AtomicJobExecutor>>();
+            services.AddScoped<IJobExecutor, AtomicJobExecutor>();
+            services.AddSingleton<ISpecificJobExecutorFactory, SpecificJobExecutorFactory>();
+            services.AddSingleton<CalculateNumberOfDigitsExecutor>();
+
+
+            serviceProvider = services.BuildServiceProvider();
         }
 
         [Theory]
@@ -23,6 +35,7 @@ namespace UnitTests.ComputeNode
         {
             var atomicJob = GetDummyAtomicJob(inputData.ToString());
 
+            var _executor = serviceProvider.GetService<IJobExecutor>();
             var result = await _executor.ExecuteAsync(atomicJob);
 
             VerifyCommons(atomicJob, result);
@@ -41,6 +54,7 @@ namespace UnitTests.ComputeNode
         {
             var atomicJob = GetDummyAtomicJob(inputData);
 
+            var _executor = serviceProvider.GetService<IJobExecutor>();
             var result = await _executor.ExecuteAsync(atomicJob);
 
             VerifyCommons(atomicJob, result);

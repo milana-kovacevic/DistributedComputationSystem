@@ -48,6 +48,13 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "jobType",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/AtomicJobType"
+            }
           }
         ],
         "requestBody": {
