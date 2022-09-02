@@ -573,11 +573,58 @@ TODO
 
 
 % ------------------------------------------------------------------------------
-\chapter{Praćenje metrika sistema}
+\chapter{Praćenje rada sistema}
 \label{chp:pracenjemetrika}
 % ------------------------------------------------------------------------------
 
-Praćenje metrika sistema TODO
+U ovom poglavlju će biti prikazane mogućnosti praćenja rada sistema uz pomoć \emph{Azure Monitor} servisa za praćenje ponašanja resursa u oblaku. Kako su aplikacije pokrenute u okviru \emph{Azure Kubernetes Service} klastera, dat je pregled načina na koji se analiziraju podaci o radu klastera. Na analogan način se može pratiti i ponašanje \emph{Azure SQL Database} baze podataka koju koristi sistem.
+
+\section{Metrike}
+
+Metrike sistema predstavljaju informacije o njegovom radu u (skoro) realnom vremenu. Kroz metrike možemo da vidimo trenutnu iskorišćenost resursa klastera, status mašina, podova, kontejnera itd.
+
+Na slici \ref{fig:aksinsights} je prikazan pogled na \emph{Insight} sekciju pripadajuceg klastera kojem se pristupa preko \emph{Azure Portal}a \emph{AzurePortal}. TODO slika sa vise korišćenja CPU - idealno nakon perf testiranja, i jos par recenica o tome
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{./images/aks_insights.png}
+  \caption{Pregled metrika klastera na \emph{Azure portalu}}
+  \label{fig:aksinsights}
+\end{figure}
+
+
+TODO metrike health statusa klastera
+Na slici \ref{fig:clusterunhealthy} je prikazan pogled na \emph{Insight} sekciju pripadajuceg klastera u slučaju nezdravog Frontend servisa
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{./images/metrics_cluster_unhealthy.png}
+  \caption{Pogled na metrike o statusu klastera}
+  \label{fig:clusterunhealthy}
+\end{figure}
+
+\section{Logovi}
+
+Logovi predstavljaju informacije o radu sistema koje ispisuju pokrenuti servisi u tekstualnom formatu. Oni su automatski sakupljeni sa mašina i prosleđeni na mesto za čuvanje, gde im je moguće pristupiti kroz propratne alate.
+
+Za pregled logova korišćen je servis \emph{Azure Log Analytics} dostupan u okviru \emph{Azure Monitor} servisa . Ovaj alat pruža moćan deskripivni jezik kojim se mogu pretraživati, filtrirati, sortirati i analizirati logovi. Rezultate upita je takođe moguće vizuelizovati u vidu grafikona.
+
+Na slici \ref{fig:frontendlogs} se nalazi prikaz stranice za pregled logova kontejnera koji sadrži Frontend pod.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{./images/frontend_logs.png}
+  \caption{Pregled logova Frontend servisa}
+  \label{fig:frontendlogs}
+\end{figure}
+
+
+\section{Alertovi}
+Na osnovu dostupnih metrika i logova, moguće je definisati situacije u kojima želimo da budemo obavešteni kao korisnik servisa. Problemi u produkcionom okruženju se javljaju, i u tim slučajevima je cilj što pre reagovati i obezbediti da sistem bude zdrav i u funkciji.
+U nastavku se nalazi prikaz definisanog upozoranja u slučaju velikog broja grešaka na servisu.
+
+TODO alert kad computenode/frontend baca exceptione
+
 
 % ------------------------------------------------------------------------------
 \chapter{Dalji razvoj sistema}
