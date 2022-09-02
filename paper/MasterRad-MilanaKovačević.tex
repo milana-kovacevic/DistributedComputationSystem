@@ -460,20 +460,24 @@ U realizaciji je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Za u
 % ------------------------------------------------------------------------------
 
 U ovom poglavlju su opisani načini testiranja implementiranog sistema. Za izradu testova korišćen je \emph{XUnit} \cite{XUnit} radni okvir.
+
 Svi testovi se nalaze na GitHub adresi projekta u \href{https://github.com/milana-kovacevic/DistributedComputationSystem/tree/main/tests}{tests} poddirektorijumu.
-Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na slici \ref{fig:testexplorer} je prikazan vizuelni prikaz rezultata izvršavanja testova u okruženju \emph{Microsoft Visual Studio}.
+
+\emph{XUnit} radni okvir ima podršku za pisanje dva tipa testova: činjenice (eng. \emph{Fact}) i teorije (eng. \emph{Theory}). Činjenice su testovi koji ne primaju argumente, dok teorije predstavljaju paremetrizovane testove. Specifikacijom atributa iznad tela funkcije testa se definišu ulazi nad kojima se test pokreće, što značajno olakšava generisanje testova sa različitim ulazima.
+
+Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na slici \ref{fig:testexplorer} se nalazi vizuelni prikaz rezultata izvršavanja testova u okruženju \emph{Microsoft Visual Studio}.
 % (TODO nova slika sa jos testova)
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.7\textwidth]{./images/testovi.png}
+  \includegraphics[width=0.8\textwidth]{./images/testovi.png}
   \caption{Struktura foldera sa testovima}
   \label{fig:testovi}
 \end{figure}
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.6\textwidth]{./images/testexplorer.png}
+  \includegraphics[width=0.8\textwidth]{./images/testexplorer.png}
   \caption{Pokretanje testova iz \emph{Test Explorer}-a u okruženju \emph{Microsoft Visual Studio}}
   \label{fig:testexplorer}
 \end{figure}
@@ -498,7 +502,7 @@ Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na sli
 %\end{figure}
 
 
-Sistem je testiran na više nivoa, počevši od testiranja jedinica koda za svaku komponentu, zatim testova integracije, i, na najvišem nivou, funkcionalnih testova.
+Sistem je testiran na više nivoa, počevši od testiranja jedinica koda za svaku komponentu, zatim testova integracije, i, na najvišem nivou, funkcionalnih testova koji ukljucuju klaster testove.
 
 \section{Testiranje jedinica koda}
 Komponente \emph{Frontend} i \emph{ComputeNode} prate testovi jedinica koda. Testovi se nalaze u zasebnom projektu.
@@ -546,13 +550,26 @@ public class DistributedSchedulerTests
 \label{fig:testscheduler}
 \end{figure}
 
+\section{Integracioni testovi}
+Integracioni testovi testiraju integraciju između komponenti sistema: \emph{Frontend}a i \emph{ComputeNode}-a.
+
 \section{Funkcionalni testovi}
-Funkcionalni testovi se pokreću nad klasterom u oblaku.
+Funkcionalni testovi testiraju funkcionalnost sistema iz ugla korisnika. U ovim testovima koristi se automatski generisana klijentska klasa \emph{DistributedCalculationSystemClient} nastala korišćenjem \emph{Swagger} alata. Ova klasa šalje zahteve ka \emph{Frontend} servisu, a u telu testova se proverava da li je odgovor od sistema očekivan.
 
-\subsection{Testiranje performansi}
-Testovi performansi sistema su skup testova koji se pokreću nad servisom pokrenutim u oblaku. Cilj ovog testiranje servisa je uvid u performanse sistema u odnosu na resurse dodeljene klasteru. Ovi  klastera
+Funkcionalni testovi se dele na nekoliko grupa:
+\begin{enumerate}
+\item Testovi nad lokalnim okruženjem - Testiraju osnovne funkcionalnosti servisa, u razvojnom okruženju.
+\item Testovi nad klasterom u oblaku - Testiraju osnovne funkcionalnosti servisa u produkcionom okruženju.
+\item Stres testovi - Skup testova koji se izvršavaju kako bi se analiziralo i unapredilo ponašanje sistema pod pritiskom. 
+\item Testovi performansi - Skup testova koji se pokreću nad servisom pokrenutim u oblaku, sa fokusom na praćenje vremena potrebnog da sistem odradi očekivani posao. Cilj ovog testiranje je uvid u performanse sistema u odnosu na resurse dodeljene klasteru.
+\end{enumerate}
 
-\subsection{Stres testiranje}
+Stres testovi i testovi performansi ispituju granice sistema. Oni su neophodni kako bi se na vreme razumela i unapredila uska grla sistema, kao i da bi se razumele mogućnosti sistema u skladu sa dodeljenim resursima.
+
+TODO evaluacija kada budem imala ove testove u zadovoljavajućoj formi
+
+\subsection{Testovi performansi nad klasterom sa različitim konfiguracijama}
+TODO
 
 
 % ------------------------------------------------------------------------------
