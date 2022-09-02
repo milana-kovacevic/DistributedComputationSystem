@@ -11,16 +11,19 @@ namespace Frontend.Engine
     {
         private readonly ILogger<DistributedScheduler> _logger;
         //private IDbContextFactory<JobContext> _contextFactory;
+        private readonly IServiceProvider _serviceProvider;
         private readonly Dictionary<int, Job> inProgressTasks = new();
         private IComputeNodeClientWrapper _computeNodeClientWrapper;
 
         public DistributedScheduler(
             ILogger<DistributedScheduler> logger,
+            IServiceProvider serviceProvider,
             //IDbContextFactory<JobContext> _contextFactory,
             IComputeNodeClientWrapper computeNodeClientWrapper)
         {
             this._logger = logger;
             //this._contextFactory = context;
+            this._serviceProvider = serviceProvider;
             this._computeNodeClientWrapper = computeNodeClientWrapper;
         }
 
@@ -33,6 +36,16 @@ namespace Frontend.Engine
         {
             try
             {
+                // Create a new scope to retrieve scoped services
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    // Get the DbContext instance
+                    var myDbContext = scope.ServiceProvider.GetRequiredService<JobContext>();
+
+                    //TODO update job state
+                }
+
+                _logger.LogInformation($"Scheduling job with id {job.Id}...");
                 // NOT DONE:
                 // [ADVANCED] use custom routing to available ComputeNodes using ingress setup
 

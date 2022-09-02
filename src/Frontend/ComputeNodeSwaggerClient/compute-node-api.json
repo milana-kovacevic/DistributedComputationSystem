@@ -97,7 +97,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "data": {
+          "inputData": {
             "type": "string",
             "nullable": true
           },
@@ -113,8 +113,8 @@
             "format": "date-time",
             "nullable": true
           },
-          "state": {
-            "$ref": "#/components/schemas/AtomicJobState"
+          "atomicJobResult": {
+            "$ref": "#/components/schemas/AtomicJobResult"
           }
         },
         "additionalProperties": false

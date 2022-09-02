@@ -9,21 +9,26 @@ namespace Frontend.Managers
     /// </summary>
     public class JobManager : IJobManager
     {
-        private readonly JobQueue jobQueue = new();
+        private readonly JobQueue _jobQueue;
+
+        public JobManager(JobQueue jobQueue)
+        {
+            this._jobQueue = jobQueue;
+        }
 
         /// </inheritdoc>
         public void Initialize(IEnumerable<Job> jobs)
         {
             foreach (var job in jobs)
             {
-                jobQueue.TryEnqueueJob(job);
+                _jobQueue.TryEnqueueJob(job);
             }
         }
 
         /// </inheritdoc>
         public bool TryAddJob(Job job)
         {
-            return jobQueue.TryEnqueueJob(job);
+            return _jobQueue.TryEnqueueJob(job);
         }
 
         /// </inheritdoc>
@@ -36,7 +41,7 @@ namespace Frontend.Managers
         /// </inheritdoc>
         public int GetNumberOfJobs()
         {
-            return jobQueue.GetNumberOfJobs();
+            return _jobQueue.GetNumberOfJobs();
         }
     }
 }

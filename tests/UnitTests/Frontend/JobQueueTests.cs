@@ -58,7 +58,8 @@ namespace UnitTests.Frontend
 
             foreach (var job in jobs)
             {
-                jobQueue.TryEnqueueJob(job);
+                var queueResult = jobQueue.TryEnqueueJob(job);
+                Assert.True(queueResult, "Job should be added to the queue.");
             }
 
             Assert.Equal(jobQueueLimit, jobQueue.GetNumberOfJobs());

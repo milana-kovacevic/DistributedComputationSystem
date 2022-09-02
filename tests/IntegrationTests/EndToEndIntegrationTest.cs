@@ -1,6 +1,8 @@
 using DistributedCalculationSystem;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
-namespace FunctionalTests
+namespace IntegrationTests
 {
     /// <summary>
     /// This is end to end test scenario.
@@ -11,11 +13,17 @@ namespace FunctionalTests
     /// </summary>
     public class EndToEndIntegrationTest
     {
+        private const string baseUrl = "http://host.docker.internal:8081";
+        DistributedCalculationSystemClient client = null;
+
+        public EndToEndIntegrationTest()
+        {
+            this.client = new DistributedCalculationSystemClient(baseUrl, new HttpClient());
+        }
+
         [Fact]
         public async Task ListAllJobs_Success()
         {
-            string baseUrl = "http://host.docker.internal:8081";
-            var client = new DistributedCalculationSystemClient(baseUrl, new HttpClient());
 
             var jobs = await client.AllAsync();
 
@@ -26,6 +34,28 @@ namespace FunctionalTests
             }
 
             Assert.NotEmpty(jobs);
+        }
+
+        [Fact]
+        public async Task RunJob_Success()
+        {
+            var inputData = new Collection<AtomicJobRequestData>();
+            var request = new JobRequestData() {
+                JobType = JobType.CalculateSumOfDigits,
+                InputData = inputData
+            };
+
+            var job = await client.CreateAsync(request);
+
+            Assert.NotNull(job);
+
+            // Verify job
+            var jobFromSystem = await client.JobsAsync(job.Id);
+            Assert.NotNull(jobFromSystem);
+
+            // TODO: Poll and verify result
+
+            // Delete job
         }
     }
 }

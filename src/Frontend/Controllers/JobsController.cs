@@ -58,11 +58,17 @@ namespace Frontend.Controllers
 
         // POST: api/Jobs/Create
         [HttpPost("Create")]
+        [ProducesResponseTypeAttribute(typeof(Job), StatusCodes.Status202Accepted)]
         public async Task<ActionResult<Job>> PostJob([FromBody] JobRequestData inputData)
         {
             if (_context.Job == null)
             {
                 return Problem("Entity set 'JobsContext.Job'  is null.");
+            }
+
+            if (inputData == null || inputData.InputData == null || !inputData.InputData.Any())
+            {
+                return BadRequest("InputData is not provided.");
             }
 
             var newJob = new Job(

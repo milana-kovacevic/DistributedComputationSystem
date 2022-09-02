@@ -31,6 +31,8 @@ namespace ComputeNode.Executor
                 }
             }
 
+            throw new Exception("Unhandled exception in ExecuteAsync in ComputeNode!");
+
             return result;
         });
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FunctionalTests
+namespace Integration
 {
     public static class TestConstants
     {
