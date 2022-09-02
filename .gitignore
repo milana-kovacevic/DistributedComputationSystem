@@ -21,6 +21,7 @@ tests/IntegrationTests/IntegrationTests.csproj.user
 tests/TestCommons/bin/**
 tests/TestCommons/obj/**
 tests/TestCommons/TestCommons.csproj.user
+paper/*.log
 paper/*.out
 paper/*.toc
 paper/*.pdf

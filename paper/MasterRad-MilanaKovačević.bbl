@@ -1,15 +1,67 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
-\bibitem{GuSh:243}
-Yuri Gurevich and Saharon Shelah.
-\newblock {Expected computation time for Hamiltonian path problem}.
-\newblock {\em SIAM Journal on Computing}, 16:486--502, 1987.
+\bibitem{AAD}
+{Azure Active Directory}.
+\newblock \url{https://azure.microsoft.com/en-gb/services/active-directory/}.
 
-\bibitem{PetrovicMikic2015}
-Petar Petrovi{\'c} and Mika Miki{\'c}.
-\newblock Nau{\v c}ni rad.
-\newblock In Miloje Milojevi{\'c}, editor, {\em Konferencija iz matematike i
-  ra{\v c}unarstva}, 2015.
-  
-  
+\bibitem{AKS}
+{Azure Kubernetes Service}.
+\newblock \url{https://docs.microsoft.com/en-us/azure/aks/}.
+
+\bibitem{Azure}
+{Microsoft Azure}.
+\newblock \url{https://azure.microsoft.com/}.
+
+\bibitem{AzureMonitor}
+{Azure Monitor}.
+\newblock \url{https://azure.microsoft.com/en-us/services/monitor/}.
+
+\bibitem{AzureSQLDB}
+{Azure SQL Database}.
+\newblock \url{https://azure.microsoft.com/en-us/products/azure-sql/database/}.
+
+\bibitem{AzurePortal}
+{Microsoft Azure Portal}.
+\newblock \url{https://portal.azure.com/}.
+
+\bibitem{Docker}
+{Docker}.
+\newblock \url{https://docs.docker.com/}.
+
+\bibitem{DockerArch}
+{Arhitektura Doker plaforme, preuzeta iz zvanične dokumentacije}.
+\newblock \url{https://docs.docker.com/get-started/overview/}.
+
+\bibitem{Kubernetes}
+{Kubernetes zvanična web stranica}.
+\newblock \url{https://kubernetes.io/}.
+
+\bibitem{KubernetesArchitecture}
+{Kubernetes Arhitektura}.
+\newblock \url{https://kubernetes.io/docs/concepts/overview/components/}.
+
+\bibitem{Moq}
+{Moq}.
+\newblock \url{https://github.com/moq/moq}.
+
+\bibitem{NSwag}
+{NSwag}.
+\newblock \url{https://github.com/domaindrivendev/Swashbuckle.AspNetCore}.
+
+\bibitem{OpenAPI}
+{OpenAPI}.
+\newblock \url{https://spec.openapis.org/oas/v3.1.0}.
+
+\bibitem{Swagger}
+{Swagger 3.1.0.}
+\newblock \url{https://swagger.io/}.
+
+\bibitem{Swashbuckle}
+{Swashbuckle}.
+\newblock \url{https://github.com/domaindrivendev/Swashbuckle.AspNetCore}.
+
+\bibitem{XUnit}
+{XUnit}.
+\newblock \url{https://xunit.net/}.
+
 \end{thebibliography}

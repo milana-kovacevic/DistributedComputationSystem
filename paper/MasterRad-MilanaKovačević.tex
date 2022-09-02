@@ -12,6 +12,9 @@
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
 \usepackage[latinica]{matfmaster}
 
+% Dodatni paketi
+\input{packages.tex}
+
 % Datoteka sa literaturom u BibTex tj. BibLaTeX/Biber formatu
 \bib{references}
 
@@ -93,9 +96,9 @@ Slučajevi upotrebe iz ugla korisnika su prikazani na slici \ref{fig:slucajupotr
 
 \begin{figure}[!ht]
   \centering
-  \label{fig:slucajupotrebe_korisnik}
   \includegraphics[width=0.6\textwidth]{./images/dijagram_slucajeva_upotrebe_korisnik.png}
   \caption{UML dijagram slučajeva upotrebe - Korisnik}
+  \label{fig:slucajupotrebe_korisnik}
 \end{figure}
 
 % Zakazivanje
@@ -240,9 +243,9 @@ Slučajevi upotrebe iz ugla administratora za bezbednost su prikazani na slici \
 
 \begin{figure}[!ht]
   \centering
-  \label{fig:slucajupotrebe_aadadmin}
   \includegraphics[width=0.6\textwidth]{./images/dijagram_slucajeva_upotrebe_administrator_sistema_aadadmin.png}
   \caption{UML dijagram slučajeva upotrebe - Administrator za bezbednost}
+  \label{fig:slucajupotrebe_aadadmin}
 \end{figure}
 
 
@@ -254,9 +257,9 @@ Slučajevi upotrebe iz ugla klaster administratora su prikazani na slici \ref{fi
 
 \begin{figure}[!ht]
   \centering
-  \label{fig:slucajupotrebe_admin_klastera}
   \includegraphics[width=0.6\textwidth]{./images/dijagram_slucajeva_upotrebe_administrator_klastera.png}
   \caption{UML dijagram slučajeva upotrebe - Klaster administrator}
+  \label{fig:slucajupotrebe_admin_klastera}
 \end{figure}
 
 % ------------------------------------------------------------------------------
@@ -274,22 +277,22 @@ Arhitektura platforme je predstavljena na slici \ref{fig:dockerarch}, preuzetoj 
 
 \begin{figure}[!ht]
   \centering
-  \label{fig:dockerarch}
   \includegraphics[width=1.0\textwidth]{./images/docker_architecture.png}
   \caption{Arhitektura Doker platforme}
+  \label{fig:dockerarch}
 \end{figure}
 
 Koraci potrebni da se napravi slika aplikacije se definišu u \emph{Dockerfile} datoteci. Svaka instrukcija u ovom fajlu kreira sloj slike (eng. \emph{layer}). U sličaju \emph{.NET Core} aplikacija, prvi korak je učitavanje željenog radnog okvira, zatim, (primera radi) pokretanje kompilacije izvornog koda i smeštanje izvršnog koda na željenu lokaciju. Krajnji korak je uglavnom definisanje komande za pokretanje aplikacije. Bitno je naglasiti da tokom razvijanja aplikacije, Doker prepoznaje koji slojevi slike koji su se promenili, te ponovo kreira samo njih i njihove naredne slojeve. Ovo čini generisanje slike efikasnom i brzom operacijom koja ne usporava programera, koji najčeće menja samo delove aplikacije. Kreirane slike se čuvaju u registru slika koji može biti lokalni ili negde u oblaku.
 
 Kontejner sadrži specifikaciju operativnog sistema na kojem se pokreće slika. Izbor \emph{.NET Core} radnog okvira omogućava pokretanje servisa na različitim platformama \emph{Windows}, \emph{Mac} i \emph{Linux}, bez izmena izvornog koda. Za izradu sistema su korišćeni \emph{Linux} kontejneri.
 
-Korišćeno okruženje za lokalno kreiranje i pokretanje kontejnera je \emph{Docker Desktop} prikazan na slici \ref{fig:dockerdesktop} TODO mapiranje referenci.
+Korišćeno okruženje za lokalno kreiranje i pokretanje kontejnera je \emph{Docker Desktop} prikazan na slici \ref{fig:dockerdesktop}.
 
 \begin{figure}[!ht]
   \centering
-  \label{fig:dockerdesktop}
   \includegraphics[width=1.0\textwidth]{./images/docker_desktop.png}
   \caption{Docker Desktop}
+  \label{fig:dockerdesktop}
 \end{figure}
 
 % Kubernetes detalji
@@ -312,9 +315,9 @@ Na slici \ref{fig:kubernetesarh} prikazana je arhitektura Kubernetes klastera, p
 
 \begin{figure}[!ht]
   \centering
-  \label{fig:kubernetesarh}
   \includegraphics[width=1.0\textwidth]{./images/kubernetes_architecture.png}
   \caption{Arhitektura Kubernetes klastera}
+  \label{fig:kubernetesarh}
 \end{figure}
 
 Kubernetes klaster se sastoji iz dve celine: kontrolnog dela i skupa radnih mašina (eng. \emph{nodes}). Radne mašine na sebi pokreću \emph{mahune} (eng. \emph{pod}) u okviru kojih je smešten jedan ili više kontejner, u okviru kojih se nalazi aplikacija. \emph{Pod} je najmanja jedinica koju je moguće kreirati i pokrenuti na klasteru, a kontejneri unutar njega imaju istu specifikaciju i dele lokalnu mrežu.
@@ -370,17 +373,18 @@ Najrelevantniji resursi korišćeni za pokretanje sistema u na \emph{Azure} plat
 \item \emph{Azure Kubernetes Service} \cite{AKS} - Resurs koji predstavlja \emph{Kubernetes} klaster.
 \item \emph{Azure SQL Database} \cite{AzureSQLDB} - Resurs koji predstavlja relacionu bazu podataka.
 \item \emph{Azure Active Directory} \cite{AAD} - Resurs koji omogućava kreiranje identiteta (npr. korisnike, grupe) i njihovo njegovo podešavanje (prava pristupa, login...).
-\item \emph{Azure Log Analytics}
+\item \emph{Azure Monitor} \cite{AzureMonitor} - Skup propratnih funkcionalnosti koje pružaju uvid u ponašanje Azure resursa. Sakuplja logove i metrike, daje alate za njihovo analiziranje, kao i mogućnost uzbunjivanja (eng. \emph{alerts}) i reagovanja na dešavanja od interesa. Ima podršku i za tehnike mašinskog učenja nad sakupljenim podacima.
 \end{enumerate}
 
 \section{Dodatni alati}
 
-\subsection{Swagger Open API}
-Servisi sistema imaju otvoreni serverski REST API ( todo link). Za automatsko generisanje klijenta za komuniciranje sa API-jevima, korišćen je paket .
-\cite{Swagger}
-Na osnovu datog \emph{json} fajla, on u toku kompilacije automatski generiše klijenta.
+\subsection{Swagger / OpenAPI}
 
-TODO
+\emph{OpenAPI} \cite{OpenAPI} je specifikacija \emph{REST API}-a koja ne zavisi od programskog jezika. \emph{Swagger} \cite{Swagger} predstavlja skup alata koji koriste \emph{OpenAPI} specifikaciju.
+
+Servisi kreirani u okviru sistema imaju otvoreni web \emph{REST API}. Korišćenjem \emph{Swagger} skupa alata su oni dokumentovani u standardizovanom formatu, u \emph{json} datoteci. Za generisanje ove specifikacije za \emph{.NET Core} aplikacije koristi se \emph{Swashbuckle} \cite{Swashbuckle} alat.
+
+Sa klijentske strane, koristi se alat \emph{NSwag} \cite{NSwag}. Na osnovu prethodno generisane \emph{json} datoteke, on ž tokom kompilacije generiše klasu koja sadriži \emph{HTTP} klijenta i potrebnu dokumentaciju. Ovo je praktičan i efikasan način da se automatski generiše kod klijenta pomoću kojeg se šalju zahtevi servisima sistema.
 
 % ------------------------------------------------------------------------------
 \chapter{Implementacija}
@@ -397,9 +401,9 @@ Arhitektura sistema je prikazana na slici \ref{fig:arhitektura}.
 
 \begin{figure}[!ht]
   \centering
-  \label{fig:arhitektura}
   \includegraphics[width=1.0\textwidth]{./images/arhitektura_sistema_dijagram_komponenti.png}
   \caption{UML dijagram komponenti - Arhitektura sistema}
+  \label{fig:arhitektura}
 \end{figure}
 
 Arhutekturalni obrazac korišćen prilikom razvoja pojedinačnih servisa sistema (Frontenda i Jedinice za izračunavanje) je Model-Pogled-Kontroler (eng. \emph{Model-View-Controller}), bez implementacije Pogled dela. Razlog za odabir ovog obrasca je što on uvodi podelu odgovornosti različitih delova servisa. Kontroler je okrenut ka spolja, i definiše interfejs za komunikaciju sa servisom. U slučaju Frontenda, on definiše API (eng. \emph{Application Programming Interface}) koji prima korisnikove zahteve za izvršavanje posla.
@@ -410,9 +414,9 @@ Proces autentikacije je prikazan na slici \ref{fig:autentikacija}.
 
 \begin{figure}[!ht]
   \centering
-  \label{fig:autentikacija}
   \includegraphics[width=1.0\textwidth]{./images/autentikacija_uml_dijagram_sekvence.png}
   \caption{UML dijagram sekvence - Autentikacija}
+  \label{fig:autentikacija}
 \end{figure}
 
 
@@ -422,9 +426,9 @@ ER (eng. \emph{Entity-Relation}) dijagram modela posla je prikazanan na slici \r
 
 \begin{figure}[!ht]
   \centering
-  \label{fig:erposao}
   \includegraphics[width=1.0\textwidth]{./images/uml_er_dijagram_posao.png}
   \caption{ER dijagram entiteta - Posao}
+  \label{fig:erposao}
 \end{figure}
 
 
@@ -434,9 +438,9 @@ Stanja kroz koja prolazi posao su pikazana na slici \ref{fig:stanjaposla}.
 
 \begin{figure}[!ht]
   \centering
-  \label{fig:stanjaposla}
   \includegraphics[width=1.0\textwidth]{./images/dijagram_stanja_posao.png}
   \caption{UML dijagram stanja - Posao}
+  \label{fig:stanjaposla}
 \end{figure}
 
 
@@ -451,15 +455,105 @@ TODO
 U realizaciji je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Za upravljanje i pristup resursima u okviru ove platforme koristi se  \emph{Azure portal} \cite{AzurePortal}.
 
 % ------------------------------------------------------------------------------
-\chapter{Testiranje sistema}
+\chapter{Testiranje}
 \label{chp:testiranjesistema}
 % ------------------------------------------------------------------------------
 
-Testiranje sistema TODO
+U ovom poglavlju su opisani načini testiranja implementiranog sistema. Za izradu testova korišćen je \emph{XUnit} \cite{XUnit} radni okvir.
+Svi testovi se nalaze na GitHub adresi projekta u \href{https://github.com/milana-kovacevic/DistributedComputationSystem/tree/main/tests}{tests} poddirektorijumu.
+Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na slici \ref{fig:testexplorer} je prikazan vizuelni prikaz rezultata izvršavanja testova u okruženju \emph{Microsoft Visual Studio}.
+% (TODO nova slika sa jos testova)
 
-\section{Unit testing}
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{./images/testovi.png}
+  \caption{Struktura foldera sa testovima}
+  \label{fig:testovi}
+\end{figure}
 
-\section{Functional testing}
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{./images/testexplorer.png}
+  \caption{Pokretanje testova iz \emph{Test Explorer}-a u okruženju \emph{Microsoft Visual Studio}}
+  \label{fig:testexplorer}
+\end{figure}
+
+
+%subfigures primer
+%\begin{figure}[ht]
+%\begin{subfigure}{.5\textwidth}
+%  \centering
+%  \includegraphics[width=1\textwidth]{./images/testexplorer.png}
+%  \caption{Struktura foldera sa testovima}
+%  \label{fig:testovi2}
+%\end{subfigure}
+%\begin{subfigure}{.5\textwidth}
+%  \centering
+%  \includegraphics[width=1\textwidth]{./images/testovi.png}
+%  \caption{Pokretanje testova iz \emph{Test Explorer}-a u okruženju \emph{Microsoft Visual Studio}}
+%  \label{fig:testexplorer2}
+%\end{subfigure}
+%\caption{Put your caption here}
+%\label{fig:fig}
+%\end{figure}
+
+
+Sistem je testiran na više nivoa, počevši od testiranja jedinica koda za svaku komponentu, zatim testova integracije, i, na najvišem nivou, funkcionalnih testova.
+
+\section{Testiranje jedinica koda}
+Komponente \emph{Frontend} i \emph{ComputeNode} prate testovi jedinica koda. Testovi se nalaze u zasebnom projektu.
+Tokom izrade testova jedinica koda, korišćen je radni okvir \emph{Moq} \cite{Moq} za mokovanje zavisnosti komponenata. U nastavku se nalazi slika \ref{fig:testscheduler} sa primerom testa jedinice koda.
+
+\begin{figure}[h!]
+\centering
+\begin{lstlisting}
+public class DistributedSchedulerTests
+{
+	private readonly ServiceProvider serviceProvider;
+	private readonly Mock<IComputeNodeClientWrapper> mockedComputeNodeClient = new();
+
+	public DistributedSchedulerTests()
+	{
+		var services = new ServiceCollection();
+		services.AddSingleton<ILoggerFactory, LoggerFactory>();
+		services.AddSingleton<ILogger<DistributedScheduler>, Logger<DistributedScheduler>>();
+
+		// Setup mocked ComputeNodeClient
+		mockedComputeNodeClient.Setup(m => m.RunAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+			.Returns(Task.FromResult(new ComputeNodeSwaggerClient.AtomicJobResult()));
+		services.AddScoped((services) => mockedComputeNodeClient.Object);
+
+		services.AddScoped<IScheduler, DistributedScheduler>();
+
+		serviceProvider = services.BuildServiceProvider();
+	}
+
+	[Fact]
+	public async Task ScheduleJobAsync_Success()
+	{
+		var scheduler = serviceProvider.GetService<IScheduler>();
+		Assert.NotNull(scheduler);
+
+		var jobToBeScheduled = UnitTestUtils.GetDummyJob();
+		await scheduler.ScheduleJobAsync(jobToBeScheduled);
+
+		mockedComputeNodeClient.Verify(client => client.RunAsync(It.IsAny<int>(), jobToBeScheduled.Id, It.IsAny<string>()), Times.AtLeastOnce());
+		Assert.NotEmpty(scheduler.GetInProgressTasks());
+	}
+}
+\end{lstlisting}
+\caption{Primer testa koji koristi \emph{Moq} radni okvir}
+\label{fig:testscheduler}
+\end{figure}
+
+\section{Funkcionalni testovi}
+Funkcionalni testovi se pokreću nad klasterom u oblaku.
+
+\subsection{Testiranje performansi}
+Testovi performansi sistema su skup testova koji se pokreću nad servisom pokrenutim u oblaku. Cilj ovog testiranje servisa je uvid u performanse sistema u odnosu na resurse dodeljene klasteru. Ovi  klastera
+
+\subsection{Stres testiranje}
+
 
 % ------------------------------------------------------------------------------
 \chapter{Praćenje metrika sistema}
