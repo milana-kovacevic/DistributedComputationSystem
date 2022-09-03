@@ -624,10 +624,26 @@ Na slici \ref{fig:frontendlogs} se nalazi prikaz stranice za pregled logova kont
 
 
 \section{Uzbunjivači}
-Korisnik koji ima pravo logovima i metrikama može da napravi uzbunjivača (eng. \emph{Alert}) koji bi na osnovu dostupnih metrika i logova, definisao situacije u kojima treba da nas uzbuni kao administratora servisa. Problemi u produkcionom okruženju se javljaju, i u tim slučajevima je cilj što pre reagovati i obezbediti da sistem bude zdrav i u funkciji.
-U nastavku se nalazi primer upozoranja u slučaju velikog broja grešaka na servisu.
 
-TODO alert kad computenode/frontend baca exceptione
+Korisnik koji ima pravo pristupa logovima i metrikama može da napravi automatsku uzbunu (eng. \emph{Alert}). Ovaj servis periodično proverava dostupne metrike i logove, i proverava da li su se ispunili uslovi predefinisani tokom njegovog kreiranja. Ukoliko zaključi da postoji problem, podiže uzbunu na specificirani način (mejlom, SMS-om, pozivom, notifikacijom) i automatski pokreće predefinisane akcije. Problemi u produkcionom okruženju se javljaju, i u tim slučajevima je cilj što pre reagovati i obezbediti da sistem bude zdrav i u funkciji.
+
+U nastavku se na slici \ref{fig:alertex} nalazi primer aktivnog upozoranja u slučaju specifičnih grešaka koje bacaju komponente sistema.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{./images/alert_unhandled_exceptions.png}
+  \caption{Aktivni uzbunjivač u slučaju neočkivanih grešaka u logovima kontejnera}
+  \label{fig:alertex}
+\end{figure}
+
+Na slici \ref{fig:alertmemory} nalazi primer aktivnog predefinisanog opšteg upozorenja u slučaju nedostatka memorije na mašinama. Analogno, postoji i uzbunjivač koji prati procenat iskorišćenosti procesora.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{./images/alert_memory_pressure.png}
+  \caption{Uzbunjivač u slučaju nedovoljno memorije u klasteru}
+  \label{fig:alertmemory}
+\end{figure}
 
 
 % ------------------------------------------------------------------------------
