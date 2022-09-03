@@ -463,7 +463,7 @@ U ovom poglavlju su opisani načini testiranja implementiranog sistema. Za izrad
 
 Svi testovi se nalaze na GitHub adresi projekta u \href{https://github.com/milana-kovacevic/DistributedComputationSystem/tree/main/tests}{tests} poddirektorijumu.
 
-\emph{XUnit} radni okvir ima podršku za pisanje dva tipa testova: činjenice (eng. \emph{Fact}) i teorije (eng. \emph{Theory}). Činjenice su testovi koji ne primaju argumente, dok teorije predstavljaju paremetrizovane testove. Specifikacijom atributa iznad tela funkcije testa se definišu ulazi nad kojima se test pokreće, što značajno olakšava generisanje testova sa različitim ulazima.
+\emph{XUnit} radni okvir ima podršku za pisanje dva tipa testova: činjenice (eng. \emph{Fact}) i teorije (eng. \emph{Theory}). Činjenice su testovi koji ne primaju argumente, dok teorije predstavljaju paremetrizovane testove. Specifikacijom atributa iznad tela funkcije teorije - testa, definišu se ulazi nad kojima se test pokreće, što značajno olakšava generisanje testova sa različitim ulazima.
 
 Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na slici \ref{fig:testexplorer} se nalazi vizuelni prikaz rezultata izvršavanja testova u okruženju \emph{Microsoft Visual Studio}.
 % (TODO nova slika sa jos testova)
@@ -505,8 +505,7 @@ Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na sli
 Sistem je testiran na više nivoa, počevši od testiranja jedinica koda za svaku komponentu, zatim testova integracije, i, na najvišem nivou, funkcionalnih testova koji ukljucuju klaster testove.
 
 \section{Testiranje jedinica koda}
-Komponente \emph{Frontend} i \emph{ComputeNode} prate testovi jedinica koda. Testovi se nalaze u zasebnom projektu.
-Tokom izrade testova jedinica koda, korišćen je radni okvir \emph{Moq} \cite{Moq} za mokovanje zavisnosti komponenata. U nastavku se nalazi slika \ref{fig:testscheduler} sa primerom testa jedinice koda.
+Komponente \emph{Frontend} i \emph{ComputeNode} prate testovi jedinica koda. Ovi testovi se nalaze u zasebnom projektu. Tokom izrade testova jedinica koda, korišćen je i radni okvir \emph{Moq} \cite{Moq} za "podmetanje" vrednosti u zavisnim delova koda. U nastavku se nalazi slika \ref{fig:testscheduler} sa primerom testa jedinice koda u okviru \emph{Frontend} komponente.
 
 \begin{figure}[h!]
 \centering
@@ -554,11 +553,11 @@ public class DistributedSchedulerTests
 Integracioni testovi testiraju integraciju između komponenti sistema: \emph{Frontend}a i \emph{ComputeNode}-a.
 
 \section{Funkcionalni testovi}
-Funkcionalni testovi testiraju funkcionalnost sistema iz ugla korisnika. U ovim testovima koristi se automatski generisana klijentska klasa \emph{DistributedCalculationSystemClient} nastala korišćenjem \emph{Swagger} alata. Ova klasa šalje zahteve ka \emph{Frontend} servisu, a u telu testova se proverava da li je odgovor od sistema očekivan.
+Funkcionalni testovi testiraju funkcionalnost sistema iz ugla korisnika. U ovim testovima koristi se automatski generisana klijentska klasa \emph{DistributedCalculationSystemClient} nastala korišćenjem \emph{Swagger} alata. Ovaj klijent šalje zahteve ka \emph{Frontend} servisu, a u telu testova se proverava da li je odgovor od sistema očekivan.
 
 Funkcionalni testovi se dele na nekoliko grupa:
 \begin{enumerate}
-\item Testovi nad lokalnim okruženjem - Testiraju osnovne funkcionalnosti servisa, u razvojnom okruženju.
+\item Testovi nad lokalnim okruženjem - Testiraju osnovne funkcionalnosti servisa, u razvojnom okruženju na lokalnoj mašini. Koriste se \emph{Frontend} i \emph{CumputeNode} aplikacije pokrenute u okviru Doker kontejnera sa predefinisanim adresama i portovima.
 \item Testovi nad klasterom u oblaku - Testiraju osnovne funkcionalnosti servisa u produkcionom okruženju.
 \item Stres testovi - Skup testova koji se izvršavaju kako bi se analiziralo i unapredilo ponašanje sistema pod pritiskom. 
 \item Testovi performansi - Skup testova koji se pokreću nad servisom pokrenutim u oblaku, sa fokusom na praćenje vremena potrebnog da sistem odradi očekivani posao. Cilj ovog testiranje je uvid u performanse sistema u odnosu na resurse dodeljene klasteru.
@@ -567,6 +566,9 @@ Funkcionalni testovi se dele na nekoliko grupa:
 Stres testovi i testovi performansi ispituju granice sistema. Oni su neophodni kako bi se na vreme razumela i unapredila uska grla sistema, kao i da bi se razumele mogućnosti sistema u skladu sa dodeljenim resursima.
 
 TODO evaluacija kada budem imala ove testove u zadovoljavajućoj formi
+
+TODO Test koji ukljucuje neki kompleksniji posao
+-- na primer, obrada foldera sa slikama i output koji ukljucuje primenjeni filter nad slikama.
 
 \subsection{Testovi performansi nad klasterom sa različitim konfiguracijama}
 TODO
@@ -577,24 +579,26 @@ TODO
 \label{chp:pracenjemetrika}
 % ------------------------------------------------------------------------------
 
-U ovom poglavlju će biti prikazane mogućnosti praćenja rada sistema uz pomoć \emph{Azure Monitor} servisa za praćenje ponašanja resursa u oblaku. Kako su aplikacije pokrenute u okviru \emph{Azure Kubernetes Service} klastera, dat je pregled načina na koji se analiziraju podaci o radu klastera. Na analogan način se može pratiti i ponašanje \emph{Azure SQL Database} baze podataka koju koristi sistem.
+U ovom poglavlju će biti prikazane mogućnosti praćenja rada sistema uz pomoć \emph{Azure Monitor} servisa za praćenje ponašanja resursa u oblaku. Kako su glavne komponente sistema pokrenute u okviru \emph{Azure Kubernetes Service} klastera, dat je pregled načina na koji se analiziraju podaci o radu klastera. Na analogan način se može pratiti i ponašanje \emph{Azure SQL Database} baze podataka koju koristi sistem.
 
 \section{Metrike}
 
-Metrike sistema predstavljaju informacije o njegovom radu u (skoro) realnom vremenu. Kroz metrike možemo da vidimo trenutnu iskorišćenost resursa klastera, status mašina, podova, kontejnera itd.
+Metrike sistema predstavljaju koncizne informacije o njegovom radu u (skoro) realnom vremenu. Kroz metrike možemo da vidimo trenutnu iskorišćenost resursa klastera, status mašina, podova, kontejnera itd.
 
-Na slici \ref{fig:aksinsights} je prikazan pogled na \emph{Insight} sekciju pripadajuceg klastera kojem se pristupa preko \emph{Azure Portal}a \emph{AzurePortal}. TODO slika sa vise korišćenja CPU - idealno nakon perf testiranja, i jos par recenica o tome
+Na slici \ref{fig:aksinsights} je prikazan pogled na \emph{Insight} sekciju pripadajuceg klastera kojem se pristupa preko portala \cite{AzurePortal}. 
+
+(TODO slika sa vise korišćenja CPU - idealno nakon perf testiranja, i jos par recenica o tome)
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{./images/aks_insights.png}
-  \caption{Pregled metrika klastera na \emph{Azure portalu}}
+  \caption{Pregled metrika klastera}
   \label{fig:aksinsights}
 \end{figure}
 
 
 TODO metrike health statusa klastera
-Na slici \ref{fig:clusterunhealthy} je prikazan pogled na \emph{Insight} sekciju pripadajuceg klastera u slučaju nezdravog Frontend servisa
+Na slici \ref{fig:clusterunhealthy} je prikazan pogled na \emph{Insight} sekciju pripadajuceg klastera u slučaju nezdravog Frontend servisa.
 
 \begin{figure}[!ht]
   \centering
@@ -619,20 +623,43 @@ Na slici \ref{fig:frontendlogs} se nalazi prikaz stranice za pregled logova kont
 \end{figure}
 
 
-\section{Alertovi}
-Na osnovu dostupnih metrika i logova, moguće je definisati situacije u kojima želimo da budemo obavešteni kao korisnik servisa. Problemi u produkcionom okruženju se javljaju, i u tim slučajevima je cilj što pre reagovati i obezbediti da sistem bude zdrav i u funkciji.
-U nastavku se nalazi prikaz definisanog upozoranja u slučaju velikog broja grešaka na servisu.
+\section{Uzbunjivači}
+Korisnik koji ima pravo logovima i metrikama može da napravi uzbunjivača (eng. \emph{Alert}) koji bi na osnovu dostupnih metrika i logova, definisao situacije u kojima treba da nas uzbuni kao administratora servisa. Problemi u produkcionom okruženju se javljaju, i u tim slučajevima je cilj što pre reagovati i obezbediti da sistem bude zdrav i u funkciji.
+U nastavku se nalazi primer upozoranja u slučaju velikog broja grešaka na servisu.
 
 TODO alert kad computenode/frontend baca exceptione
 
 
 % ------------------------------------------------------------------------------
-\chapter{Dalji razvoj sistema}
+\chapter{Pravci daljeg razvoja sistema}
 \label{chp:daljirazvoj}
-
 % ------------------------------------------------------------------------------
+U ovom poglavlju je predloženo nekoliko ideja u kojem smeru bi predstavljeni sistem za izračunavanje mogao da se razvija.
 
-Dalji razvoj sistema TODO
+\section{Generalizacija tipa poslova}
+
+Prikazani sistem u inicijalnoj implementaciji ume da obrađuje samo poslove koji se sastoji od niza atomičnih poslova. Dodavanje podrške za obradu novih tipova posla je moguća uz sitnije izmene, čija je suština u dodavanju klase koja izvršava specifični atomični posao. Ova klasa implementira \href{https://github.com/milana-kovacevic/DistributedComputationSystem/blob/main/src/ComputeNode/Executors/ISpecificJobExecutor.cs}{\emph{ISpecificJobExecutor} interfejs} u projektu jedinice za izvršavanje. Izbor koji tip posla će sledeći biti implementiran zavisi od potražnje na tržištu.
+
+Potpunu generalizaciju obrade atomičnih jedinica posla moguće je izvesti proširivanjem korisničkog interfejsa za zakazivanje posla, proširenjem interfejsa da mu ulazni parametar bude izvorni kod funkcije koju je potrebno izvršiti nad atomičnim poslovima. Tada bi korisnik, pored ulaznih podataka, prosledio i deo koda koji želi da se izvrši nad atomičnim poslovima na sistemu. Za podršku ovog slučaja upotrebe, potrebno je da sistem zna da prevede izvorni kod funkcije i rezultujuću funkciju prosledi jedinici za izvršavanje. Ovaj pristup podrazumeva bezbednosne provere unetog koda, kako bi se osigurali od napada na klaster.
+
+Dalja unapređenja bi mogla da uključe obradu poslova koji nisu nužno specificirani nizom svojih atomičnih podjedinica. Ovo podrazumeva da programer razume suštinu izvršavanja novog tipa posla, te generiše plan za distribuirano izvršavanje. Plan može da uključuje i agregaciju podrezultata zbog eventualnih zavisnosti podposlova.
+
+
+\section{Podrška za različite frontende}
+
+Implementirani frontend daje korisniku na korišćenje REST API. Dalji razvoj servisa bi mogao da podrži i druge klijent - server načine komunikacije, uključujući komunikaciju preko \emph{Web Socketa}. Takođe, moguće je izraditi \emph{Web} platformu i vizuelni korisnički interfejs za lakše korišćenje sistema.
+
+Sistem je moguće proširiti da uključuje podršku i za druge tipove autentikacije. Osnovna autentikacija je uključila integrisanje sa \emph{Azure Active Directory} provajderom identiteta. Ovo je moguće unaprediti dodavanjem odvojenu komponente za podršku za druge načine autentikacije (na primer, koriščenjem \emph{Google} naloga).
+
+Navedena poboljšanja bi dosta opteretila današnju implementaciju frontenda. Sa daljim razvojem u ovom delu servisa, trebalo bi razdvojiti implementaciju Frontend servisa od komponente za distribuirano zakazivanje, i nastaviti razvoj imajući u vidu pristup sa mikro-servisima. To bi uključivalo izradu drugih Frontend servisa koji bi komunicirali sa svojim klijentima.
+
+\section{Napredno zakazivanje poslova}
+
+Urađena implementacija se, prilikom izvršavanja atomičnih jedinica posla na jedinicama za izvršavanje, oslanja na Kubernetes podršku za balansiranje zahteva koji idu kroz mrežu do servisa. Napredniji način zakazivanja poslova bi uključio prepoznavanje adresa jedinica za izvšavanje (tj. njihovih podova) a zatim tu informaciju iskoristio za pametnije usmeravanje poslova na izvršavanje na tim adresama. U kalkulacije bi uključio i procene kompleksnosti posla, kao i dostupne resurse.
+
+Ova implementacija je dosta zahtevnija ali pruža potencijalnu priliku za bolje performanse. Međutim, pre početka same implementacije, potrebno je izvšiti opsežno testiranje i analiziranje postojućeg sistema kako bi se opravdala potreba za novim okrestratorom distribuiranog izvršavanja. Ukoliko osnovna varijanta algoritma za orkestriranje ne zadovoljava kriterijume performansi, onda ima smisla raditi ovakva unapređenja.
+
+Ukoliko je unapređenje opravdano, za početak, potrebno je napraviti infrastrukturu za pronalaženje adresa u okviru komponente koja vrši zakazivanje poslova. Dodatno, treba implementirati agoritam koji procenjuje kompleksnost posla. Na kraju, potrebno je i implementirati novi orkestrator. Kada je ovo sve urađeno, potrebno je uraditi testiranje sistema sa novom implementacijom, kao i AB testiranje sistema kako bi se doneli zaključci koji je princip bolji i zašto.
 
 
 % ------------------------------------------------------------------------------
