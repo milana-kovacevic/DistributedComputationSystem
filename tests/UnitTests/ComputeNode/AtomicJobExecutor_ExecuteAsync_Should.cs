@@ -1,9 +1,8 @@
 ﻿using ComputeNode.Exceptions;
 using ComputeNode.Executor;
-using ComputeNode.Executors;
 using ComputeNode.Models;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using TestCommons;
 
 namespace UnitTests.ComputeNode
 {
@@ -14,13 +13,9 @@ namespace UnitTests.ComputeNode
 
         public AtomicJobExecutor_ExecuteAsync_Should()
         {
+            // Configure services using common bootstraper for tests
             var services = new ServiceCollection();
-            services.AddSingleton<ILoggerFactory, LoggerFactory>();
-            services.AddSingleton<ILogger<AtomicJobExecutor>, Logger<AtomicJobExecutor>>();
-            services.AddScoped<IJobExecutor, AtomicJobExecutor>();
-            services.AddSingleton<ISpecificJobExecutorFactory, SpecificJobExecutorFactory>();
-            services.AddSingleton<CalculateNumberOfDigitsExecutor>();
-
+            TestBootstraper.ConfigureServices_ComputeNode(services);
 
             serviceProvider = services.BuildServiceProvider();
         }

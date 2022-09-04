@@ -1,6 +1,7 @@
 using DistributedCalculationSystem;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net;
 
 namespace IntegrationTests
 {
@@ -39,7 +40,12 @@ namespace IntegrationTests
         [Fact]
         public async Task RunJob_Success()
         {
-            var inputData = new Collection<AtomicJobRequestData>();
+            var inputData = new Collection<AtomicJobRequestData>()
+            {
+                new AtomicJobRequestData() { InputData ="123" },
+                new AtomicJobRequestData() { InputData ="42" }
+            };
+
             var request = new JobRequestData() {
                 JobType = JobType.CalculateSumOfDigits,
                 InputData = inputData
@@ -56,6 +62,18 @@ namespace IntegrationTests
             // TODO: Poll and verify result
 
             // Delete job
+        }
+
+        [Fact]
+        public async Task RunJob_BadRequest()
+        {
+            var request = new JobRequestData()
+            {
+                InputData = new Collection<AtomicJobRequestData>()
+            };
+
+            var exception = Assert.ThrowsAsync<ApiException>(() => client.CreateAsync(request));
+            Assert.Equal<int>((int)HttpStatusCode.BadRequest, exception.Result.StatusCode);
         }
     }
 }

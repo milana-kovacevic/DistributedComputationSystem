@@ -2,10 +2,9 @@
 using ComputeNode.Executor;
 using ComputeNode.Executors;
 using ComputeNode.Models;
-using Frontend.Engine;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Moq;
+using TestCommons;
 
 namespace UnitTests.ComputeNode
 {
@@ -17,17 +16,9 @@ namespace UnitTests.ComputeNode
 
         public AtomicJobControllerTests()
         {
-            // TODO put this in ConfigureServices method in test utils
+            // Configure test services.
             services = new ServiceCollection();
-            services.AddSingleton<IJobExecutor, AtomicJobExecutor>();
-            services.AddSingleton<ILoggerFactory, LoggerFactory>();
-            services.AddSingleton<ILogger<AtomicJobController>, Logger<AtomicJobController>>();
-            services.AddScoped<AtomicJobController>();
-            services.AddSingleton<ILogger<AtomicJobExecutor>, Logger<AtomicJobExecutor>>();
-            services.AddScoped<IJobExecutor, AtomicJobExecutor>();
-            services.AddSingleton<ISpecificJobExecutorFactory, SpecificJobExecutorFactory>();
-            services.AddSingleton<CalculateNumberOfDigitsExecutor>();
-
+            TestBootstraper.ConfigureServices_ComputeNode(services);
             serviceProvider = services.BuildServiceProvider();
 
             controller = serviceProvider.GetService<AtomicJobController>();

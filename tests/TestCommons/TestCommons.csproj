@@ -42,4 +42,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ComputeNode\ComputeNode.csproj" />
+    <ProjectReference Include="..\..\src\Frontend\Frontend.csproj" />
+  </ItemGroup>
+
 </Project>

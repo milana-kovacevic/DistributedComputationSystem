@@ -13,7 +13,6 @@ ContainerBootstraper.ConfigureServices(builder.Services);
 {
     var connectionStringProvider = new AzureSqlDbConnectionStringProvider(builder.Configuration);
     builder.Services.AddDbContext<JobContext>(options => options.UseSqlServer(connectionStringProvider.GetConnectionString()));
-    //builder.Services.AddDbContextFactory<JobContext>(options => options.UseSqlServer(connectionStringProvider.GetConnectionString()));
 }
 
 // Configure authentication

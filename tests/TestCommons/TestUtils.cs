@@ -1,8 +1,7 @@
-﻿using DistributedCalculationSystem;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Xunit;
 
-namespace UnitTests
+namespace TestCommons
 {
     public class TestUtils
     {

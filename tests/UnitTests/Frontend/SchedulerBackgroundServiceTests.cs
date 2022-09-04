@@ -3,6 +3,7 @@ using Frontend.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using TestCommons;
 
 namespace UnitTests.Frontend
 {

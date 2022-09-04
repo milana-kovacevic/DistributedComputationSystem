@@ -1,5 +1,6 @@
 using DistributedCalculationSystem;
 using System.Collections.ObjectModel;
+using System.Net;
 using Xunit;
 
 namespace FunctionalTests
@@ -15,7 +16,7 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public async void ListJobs_ClusterTest()
+        public async void ListJobs_Success()
         {
             var jobs = await client.AllAsync();
 
@@ -27,24 +28,30 @@ namespace FunctionalTests
 
             Assert.NotEmpty(jobs);
         }
+
         [Fact]
         public async void RunJob_Success()
         {
-            var inputData = new Collection<AtomicJobRequestData>()
+            int i = 0;
+            while (true)
             {
-                new AtomicJobRequestData() { InputData ="123" }, 
-                new AtomicJobRequestData() { InputData ="42" }
-            };
+                var inputData = new Collection<AtomicJobRequestData>()
+                {
+                    new AtomicJobRequestData() { InputData =$"{i++}" }
+                };
 
-            var request = new JobRequestData()
-            {
-                JobType = JobType.CalculateSumOfDigits,
-                InputData = inputData
-            };
+                var request = new JobRequestData()
+                {
+                    JobType = JobType.CalculateSumOfDigits,
+                    InputData = inputData
+                };
 
-            var job = await client.CreateAsync(request);
+                var job = await client.CreateAsync(request);
 
-            Assert.NotNull(job);
+                Assert.NotNull(job);
+
+                await Task.Delay(30000);
+            }
         }
     }
 }
