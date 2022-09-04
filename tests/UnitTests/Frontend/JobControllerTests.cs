@@ -1,9 +1,10 @@
 ﻿using Frontend.Controllers;
+using Frontend.Exceptions;
 using Frontend.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.ObjectModel;
+using System.Net;
 using TestCommons;
 
 namespace UnitTests.Frontend
@@ -38,10 +39,10 @@ namespace UnitTests.Frontend
             var result = await controller.PostJob(request);
 
             Assert.NotNull(result.Result);
-            //Assert.Equal<int>(result.Result, is BadRequest);
-            //var exception = Assert.ThrowsAsync<ApiException>(() => controller.PostJob(request));
+            Assert.Equal(typeof(BadRequestObjectResult), result.Result.GetType());
 
-            //Assert.Equal<int>((int)HttpStatusCode.BadRequest, exception.Result.StatusCode);
+            var badRequestResult = (BadRequestObjectResult)result.Result;
+            Assert.Equal(ExceptionMessages.InputDataNotProvided, badRequestResult.Value);
         }
     }
 }

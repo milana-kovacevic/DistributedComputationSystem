@@ -68,7 +68,7 @@ namespace Frontend.Controllers
 
             if (inputData == null || inputData.InputData == null || !inputData.InputData.Any())
             {
-                return BadRequest("InputData is not provided.");
+                return BadRequest(ExceptionMessages.InputDataNotProvided);
             }
 
             var newJob = new Job(

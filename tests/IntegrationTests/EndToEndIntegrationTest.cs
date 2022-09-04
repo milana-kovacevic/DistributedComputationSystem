@@ -23,21 +23,6 @@ namespace IntegrationTests
         }
 
         [Fact]
-        public async Task ListAllJobs_Success()
-        {
-
-            var jobs = await client.AllAsync();
-
-            Console.WriteLine("Jobs:");
-            foreach (var job in jobs)
-            {
-                Console.WriteLine(job.ToString());
-            }
-
-            Assert.NotEmpty(jobs);
-        }
-
-        [Fact]
         public async Task RunJob_Success()
         {
             var inputData = new Collection<AtomicJobRequestData>()
@@ -62,6 +47,20 @@ namespace IntegrationTests
             // TODO: Poll and verify result
 
             // Delete job
+        }
+
+        [Fact]
+        public async Task ListAllJobs_Success()
+        {
+            var jobs = await client.AllAsync();
+
+            Console.WriteLine("Jobs:");
+            foreach (var job in jobs)
+            {
+                Console.WriteLine(job.ToString());
+            }
+
+            Assert.NotEmpty(jobs);
         }
 
         [Fact]
