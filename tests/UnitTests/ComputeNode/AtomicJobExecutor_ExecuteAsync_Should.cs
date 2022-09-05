@@ -9,7 +9,7 @@ namespace UnitTests.ComputeNode
     public class AtomicJobExecutor_ExecuteAsync_Should
     {
         private readonly ServiceProvider serviceProvider;
-        private readonly IJobExecutor _executor;
+        private readonly IAtomicJobExecutor _executor;
 
         public AtomicJobExecutor_ExecuteAsync_Should()
         {
@@ -30,7 +30,7 @@ namespace UnitTests.ComputeNode
         {
             var atomicJob = GetDummyAtomicJob(inputData.ToString());
 
-            var _executor = serviceProvider.GetService<IJobExecutor>();
+            var _executor = serviceProvider.GetService<IAtomicJobExecutor>();
             var result = await _executor.ExecuteAsync(atomicJob);
 
             VerifyCommons(atomicJob, result);
@@ -49,7 +49,7 @@ namespace UnitTests.ComputeNode
         {
             var atomicJob = GetDummyAtomicJob(inputData);
 
-            var _executor = serviceProvider.GetService<IJobExecutor>();
+            var _executor = serviceProvider.GetService<IAtomicJobExecutor>();
             var result = await _executor.ExecuteAsync(atomicJob);
 
             VerifyCommons(atomicJob, result);

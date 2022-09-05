@@ -51,14 +51,15 @@ namespace TestCommons
 
         public static void ConfigureServices_ComputeNode(IServiceCollection services)
         {
-            services.AddSingleton<IJobExecutor, AtomicJobExecutor>();
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
-            services.AddSingleton<ILogger<AtomicJobController>, Logger<AtomicJobController>>();
-            services.AddScoped<AtomicJobController>();
             services.AddSingleton<ILogger<AtomicJobExecutor>, Logger<AtomicJobExecutor>>();
-            services.AddScoped<IJobExecutor, AtomicJobExecutor>();
+            services.AddSingleton<IAtomicJobExecutor, AtomicJobExecutor>();
+
             services.AddSingleton<ISpecificJobExecutorFactory, SpecificJobExecutorFactory>();
             services.AddSingleton<CalculateNumberOfDigitsExecutor>();
+
+            services.AddSingleton<ILogger<AtomicJobController>, Logger<AtomicJobController>>();
+            services.AddScoped<AtomicJobController>();
         }
     }
 }

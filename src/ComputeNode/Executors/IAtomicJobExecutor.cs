@@ -2,7 +2,7 @@
 
 namespace ComputeNode.Executor
 {
-    public interface IJobExecutor
+    public interface IAtomicJobExecutor
     {
         Task<AtomicJobResult> ExecuteAsync(AtomicJob atomicJob);
     }

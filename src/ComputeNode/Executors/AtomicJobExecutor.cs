@@ -8,7 +8,7 @@ namespace ComputeNode.Executor
     /// <summary>
     /// Atomic job executor.
     /// </summary>
-    public class AtomicJobExecutor : IJobExecutor
+    public class AtomicJobExecutor : IAtomicJobExecutor
     {
         private readonly ILogger<AtomicJobExecutor> _logger;
         private readonly ISpecificJobExecutorFactory _specificJobExecutorFactory;

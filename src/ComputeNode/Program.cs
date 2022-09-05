@@ -11,7 +11,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 });
 
 // Add services to the container.
-builder.Services.AddSingleton<IJobExecutor, AtomicJobExecutor>();
+builder.Services.AddSingleton<IAtomicJobExecutor, AtomicJobExecutor>();
 builder.Services.AddSingleton<ISpecificJobExecutorFactory, SpecificJobExecutorFactory>();
 builder.Services.AddSingleton<CalculateNumberOfDigitsExecutor>();
 

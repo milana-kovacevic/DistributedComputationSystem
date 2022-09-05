@@ -10,11 +10,11 @@ namespace ComputeNode.Controllers
     public class AtomicJobController : Controller
     {
         private readonly ILogger<AtomicJobController> _logger;
-        private readonly IJobExecutor _executor;
+        private readonly IAtomicJobExecutor _executor;
 
         public AtomicJobController(
             ILogger<AtomicJobController> logger,
-            IJobExecutor executor)
+            IAtomicJobExecutor executor)
         {
             _logger = logger;
             _executor = executor;
