@@ -307,7 +307,7 @@ Kubenetes omogućava:
 \item Korišćenje diska i drugih skladišta podataka,
 \item Automatsko ažuriranje (eng. \emph{update}) verzija aplikacije kao i vraćanje na prethodnu verziju,
 \item Upravljanje resursima i pakovanje kontejnera na mašine,
-\item \emph{Self-healing} - automatski restart kontejnera koji ne ispunjavaju uslove zrdravlja,
+\item \emph{Self-healing} - automatski restart kontejnera koji ne ispunjavaju uslove zdravlja,
 \item Upravljanje konfiguracijom, šiframa, sertifikatima i drugim osetljivim informacijama - uz samostalno ažuriranje bez potrebe za promenom slike kontejnera.
 \end{enumerate}
 
@@ -320,34 +320,36 @@ Na slici \ref{fig:kubernetesarh} prikazana je arhitektura Kubernetes klastera, p
   \label{fig:kubernetesarh}
 \end{figure}
 
-Kubernetes klaster se sastoji iz dve celine: kontrolnog dela i skupa radnih mašina (eng. \emph{nodes}). Radne mašine na sebi pokreću \emph{mahune} (eng. \emph{pod}) u okviru kojih je smešten jedan ili više kontejner, u okviru kojih se nalazi aplikacija. \emph{Pod} je najmanja jedinica koju je moguće kreirati i pokrenuti na klasteru, a kontejneri unutar njega imaju istu specifikaciju i dele lokalnu mrežu.
+Kubernetes klaster se sastoji iz dve celine: kontrolnog dela i skupa radnih mašina (eng. \emph{nodes}). Radne mašine na sebi pokreću \emph{mahune} (eng. \emph{pod}) u okviru kojih je smešten jedan ili više kontejner, u okviru kojih se nalazi aplikacija. Mahuna je najmanja jedinica koju je moguće kreirati i pokrenuti na klasteru, a kontejneri unutar njega imaju istu specifikaciju i dele lokalnu mrežu.
 
-Kako bi pokrenute aplikacije bile dostupne na mreži, kreira se apstrakcija koja se naziva \emph{Servis}. Ova apstrakcija povezuje grupu \emph{pod}ova i definiše način na koji im se pristupa: koristeći jedinstveno DNS ime ili IP adresu (eng. \emph{Service endpointa}). Slanjem poruka na ovu adresu, Kubernetes sam usmerava i balansira saobraćaj ka \emph{pod}ovima, od kojih svaki ima jedinstvenu IP adresu.
+Kako bi pokrenute aplikacije bile dostupne na mreži, kreira se apstrakcija koja se naziva \emph{Servis}. Ova apstrakcija povezuje grupu mahuna i definiše način na koji im se pristupa: koristeći jedinstveno DNS ime ili IP adresu (eng. \emph{Service endpoints}). Slanjem poruka na ovu adresu, Kubernetes sam usmerava i balansira saobraćaj ka mahunama, od kojih svaka ima jedinstvenu IP adresu.
 
 U okviru svake radne mašine je pokrenuto još nekoliko sistemskih procesa: 
 \begin{enumerate}
-\item \emph{kuberlet} - Zadužen za pokretanje kontejnera na mašini, kao i za praćenje rada kontejnera i njegovog zdravlja.
-\item \emph{kube-proxy} - Zadužen za podešavanje pravila mreže koja omogućavaju slanje i prijem poruka \emph{pod}ovima, koristeći specifikacije definisane servisima.
+\item \emph{kuberlet} - Zadužen za pokretanje kontejnera na mašini, kao i za praćenje rada kontejnera i njihovog zdravlja.
+\item \emph{kube-proxy} - Zadužen za podešavanje pravila mreže koja omogućavaju slanje i prijem poruka mahunama, koristeći specifikacije definisane servisima.
 \item \emph{Container runtime} - Zadužen za pokretanje kontejnera.
 \end{enumerate}
 
 Kontrolni deo klastera služi za upravljanje klasterom, a funkcionalnosti su obezbeđene kroz nekoliko komponenti:
 \begin{enumerate}
 \item \emph{kube-apiserver} - Server API koji prima zahteve upućene klasteru.
-\item \emph{etcd} - Služi za skladište podatka u klasteru.
-\item \emph{kube-scheduler} - Zadužen za smeštanje novih \emph{pod}-ova na mašine u skladu sa dostupnim i traženim resursima, kao i drugim specifikacijama (na primer, međusobni afinitet servisa).
+\item \emph{etcd} - Služi kao skladište podatka u klasteru.
+\item \emph{kube-scheduler} - Zadužen za smeštanje novih mahuna na mašine u skladu sa dostupnim i traženim resursima, kao i drugim specifikacijama (na primer, međusobni afinitet servisa).
 \item \emph{kube-controller-manager} - Sastoji se od nekoliko kontrolera:
 	\begin{enumerate}
 	\item \emph{node-controller} - Omogućava reagovanje u slučajevima kada mašine postanu nedostupne.
 	\item \emph{job-controller} - Izvšava dodatne poslove na klasteru.
-	\item \emph{endpoints-controller} - Podešava endpointe, tj. omogućava pronalaženje servisa i \emph{pod}ova koje obuhvata. Ažurira adrese u slučaju promena (dodavanja i brisanja \emph{pod}ova).
-	\item \emph{Servce Account \& Token Controller} - Resursi u okviru klastera se mogu podeliti po imenskim prostoima (eng. \emph{namespace}). Ovi kontroleri omogućavaju podešavaju prava pristupa u okviru imenskih prostora.
+	\item \emph{endpoints-controller} - Podešava endpointe, tj. omogućava pronalaženje servisa i mahuna koje obuhvata. Ažurira adrese u slučaju promena (dodavanja i brisanja mahuna).
+	\item \emph{Servce Account \& Token Controller} - Resursi u okviru klastera se mogu podeliti po imenskim prostorima (eng. \emph{namespace}). Ovi kontroleri omogućavaju podešavaju prava pristupa u okviru imenskih prostora.
 	\end{enumerate}
-\item \emph{cloud-controller-manager} - Predstavlja vezu između klastera i cloud providera.
+\item \emph{cloud-controller-manager} - Predstavlja vezu između klastera i snabdevača resursa u oblaku (eng.\emph{cloud provider}).
 \end{enumerate}
-Sve aplikacije su pokrenute na fizičkim mašinama koje su date na raspolaganju klasteru tokom njegovog kreiranja ili ažuriranja. Neki kontejneri/podovi mogu biti pokrenuti na istoj mašini, ali to zavisi od potražnje i raspodele resursa, kao i od drugih specifikacija. Jedna od prednosti Kubernetesa je što on vodi računa o tome gde je koji proces pokrenut, te pokušava da obezbedi najbolju otpornost na greške u sistemu (na primer, restartovanje mašine) i time obezbedi visoku dostupnost pokrenutih servisa.
+Sve aplikacije su pokrenute na fizičkim (ili virtuelnim) mašinama koje su date na raspolaganju klasteru tokom njegovog kreiranja ili ažuriranja. Neki kontejneri/mahune mogu biti pokrenuti na istoj mašini, ali to zavisi od potražnje i raspodele resursa, kao i od drugih specifikacija. Jedna od prednosti Kubernetesa je što on vodi računa o tome gde je koji proces pokrenut, te pokušava da obezbedi najbolju otpornost na greške u sistemu (na primer, restartovanje mašine) i time obezbedi visoku dostupnost pokrenutih servisa.
 
-Za definisanje resursa i njihovih specifikacija, kao i konfiguracije na klasteru koriste se datoteke sa ekstenzijom \emph{yaml}. Prosleđivanjem ovih datoteka klasteru se prave promene na klasteru.
+Dodatno, visoka dostupnost servisa se obezbeđuje kroz kontrolisani proces ažuriranja aplikacija, koristeći mehanizam koji se naziva eng. \emph{rolling update}. Ovaj sistem podrazumeva da se inkrementalno zamenjuju mahune, sa novokreiranim mahunama koje su pokrenute sa novom verzijom. Tokom ažuriranja, saobraćaj do mahuna se automatski raspoređuje samo ka dostupnim mahunama.
+
+Za definisanje resursa i njihovih specifikacija, kao i konfiguracije na klasteru koriste se datoteke sa ekstenzijom \emph{yaml}. Prosleđivanjem ovih datoteka klasteru se rade promene na klasteru.
 
 Za komunikaciju sa kontrolnim delom Kubernetes klastera se koristi kilijent \emph{kubectl}. Neke od komandi su predstavljene u nastavku.
 
@@ -362,6 +364,8 @@ kubectl get svc
 kubectl get pods
 // Pristup bash konzoli na mašini u okviru koje je pokrenut pod
 kubectl exec mypod-m96mk -it mypod-m96mk  -- /bin/bash
+// Podešava automatsko skaliranje broja mahuna
+kubectl autoscale deployment computenode --cpu-percent=50 --min=1 --max=10
 \end{verbatim}
 
 \section{Azure platforma}
@@ -373,7 +377,7 @@ Najrelevantniji resursi korišćeni za pokretanje sistema u na \emph{Azure} plat
 \item \emph{Azure Kubernetes Service} \cite{AKS} - Resurs koji predstavlja \emph{Kubernetes} klaster.
 \item \emph{Azure SQL Database} \cite{AzureSQLDB} - Resurs koji predstavlja relacionu bazu podataka.
 \item \emph{Azure Active Directory} \cite{AAD} - Resurs koji omogućava kreiranje identiteta (npr. korisnike, grupe) i njihovo njegovo podešavanje (prava pristupa, login...).
-\item \emph{Azure Monitor} \cite{AzureMonitor} - Skup propratnih funkcionalnosti koje pružaju uvid u ponašanje Azure resursa. Sakuplja logove i metrike, daje alate za njihovo analiziranje, kao i mogućnost uzbunjivanja (eng. \emph{alerts}) i reagovanja na dešavanja od interesa. Ima podršku i za tehnike mašinskog učenja nad sakupljenim podacima.
+\item \emph{Azure Monitor} \cite{AzureMonitor} - Skup propratnih funkcionalnosti koje pružaju uvid u ponašanje Azure resursa. Sakuplja logove i metrike, daje alate za njihovo analiziranje, kao i mogućnost uzbunjivanja (eng. \emph{alerts}) i reagovanja na dešavanja od interesa. Ima podršku i za tehnike mašinskog učenja nad sakupljenim podacima. Više o integraciji sa \emph{Azure Monitor}-om se nalazu u poglavlju \ref{chp:pracenjemetrika}.
 \end{enumerate}
 
 \section{Dodatni alati}
@@ -384,7 +388,7 @@ Najrelevantniji resursi korišćeni za pokretanje sistema u na \emph{Azure} plat
 
 Servisi kreirani u okviru sistema imaju otvoreni web \emph{REST API}. Korišćenjem \emph{Swagger} skupa alata su oni dokumentovani u standardizovanom formatu, u \emph{json} datoteci. Za generisanje ove specifikacije za \emph{.NET Core} aplikacije koristi se \emph{Swashbuckle} \cite{Swashbuckle} alat.
 
-Sa klijentske strane, koristi se alat \emph{NSwag} \cite{NSwag}. Na osnovu prethodno generisane \emph{json} datoteke, on ž tokom kompilacije generiše klasu koja sadriži \emph{HTTP} klijenta i potrebnu dokumentaciju. Ovo je praktičan i efikasan način da se automatski generiše kod klijenta pomoću kojeg se šalju zahtevi servisima sistema.
+Sa klijentske strane, koristi se alat \emph{NSwag} \cite{NSwag}. Na osnovu prethodno generisane \emph{json} datoteke, on tokom kompilacije generiše klasu koja sadriži \emph{HTTP} klijenta i potrebnu dokumentaciju. Ovo je praktičan i efikasan način da se automatski generiše kod klijenta pomoću kojeg se šalju zahtevi serveru.
 
 % ------------------------------------------------------------------------------
 \chapter{Implementacija}
@@ -583,7 +587,7 @@ U ovom poglavlju će biti prikazane mogućnosti praćenja rada sistema uz pomoć
 
 \section{Metrike}
 
-Metrike sistema predstavljaju koncizne informacije o njegovom radu u (skoro) realnom vremenu. Kroz metrike možemo da vidimo trenutnu iskorišćenost resursa klastera, status mašina, podova, kontejnera itd.
+Metrike sistema predstavljaju koncizne informacije o njegovom radu u (skoro) realnom vremenu. Kroz metrike možemo da vidimo trenutnu iskorišćenost resursa klastera, status mašina, mahuna, kontejnera itd.
 
 Na slici \ref{fig:aksinsights} je prikazan pogled na \emph{Insight} sekciju pripadajuceg klastera kojem se pristupa preko portala \cite{AzurePortal}. 
 
@@ -596,9 +600,7 @@ Na slici \ref{fig:aksinsights} je prikazan pogled na \emph{Insight} sekciju prip
   \label{fig:aksinsights}
 \end{figure}
 
-
-TODO metrike health statusa klastera
-Na slici \ref{fig:clusterunhealthy} je prikazan pogled na \emph{Insight} sekciju pripadajuceg klastera u slučaju nezdravog Frontend servisa.
+Na slici \ref{fig:clusterunhealthy} je prikazan pogled na \emph{Insight} sekciju pripadajućeg klastera u slučaju nezdravog Frontend servisa.
 
 \begin{figure}[!ht]
   \centering
@@ -611,9 +613,9 @@ Na slici \ref{fig:clusterunhealthy} je prikazan pogled na \emph{Insight} sekciju
 
 Logovi predstavljaju informacije o radu sistema koje ispisuju pokrenuti servisi u tekstualnom formatu. Oni su automatski sakupljeni sa mašina i prosleđeni na mesto za čuvanje, gde im je moguće pristupiti kroz propratne alate.
 
-Za pregled logova korišćen je servis \emph{Azure Log Analytics} dostupan u okviru \emph{Azure Monitor} servisa . Ovaj alat pruža moćan deskripivni jezik kojim se mogu pretraživati, filtrirati, sortirati i analizirati logovi. Rezultate upita je takođe moguće vizuelizovati u vidu grafikona.
+Za pregled logova korišćen je servis \emph{Azure Log Analytics} dostupan u okviru \emph{Azure Monitor} servisa. Ovaj alat pruža moćan deskriptivni jezik kojim se mogu pretraživati, filtrirati, sortirati i analizirati logovi. Rezultate upita je takođe moguće vizuelizovati u vidu grafikona.
 
-Na slici \ref{fig:frontendlogs} se nalazi prikaz stranice za pregled logova kontejnera koji sadrži Frontend pod.
+Na slici \ref{fig:frontendlogs} se nalazi prikaz stranice za pregled logova kontejnera koji sadrži Frontend aplikaciju.
 
 \begin{figure}[!ht]
   \centering
@@ -625,18 +627,18 @@ Na slici \ref{fig:frontendlogs} se nalazi prikaz stranice za pregled logova kont
 
 \section{Uzbunjivači}
 
-Korisnik koji ima pravo pristupa logovima i metrikama može da napravi automatsku uzbunu (eng. \emph{Alert}). Ovaj servis periodično proverava dostupne metrike i logove, i proverava da li su se ispunili uslovi predefinisani tokom njegovog kreiranja. Ukoliko zaključi da postoji problem, podiže uzbunu na specificirani način (mejlom, SMS-om, pozivom, notifikacijom) i automatski pokreće predefinisane akcije. Problemi u produkcionom okruženju se javljaju, i u tim slučajevima je cilj što pre reagovati i obezbediti da sistem bude zdrav i u funkciji.
+Korisnik koji ima pravo pristupa logovima i metrikama može da napravi automatsku uzbunu (eng. \emph{Alert}) u nekim situacijama od značaja. Ovaj servis periodično proverava dostupne metrike i logove, i proverava da li su se ispunjeni uslovi predefinisani tokom njegovog kreiranja. Ukoliko zaključi da postoji problem, podiže uzbunu na ranije definisan način (mejlom, SMS-om, pozivom, obaveštenjem) i, ukoliko postoje, automatski pokreće predefinisane akcije. Problemi u produkcionom okruženju se javljaju, i u tim slučajevima je cilj što pre reagovati i obezbediti da sistem bude zdrav i na raspolaganju korisnicima.
 
-U nastavku se na slici \ref{fig:alertex} nalazi primer aktivnog upozoranja u slučaju specifičnih grešaka koje bacaju komponente sistema.
+U nastavku se na slici \ref{fig:alertex} nalazi primer aktivnog upozoranja u slučaju grešaka koje bacaju komponente sistema.
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{./images/alert_unhandled_exceptions.png}
-  \caption{Aktivni uzbunjivač u slučaju neočkivanih grešaka u logovima kontejnera}
+  \caption{Aktivni uzbunjivač u slučaju neočkivanih grešaka prisutnim u logovima kontejnera}
   \label{fig:alertex}
 \end{figure}
 
-Na slici \ref{fig:alertmemory} nalazi primer aktivnog predefinisanog opšteg upozorenja u slučaju nedostatka memorije na mašinama. Analogno, postoji i uzbunjivač koji prati procenat iskorišćenosti procesora.
+Na slici \ref{fig:alertmemory} nalazi primer aktivnog opšteg upozorenja u slučaju nedostatka memorije na mašinama. Analogno, postoji i uzbunjivač koji prati procenat iskorišćenosti dostupnog procesora.
 
 \begin{figure}[!ht]
   \centering
@@ -656,7 +658,7 @@ U ovom poglavlju je predloženo nekoliko ideja u kojem smeru bi predstavljeni si
 
 Prikazani sistem u inicijalnoj implementaciji ume da obrađuje samo poslove koji se sastoji od niza atomičnih poslova. Dodavanje podrške za obradu novih tipova posla je moguća uz sitnije izmene, čija je suština u dodavanju klase koja izvršava specifični atomični posao. Ova klasa implementira \href{https://github.com/milana-kovacevic/DistributedComputationSystem/blob/main/src/ComputeNode/Executors/ISpecificJobExecutor.cs}{\emph{ISpecificJobExecutor} interfejs} u projektu jedinice za izvršavanje. Izbor koji tip posla će sledeći biti implementiran zavisi od potražnje na tržištu.
 
-Potpunu generalizaciju obrade atomičnih jedinica posla moguće je izvesti proširivanjem korisničkog interfejsa za zakazivanje posla, proširenjem interfejsa da mu ulazni parametar bude izvorni kod funkcije koju je potrebno izvršiti nad atomičnim poslovima. Tada bi korisnik, pored ulaznih podataka, prosledio i deo koda koji želi da se izvrši nad atomičnim poslovima na sistemu. Za podršku ovog slučaja upotrebe, potrebno je da sistem zna da prevede izvorni kod funkcije i rezultujuću funkciju prosledi jedinici za izvršavanje. Ovaj pristup podrazumeva bezbednosne provere unetog koda, kako bi se osigurali od napada na klaster.
+Potpunu generalizaciju obrade atomičnih jedinica posla moguće je izvesti proširivanjem korisničkog interfejsa za zakazivanje posla, tj. proširenjem interfejsa da mu ulazni parametar bude izvorni kod funkcije koju je potrebno izvršiti nad atomičnim poslovima. Tada bi korisnik, pored ulaznih podataka, prosledio i deo koda koji želi da se izvrši nad atomičnim poslovima na sistemu. Za podršku ovog slučaja upotrebe, potrebno je da sistem zna da prevede izvorni kod funkcije i rezultujuću funkciju prosledi jedinici za izvršavanje. Ovaj pristup podrazumeva bezbednosne provere unetog koda, kako bi se osigurali od napada na klaster.
 
 Dalja unapređenja bi mogla da uključe obradu poslova koji nisu nužno specificirani nizom svojih atomičnih podjedinica. Ovo podrazumeva da programer razume suštinu izvršavanja novog tipa posla, te generiše plan za distribuirano izvršavanje. Plan može da uključuje i agregaciju podrezultata zbog eventualnih zavisnosti podposlova.
 
@@ -667,7 +669,7 @@ Implementirani frontend daje korisniku na korišćenje REST API. Dalji razvoj se
 
 Sistem je moguće proširiti da uključuje podršku i za druge tipove autentikacije. Osnovna autentikacija je uključila integrisanje sa \emph{Azure Active Directory} provajderom identiteta. Ovo je moguće unaprediti dodavanjem odvojenu komponente za podršku za druge načine autentikacije (na primer, koriščenjem \emph{Google} naloga).
 
-Navedena poboljšanja bi dosta opteretila današnju implementaciju frontenda. Sa daljim razvojem u ovom delu servisa, trebalo bi razdvojiti implementaciju Frontend servisa od komponente za distribuirano zakazivanje, i nastaviti razvoj imajući u vidu pristup sa mikro-servisima. To bi uključivalo izradu drugih Frontend servisa koji bi komunicirali sa svojim klijentima.
+Navedena poboljšanja bi dosta opteretila današnju implementaciju frontenda. Sa daljim razvojem u ovom delu servisa, trebalo bi razdvojiti implementaciju Frontend servisa od komponente za distribuirano zakazivanje, i nastaviti razvoj imajući u vidu pristup razvijanja kroz mikro-servise. To bi uključilo izradu drugih Frontend servisa koji bi komunicirali sa svojim klijentima, a poslove slali na centralni servis zadužen za distribuirano orkestriranje.
 
 \section{Napredno zakazivanje poslova}
 
@@ -675,7 +677,7 @@ Urađena implementacija se, prilikom izvršavanja atomičnih jedinica posla na j
 
 Ova implementacija je dosta zahtevnija ali pruža potencijalnu priliku za bolje performanse. Međutim, pre početka same implementacije, potrebno je izvšiti opsežno testiranje i analiziranje postojućeg sistema kako bi se opravdala potreba za novim okrestratorom distribuiranog izvršavanja. Ukoliko osnovna varijanta algoritma za orkestriranje ne zadovoljava kriterijume performansi, onda ima smisla raditi ovakva unapređenja.
 
-Ukoliko je unapređenje opravdano, za početak, potrebno je napraviti infrastrukturu za pronalaženje adresa u okviru komponente koja vrši zakazivanje poslova. Dodatno, treba implementirati agoritam koji procenjuje kompleksnost posla. Na kraju, potrebno je i implementirati novi orkestrator. Kada je ovo sve urađeno, potrebno je uraditi testiranje sistema sa novom implementacijom, kao i AB testiranje sistema kako bi se doneli zaključci koji je princip bolji i zašto.
+Ukoliko je unapređenje opravdano, za početak, potrebno je napraviti infrastrukturu za pronalaženje adresa u okviru komponente koja vrši zakazivanje poslova. Dodatno, treba implementirati algoritam koji procenjuje kompleksnost posla u vidu potrebnih resursa za njegovo izračunavanje. Na kraju, potrebno je i implementirati novi orkestrator. Kada je ovo sve urađeno, potrebno je uraditi testiranje sistema sa novom implementacijom, kao i AB testiranje sistema kako bi se doneli zaključci koji je princip bolji i zašto.
 
 
 % ------------------------------------------------------------------------------
