@@ -1,9 +1,10 @@
-﻿using ComputeNodeSwaggerClient;
+﻿using FrontendAtomicJobResult = Frontend.Models.AtomicJobResult;
+using FrontendAtomicJobType = Frontend.Models.AtomicJobType;
 
 namespace Frontend.ComputeNodeSwaggerClient
 {
     public interface IComputeNodeClientWrapper
     {
-        Task<AtomicJobResult> RunAsync(int atomicJobId, int parentJobId, AtomicJobType atomicJobType, string inputData);
+        Task<FrontendAtomicJobResult> RunAsync(int atomicJobId, int parentJobId, FrontendAtomicJobType atomicJobType, string inputData);
     }
 }

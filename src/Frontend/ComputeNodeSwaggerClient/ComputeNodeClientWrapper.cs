@@ -1,5 +1,10 @@
 ﻿using ComputeNodeSwaggerClient;
 using Frontend.Topology;
+using Frontend.Models;
+using ComputeNodeAtomicJobResult = ComputeNodeSwaggerClient.AtomicJobResult;
+using FrontendAtomicJobResult = Frontend.Models.AtomicJobResult;
+using FrontendAtomicJobState = Frontend.Models.AtomicJobType;
+using Frontend.Mappers;
 
 namespace Frontend.ComputeNodeSwaggerClient
 {
@@ -18,9 +23,12 @@ namespace Frontend.ComputeNodeSwaggerClient
             _computeNodeClient = new ComputeNodeClient(computeNodeServiceAddress, _httpClient);
         }
 
-        public async Task<AtomicJobResult> RunAsync(int atomicJobId, int parentJobId, AtomicJobType atomicJobType, string inputData)
+        public async Task<FrontendAtomicJobResult> RunAsync(int atomicJobId, int parentJobId, FrontendAtomicJobState atomicJobType, string inputData)
         {
-            return await _computeNodeClient.RunAsync(atomicJobId, parentJobId, atomicJobType, inputData);
+            var computeNodeAtomicJobType = AtomicJobTypeMapper.Map(atomicJobType);
+            ComputeNodeAtomicJobResult result = await _computeNodeClient.RunAsync(atomicJobId, parentJobId, computeNodeAtomicJobType, inputData);
+
+            return AtomicJobResultMapper.Map(result);
         }
     }
 }

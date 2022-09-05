@@ -1,15 +1,22 @@
-﻿using ComputeNodeSwaggerClient;
-using AtomicJobTypeFrontend = Frontend.Models.AtomicJobType;
+﻿using FrontendAtomicJobType = Frontend.Models.AtomicJobType;
+using ComputeNodeAtomicJobType= ComputeNodeSwaggerClient.AtomicJobType;
 
 namespace Frontend.Mappers
 {
     public static class AtomicJobTypeMapper
     {
-        public static AtomicJobType Map(AtomicJobTypeFrontend atomicJobType)
+        public static ComputeNodeAtomicJobType Map(FrontendAtomicJobType atomicJobType)
         {
             string value = atomicJobType.ToString();
 
-            return (AtomicJobType)Enum.Parse(typeof(AtomicJobType), value);
+            return (ComputeNodeAtomicJobType)Enum.Parse(typeof(ComputeNodeAtomicJobType), value);
+        }
+
+        public static FrontendAtomicJobType Map(ComputeNodeAtomicJobType atomicJobType)
+        {
+            string value = atomicJobType.ToString();
+
+            return (FrontendAtomicJobType)Enum.Parse(typeof(FrontendAtomicJobType), value);
         }
     }
 }
