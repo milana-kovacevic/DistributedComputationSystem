@@ -2,8 +2,6 @@
 using Frontend.Extensions;
 using Frontend.Managers;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Packaging;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Frontend.Models
@@ -21,7 +19,14 @@ namespace Frontend.Models
                 {
                     // Populate internally Job manager with active jobs from the db.
                     // This is needed to reschedule unfinished jobs in case of the service restart.
-                    activeJobs = context.Job.AsEnumerable().Where(job => job.IsActive());
+
+                    // TODO this should be automatically populated due to forgein key constraint when seeding Job object
+                    // BUG
+                    var activeJobIds = context.JobResult.AsEnumerable()
+                        .Where(jobResult => jobResult.IsActive())
+                        .Select(jobResult => jobResult.JobId);
+
+                    activeJobs = activeJobs.Where(job => activeJobIds.Contains(job.Id));
 
                     if (activeJobs.Any() && context.AtomicJob.Any())
                     {

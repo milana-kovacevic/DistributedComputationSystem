@@ -3,15 +3,15 @@
 namespace Frontend.Extensions
 {
     /// <summary>
-    /// Extension methods for Job object.
+    /// Extension methods for Job and its related objects.
     /// </summary>
     public static class JobExtension
     {
-        public static bool IsActive(this Job job)
+        public static bool IsActive(this JobResult jobResult)
         {
-            return job.JobResult.State == JobState.Pending
-                || job.JobResult.State == JobState.Queued
-                || job.JobResult.State == JobState.InProgress;
+            return jobResult.State == JobState.Pending
+                || jobResult.State == JobState.Queued
+                || jobResult.State == JobState.InProgress;
         }
     }
 }

@@ -104,8 +104,9 @@ namespace Frontend.Controllers
                 return NotFound();
             }
 
-            // Only allow to cancel pending and inprogress jobs.
-            if (!job.IsActive())
+            // Only allow to cancel pending and in progress jobs.
+            // TODO BUG job result fetching
+            if (!job.JobResult.IsActive())
             {
                 return BadRequest($"Job is not active so it cannot be cancelled. Job state: {job.State}.");
             }
