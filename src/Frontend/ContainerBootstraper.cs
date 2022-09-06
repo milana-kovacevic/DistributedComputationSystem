@@ -1,7 +1,6 @@
 ﻿using Frontend.ComputeNodeSwaggerClient;
 using Frontend.Configuration;
 using Frontend.Data;
-using Frontend.DistributedOrchestrator;
 using Frontend.Engine;
 using Frontend.Managers;
 using Frontend.Providers;
@@ -16,7 +15,6 @@ namespace Frontend
         {
             services.AddSingleton<IFrontendConfiguration, FrontendConfiguration>();
             services.AddSingleton<IConnectionStringProvider, AzureSqlDbConnectionStringProvider>();
-            services.AddSingleton<IOrchestrator, DistributedOrchestrator.DistributedOrchestrator>();
             services.AddSingleton<IJobManager, JobManager>();
             services.AddSingleton<JobQueue>();
             services.AddSingleton<IAddressManager, AddressManager>();
