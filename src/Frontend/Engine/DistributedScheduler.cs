@@ -41,7 +41,7 @@ namespace Frontend.Engine
                 _logger.LogInformation($"Scheduling job with id {job.Id}...");
 
                 // Add parent job to list in progress tasks.
-                _jobExecutionMonitor.AddJob(job.Id);
+                _jobExecutionMonitor.AddJob(job.Id, job.AtomicJobs.Count);
 
                 // NOT DONE:
                 // [ADVANCED] use custom routing to available ComputeNodes using ingress setup.
@@ -68,6 +68,7 @@ namespace Frontend.Engine
         public IEnumerable<Job> GetInProgressTasks()
         {
             //return _jobExecutionMonitor.GetMonitoredJobs();
+            // TODO
             return new List<Job>();
         }
     }

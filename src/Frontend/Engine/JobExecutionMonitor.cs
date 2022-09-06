@@ -10,9 +10,8 @@ namespace Frontend.Engine
         private readonly ILogger<JobExecutionMonitor> _logger;
         private DbEntityManager _dbEntityManager;
 
-        // Dictionary for tracking running atomic jobs.
-        public static ConcurrentDictionary<int, ConcurrentDictionary<int, AtomicJobResult>> _inProgressTasks { get; } = new();
-
+        // Dictionary for tracking running jobs.
+        public static ConcurrentDictionary<int, JobDetails> _inProgressTasks { get; } = new();
 
         public JobExecutionMonitor(
             ILogger<JobExecutionMonitor> logger,
@@ -31,17 +30,17 @@ namespace Frontend.Engine
                 _dbEntityManager.UpdateJobState(jobId, JobState.Failed, error: ExceptionMessages.ParentJobFailed);
             }
 
-            if (_inProgressTasks.TryGetValue(jobId, out var jobDictionary))
+            if (_inProgressTasks.TryGetValue(jobId, out var jobDetails))
             {
                 _logger.LogInformation($"Removing atomic job from dictionary: {jobId} : {atomicJobId}");
-                jobDictionary.Remove(atomicJobId, out _);
+                
+                jobDetails.RemoveAtomicJob(atomicJobId, out _);
 
                 // If that was the last job in the dictionary, update the state of the parent job.
                 // Job is succeeded if all atomic jobs passed.
                 // If some atomic job passed, the value of the state of the job should be already set to Failed.
                 //
-                // TODO !!! track the number of pending atomic jobs separately - this is not correct
-                if (jobDictionary.Count == 0)
+                if (jobDetails.NumberOfRemainingAtomicJobs == 0)
                 {
                     JobState endResult = _dbEntityManager.UpdateJobStateToSuccessIfNotFailed(jobId, JobState.Succeeded);
 
@@ -50,16 +49,16 @@ namespace Frontend.Engine
             }
         }
 
-        internal void AddJob(int jobId)
+        internal void AddJob(int jobId, int totalNumberAfAtomicJobs)
         {
-            _inProgressTasks.TryAdd(jobId, new ConcurrentDictionary<int, AtomicJobResult>());
+            _inProgressTasks.TryAdd(jobId, new JobDetails(jobId, totalNumberAfAtomicJobs));
         }
 
         internal void AddAtomicJob(int jobId, int atomicJobId, AtomicJobResult atomicJobResult)
         {
-            if (_inProgressTasks.TryGetValue(jobId, out var jobDictionary))
+            if (_inProgressTasks.TryGetValue(jobId, out var jobDetails))
             {
-                jobDictionary.TryAdd(atomicJobId, atomicJobResult);
+                jobDetails.TryAddAtomicJob(atomicJobId, atomicJobResult);
 
                 _logger.LogInformation($"Added job to dictionary: {jobId} : {atomicJobId}");
             }

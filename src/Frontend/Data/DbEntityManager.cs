@@ -7,7 +7,6 @@ namespace Frontend.Data
         private readonly ILogger<DbEntityManager> _logger;
         private readonly IServiceProvider _serviceProvider;
 
-
         public DbEntityManager(
             ILogger<DbEntityManager> logger,
             IServiceProvider serviceProvider)
@@ -16,6 +15,7 @@ namespace Frontend.Data
             _serviceProvider = serviceProvider;
         }
 
+        // TODO deduplicate code
         public void UpdateJobState(int jobId, JobState newState, string error = "")
         {
             _logger.LogInformation($"Updating job {jobId} state to: {newState}");
@@ -68,6 +68,7 @@ namespace Frontend.Data
             }
         }
 
+        // TODO deduplicate code
         public void UpdateAtomicJobState(int jobId, int atomicJobId, AtomicJobState newState)
         {
             _logger.LogInformation($"Updating atomic job {jobId}:{atomicJobId} state to: {newState}");
@@ -86,6 +87,7 @@ namespace Frontend.Data
             }
         }
 
+        // TODO deduplicate code
         public void UpdateAtomicJobResult(int jobId, int atomicJobId, AtomicJobResult atomicJobResult)
         {
             _logger.LogInformation($"Updating atomic job {jobId}:{atomicJobId} result: {atomicJobResult.State}");
