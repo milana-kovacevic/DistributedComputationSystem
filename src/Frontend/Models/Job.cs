@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Frontend.Models
 {
@@ -8,9 +8,12 @@ namespace Frontend.Models
 
         public JobType JobType { get; set; }
 
+        [JsonIgnore]
         public ICollection<AtomicJob> AtomicJobs { get; set; }
 
         public JobResult JobResult { get; set; }
+        
+        [JsonIgnore]
         public JobState State => JobResult.State;
 
         public Job()

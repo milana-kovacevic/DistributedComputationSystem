@@ -5,6 +5,7 @@ namespace Frontend.Models
 {
     public class JobResult
     {
+        [JsonIgnore]
         public int JobId { get; set; }
 
         public JobState State { get; set; }

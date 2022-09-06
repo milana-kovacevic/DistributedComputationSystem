@@ -31,11 +31,20 @@ namespace Frontend.Controllers
         [HttpGet("All")]
         public async Task<ActionResult<IEnumerable<Job>>> GetJob()
         {
-          if (_context.Job == null)
-          {
-              return NotFound();
-          }
-            return await _context.Job.ToListAsync();
+            if (_context.Job == null)
+            {
+                return NotFound();
+            }
+
+            // TODO fetch result as forgein key
+            var jobResults = await _context.JobResult.ToListAsync();
+            var jobs = await _context.Job.ToListAsync();
+            foreach (var job in jobs)
+            {
+                job.JobResult = jobResults.SingleOrDefault(jr => job.Id == jr.JobId);
+            }
+
+            return jobs;
         }
 
         // GET: api/Jobs/5
@@ -52,6 +61,10 @@ namespace Frontend.Controllers
             {
                 return NotFound();
             }
+
+            // TODO fetch result as forgein key
+            var jobResult = await _context.JobResult.FindAsync(id);
+            job.JobResult = jobResult;
 
             return job;
         }
