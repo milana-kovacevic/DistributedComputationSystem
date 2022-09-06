@@ -1,7 +1,6 @@
-﻿using ComputeNodeSwaggerClient;
-using Frontend.ComputeNodeSwaggerClient;
+﻿using Frontend.ComputeNodeSwaggerClient;
+using Frontend.Data;
 using Frontend.Exceptions;
-using Frontend.Mappers;
 using Frontend.Models;
 
 namespace Frontend.Engine
@@ -9,41 +8,83 @@ namespace Frontend.Engine
     public class AtomicJobScheduler : IAtomicJobScheduler
     {
         private readonly ILogger<AtomicJobScheduler> _logger;
+        private readonly IServiceProvider _serviceProvider;
         private IComputeNodeClientWrapper _computeNodeClientWrapper;
+        private JobExecutionMonitor _jobExecutionMonitor;
+        private DbEntityManager _dbEntityManager;
+
 
         public AtomicJobScheduler(
             ILogger<AtomicJobScheduler> logger,
-            IComputeNodeClientWrapper computeNodeClientWrapper)
+            IServiceProvider serviceProvider,
+            IComputeNodeClientWrapper computeNodeClientWrapper,
+            JobExecutionMonitor jobExecutionMonitor,
+            DbEntityManager dbEntityManager)
         {
             _logger = logger;
-            this._computeNodeClientWrapper = computeNodeClientWrapper;
+            _serviceProvider = serviceProvider;
+            _computeNodeClientWrapper = computeNodeClientWrapper;
+            _jobExecutionMonitor = jobExecutionMonitor;
+            _dbEntityManager = dbEntityManager;
         }
 
-        public async Task<AtomicJobResult> ScheduleAsync(AtomicJob job)
+        public async Task ScheduleAsync(AtomicJob job)
         {
-            try
+            // Use thread pool to asyncly run atomic jobs.
+            ThreadPool.QueueUserWorkItem(new WaitCallback(async (obj) =>
             {
-                ComputeNodeSwaggerClient.AtomicJobResult result = _computeNodeClientWrapper.RunAsync(
-                        job.AtomicJobId, // TODO
-                        job.JobId,
-                        AtomicJobTypeMapper.Map(job.JobType),
-                        job.InputData);
-                _logger.LogInformation($"JobId {0}; AtomicJobId {job.JobId}; ResultState: {result.Status}; Result {result.Result}; Error {result.Error}");
-
-            }
-            catch (Exception e)
-            {
-                var errorMessage = string.Format(ExceptionMessages.UnhandledException, e.Message);
-                _logger.LogError(e, errorMessage);
-
-                return new AtomicJobResult()
+                AtomicJobResult result = new AtomicJobResult()
                 {
                     AtomicJobId = job.AtomicJobId,
                     JobId = job.JobId,
-                    Error = errorMessage,
-                    State = AtomicJobState.Failed
+                    StartTime = DateTime.UtcNow,
+                    State = AtomicJobState.InProgress
                 };
-            }
+
+                // TODO Execute with retry
+                try
+                {
+                    var unit = (AtomicJob)obj;
+                    _logger.LogInformation($"Thread {Thread.CurrentThread.GetHashCode()} consumes JobId {unit.JobId}; AtomicJobId {unit.AtomicJobId}");
+
+                    _jobExecutionMonitor.AddAtomicJob(unit.JobId, unit.AtomicJobId, result);
+
+                    // Update atomic job state
+                    _dbEntityManager.UpdateAtomicJobState(unit.JobId, unit.AtomicJobId, AtomicJobState.InProgress);
+
+                    // Run the job
+                    result = await _computeNodeClientWrapper.RunAsync(
+                            job.AtomicJobId,
+                            job.JobId,
+                            job.JobType,
+                            job.InputData);
+
+                    // Update atomic job result in database.
+                    _dbEntityManager.UpdateAtomicJobResult(unit.JobId, unit.AtomicJobId, result);
+
+                    _logger.LogInformation($"Completed: JobId {unit.JobId}; AtomicJobId {unit.AtomicJobId}; ResultState: {result.State}");
+                    
+                    _jobExecutionMonitor.NotifyAtomicJobCompletion(unit.JobId, unit.AtomicJobId, result.State);
+                }
+                catch (Exception e)
+                {
+                    var errorMessage = string.Format(ExceptionMessages.UnhandledException, e.Message);
+                    _logger.LogError(e, errorMessage);
+
+                    _jobExecutionMonitor.NotifyAtomicJobCompletion(job.JobId, job.AtomicJobId, AtomicJobState.Failed);
+
+                    result = new AtomicJobResult()
+                    {
+                        AtomicJobId = job.AtomicJobId,
+                        JobId = job.JobId,
+                        Error = errorMessage,
+                        State = AtomicJobState.Failed
+                    };
+
+                    _dbEntityManager.UpdateAtomicJobResult(job.JobId, job.AtomicJobId, result);
+                }
+            }),
+            job);
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using Frontend.Models;
+using System.Collections.Concurrent;
 
 namespace Frontend.Engine
 {
     public interface IAtomicJobScheduler
     {
-        Task<AtomicJobResult> ScheduleAsync(AtomicJob atomicJob);
+        Task ScheduleAsync(AtomicJob atomicJob);
     }
 }

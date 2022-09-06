@@ -31,15 +31,23 @@ namespace TestCommons
             services.AddSingleton<IAddressManager, AddressManager>();
             services.AddSingleton<IComputeNodeClientWrapper, ComputeNodeClientWrapper>();
             services.AddSingleton<IScheduler, DistributedScheduler>();
+            services.AddSingleton<IAtomicJobScheduler, AtomicJobScheduler>();
+            services.AddSingleton<JobExecutionMonitor>();
+            services.AddSingleton<DbEntityManager>();
+
+            // Loggers
+            services.AddSingleton<ILoggerFactory, LoggerFactory>();
+            services.AddSingleton<ILogger<DistributedScheduler>, Logger<DistributedScheduler>>();
+            services.AddSingleton<ILogger<AtomicJobScheduler>, Logger<AtomicJobScheduler>>();
+            services.AddSingleton<ILogger<JobsController>, Logger<JobsController>>();
+            services.AddSingleton<ILogger<DbEntityManager>, Logger<DbEntityManager>>();
+            services.AddSingleton<ILogger<JobExecutionMonitor>, Logger<JobExecutionMonitor>>();
 
             // Controllers
-            services.AddSingleton<ILoggerFactory, LoggerFactory>();
-            services.AddSingleton<ILogger<JobsController>, Logger<JobsController>>();
             services.AddScoped<JobsController>();
 
             // Add background task for job scheduler.
             //services.AddHostedService<SchedulerBackgroundService>();
-
 
             // Configure database context.
             {

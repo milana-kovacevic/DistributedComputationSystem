@@ -78,13 +78,13 @@ namespace Frontend.Controllers
             // Using added job as id is auto-populated.
             var addedJob = _context.Job.Add(newJob);
 
+            await _context.SaveChangesAsync();
+
             if (!_jobManager.TryAddJob(addedJob.Entity))
             {
                 _logger.LogError("Failed to add new job to queue");
                 return Problem(ExceptionMessages.SystemTooBusy, statusCode: (int)StatusCodes.Status503ServiceUnavailable);
             }
-
-            await _context.SaveChangesAsync();
 
             return AcceptedAtAction("GetJob", new { id = addedJob.Entity.Id }, addedJob.Entity);
         }

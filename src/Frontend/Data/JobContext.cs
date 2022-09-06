@@ -52,5 +52,9 @@ namespace Frontend.Data
         public DbSet<AtomicJob>? AtomicJob { get; set; }
 
         public DbSet<AtomicJobResult>? AtomicJobResult { get; set; }
+
+        public AtomicJobResult? GetAtomicJobResult(int jobId, int atomicJobId) => AtomicJobResult
+            ?.Where(j => j.JobId == jobId && j.AtomicJobId == atomicJobId)
+            .SingleOrDefault();
     }
 }

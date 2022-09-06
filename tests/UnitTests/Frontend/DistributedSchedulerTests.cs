@@ -1,9 +1,15 @@
 ﻿using ComputeNodeSwaggerClient;
 using Frontend.ComputeNodeSwaggerClient;
 using Frontend.Engine;
+using Frontend.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using FrontendAtomicJobType = Frontend.Models.AtomicJobType;
+using FrontendAtomicJobResult = Frontend.Models.AtomicJobResult;
+using Frontend.Controllers;
+using Microsoft.AspNetCore.Mvc;
+using TestCommons;
 
 namespace UnitTests.Frontend
 {
@@ -14,13 +20,13 @@ namespace UnitTests.Frontend
 
         public DistributedSchedulerTests()
         {
+            // Configure services using common bootstraper for tests
             var services = new ServiceCollection();
-            services.AddSingleton<ILoggerFactory, LoggerFactory>();
-            services.AddSingleton<ILogger<DistributedScheduler>, Logger<DistributedScheduler>>();
+            TestBootstraper.ConfigureServices_Frontend(services);
 
             // Setup mocked ComputeNodeClient
-            mockedComputeNodeClient.Setup(m => m.RunAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<AtomicJobType>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(new ComputeNodeSwaggerClient.AtomicJobResult()));
+            mockedComputeNodeClient.Setup(m => m.RunAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<FrontendAtomicJobType>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new FrontendAtomicJobResult()));
             services.AddScoped((services) => mockedComputeNodeClient.Object);
 
             services.AddScoped<IScheduler, DistributedScheduler>();
@@ -37,7 +43,7 @@ namespace UnitTests.Frontend
             var jobToBeScheduled = UnitTestUtils.GetDummyJob();
             await scheduler.ScheduleJobAsync(jobToBeScheduled);
 
-            mockedComputeNodeClient.Verify(client => client.RunAsync(It.IsAny<int>(), jobToBeScheduled.Id, It.IsAny<AtomicJobType>(), It.IsAny<string>()), Times.AtLeastOnce());
+            mockedComputeNodeClient.Verify(client => client.RunAsync(It.IsAny<int>(), jobToBeScheduled.Id, It.IsAny<FrontendAtomicJobType>(), It.IsAny<string>()), Times.AtLeastOnce());
             Assert.NotEmpty(scheduler.GetInProgressTasks());
         }
     }

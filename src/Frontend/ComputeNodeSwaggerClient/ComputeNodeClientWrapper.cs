@@ -1,6 +1,5 @@
 ﻿using ComputeNodeSwaggerClient;
 using Frontend.Topology;
-using Frontend.Models;
 using ComputeNodeAtomicJobResult = ComputeNodeSwaggerClient.AtomicJobResult;
 using FrontendAtomicJobResult = Frontend.Models.AtomicJobResult;
 using FrontendAtomicJobState = Frontend.Models.AtomicJobType;

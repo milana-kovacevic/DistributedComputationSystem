@@ -47,7 +47,8 @@ namespace Frontend.Engine
                         continue;
                     }
 
-                    // Schedule job.
+                    // Schedule job one at the time.
+                    // TODO use thread pooling
                     _logger.LogInformation($"Scheduling job with id {jobToBeScheduled.Id}.");
                     await this._scheduler.ScheduleJobAsync(jobToBeScheduled);
                 }
