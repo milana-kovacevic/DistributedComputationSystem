@@ -31,6 +31,7 @@ namespace Frontend.Data
                 {
                     jobResultFromDb.State = newState;
                     jobResultFromDb.Error = error;
+                    jobResultFromDb.EndTime = DateTime.UtcNow;
 
                     jobContext.SaveChanges();
                 }
@@ -57,6 +58,7 @@ namespace Frontend.Data
                 if (jobResultFromDb != null && jobResultFromDb.State != JobState.Failed)
                 {
                     jobResultFromDb.State = newState;
+                    jobResultFromDb.EndTime = DateTime.UtcNow;
                     jobContext.SaveChanges();
 
                     return newState;
