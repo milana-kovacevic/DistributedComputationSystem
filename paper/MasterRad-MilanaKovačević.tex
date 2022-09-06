@@ -50,7 +50,7 @@
 % Strana sa podacima o mentoru i članovima komisije
 \komisija
 % Strana sa posvetom (u odabranom pismu)
-\posveta{Porodici i najbližima na strpljenju i podršci tokom studiranja}
+\posveta{Porodici i najbližima za strpljenje i podršku tokom studiranja}
 % Strana sa podacima o disertaciji na srpskom jeziku
 \apstrakt
 % Sadržaj teze
@@ -268,23 +268,23 @@ Slučajevi upotrebe iz ugla klaster administratora su prikazani na slici \ref{fi
 % ------------------------------------------------------------------------------
 
 U ovom poglavlju biće opisane tehnologije i alati korišćenih prilikom programske realizacije sistema.
-Za implementaciju je korišćen programski jezik C\#, i \emph{.NET Core 6.0} radni okvir. Korišćeno razvojno okruženje je \emph{Microsoft Visual Studio Community 2022} i operativni sistem \emph{Windows 10}.
+Za implementaciju je korišćen programski jezik C\#, i radni okvir \emph{.NET Core 6.0}. Korišćeno razvojno okruženje je \emph{Microsoft Visual Studio Community 2022} i operativni sistem \emph{Windows 10}.
 
 \section{Doker platforma}
-Za pokretanje aplikacija je korišćena Doker platforma (eng. \emph{Docker}) \cite{Docker}. Prednosti korišćenja ove platforme su monogstuke. Za početak, ona razdvaja razvijanje aplikacije od infrastrukture na kojoj će biti pokrenuta. Aplikacija je spakovana u izolovano okruženje koje se naziva kontejner (eng. \emph{container}). Kontejneri sadrže sve (a u idealnom slučaju, samo) ono što je neophodno za pokretanje aplikacije, u vidu strukture koja se naziva slika (eng. \emph{image}). To čini da su kontejneri lagani za prenošenje, za razliku od virtuelnih mašina koje u teoriji mogu pružiti istu funkcionalnost. Spakovana aplikacija može biti pokrenuta neograničeni broj puta, u različitim okruženjima: prilikom ručnog i automatskog testiranja, u produkciji, itd. Prilikom pokretanja kontejnera, može se dodatno specificirati njegova konfiguracija (na primer, mapiranje portova).
+Za pokretanje aplikacija je korišćena platforma Doker (eng. \emph{Docker}) \cite{Docker}. Prednosti korišćenja ove platforme su monogstuke. Za početak, ona razdvaja razvijanje aplikacije od infrastrukture na kojoj će biti pokrenuta. Aplikacija je spakovana u izolovano okruženje koje se naziva kontejner (eng. \emph{container}). Kontejneri sadrže sve (a u idealnom slučaju, samo) ono što je neophodno za pokretanje aplikacije, u vidu strukture koja se naziva slika (eng. \emph{image}). To čini da su kontejneri lagani za prenošenje, za razliku od virtuelnih mašina koje u teoriji mogu pružiti istu funkcionalnost. Spakovana aplikacija može biti pokrenuta neograničeni broj puta, u različitim okruženjima: prilikom ručnog i automatskog testiranja, u produkciji, itd. Prilikom pokretanja kontejnera, može se dodatno specificirati njegova konfiguracija (na primer, mapiranje portova).
 
 Arhitektura platforme je predstavljena na slici \ref{fig:dockerarch}, preuzetoj iz zvanične dokumentacije \cite{DockerArch}. 
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1.0\textwidth]{./images/docker_architecture.png}
-  \caption{Arhitektura Doker platforme}
+  \caption{Arhitektura platforme Doker}
   \label{fig:dockerarch}
 \end{figure}
 
 Koraci potrebni da se napravi slika aplikacije se definišu u \emph{Dockerfile} datoteci. Svaka instrukcija u ovom fajlu kreira sloj slike (eng. \emph{layer}). U sličaju \emph{.NET Core} aplikacija, prvi korak je učitavanje željenog radnog okvira, zatim, (primera radi) pokretanje kompilacije izvornog koda i smeštanje izvršnog koda na željenu lokaciju. Krajnji korak je uglavnom definisanje komande za pokretanje aplikacije. Bitno je naglasiti da tokom razvijanja aplikacije, Doker prepoznaje koji slojevi slike koji su se promenili, te ponovo kreira samo njih i njihove naredne slojeve. Ovo čini generisanje slike efikasnom i brzom operacijom koja ne usporava programera, koji najčeće menja samo delove aplikacije. Kreirane slike se čuvaju u registru slika koji može biti lokalni ili negde u oblaku.
 
-Kontejner sadrži specifikaciju operativnog sistema na kojem se pokreće slika. Izbor \emph{.NET Core} radnog okvira omogućava pokretanje servisa na različitim platformama \emph{Windows}, \emph{Mac} i \emph{Linux}, bez izmena izvornog koda. Za izradu sistema su korišćeni \emph{Linux} kontejneri.
+Kontejner sadrži specifikaciju operativnog sistema na kojem se pokreće slika. Izbor radnog okvira \emph{.NET Core} omogućava pokretanje servisa na različitim platformama \emph{Windows}, \emph{Mac} i \emph{Linux}, bez izmena izvornog koda. Za izradu sistema su korišćeni \emph{Linux} kontejneri.
 
 Korišćeno okruženje za lokalno kreiranje i pokretanje kontejnera je \emph{Docker Desktop} prikazan na slici \ref{fig:dockerdesktop}.
 
@@ -298,7 +298,7 @@ Korišćeno okruženje za lokalno kreiranje i pokretanje kontejnera je \emph{Doc
 % Kubernetes detalji
 \section{Kubernetes platforma}
 
-Pokretanje sistema na praktičan i skalabilan način, omogućila je \emph{Kubernetes} platforma \cite{Kubernetes}. Ona pruža potrebnu infrastrukturu za pokretanje aplikacija zapakovanih u Doker kontejnere, kao i za upravljanje njima i ostalim pratećim delovima sistema.
+Pokretanje sistema na praktičan i skalabilan način, omogućila je platforma \emph{Kubernetes} \cite{Kubernetes}. Ona pruža potrebnu infrastrukturu za pokretanje aplikacija zapakovanih u Doker kontejnere, kao i za upravljanje njima i ostalim pratećim delovima sistema.
 
 Kubenetes omogućava:
 \begin{enumerate}
@@ -316,7 +316,7 @@ Na slici \ref{fig:kubernetesarh} prikazana je arhitektura Kubernetes klastera, p
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1.0\textwidth]{./images/kubernetes_architecture.png}
-  \caption{Arhitektura Kubernetes klastera}
+  \caption{Arhitektura klastera Kubernetes}
   \label{fig:kubernetesarh}
 \end{figure}
 
@@ -368,7 +368,7 @@ kubectl exec mypod-m96mk -it mypod-m96mk  -- /bin/bash
 kubectl autoscale deployment computenode --cpu-percent=50 --min=1 --max=10
 \end{verbatim}
 
-\section{Azure platforma}
+\section{Platforma \emph{Microsoft Azure}}
 
 Programska implementacija sistema je uključila njegovo pokretanje u oblaku, a za to je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Ova platforma pruža veliki broj softverskih i infrastrukturnih rešenja, kao i propratnih servisa i mogućnosti koje poboljšavaju celokupno iskustvo korišćenja.
 
@@ -386,7 +386,7 @@ Najrelevantniji resursi korišćeni za pokretanje sistema u na \emph{Azure} plat
 
 \emph{OpenAPI} \cite{OpenAPI} je specifikacija \emph{REST API}-a koja ne zavisi od programskog jezika. \emph{Swagger} \cite{Swagger} predstavlja skup alata koji koriste \emph{OpenAPI} specifikaciju.
 
-Servisi kreirani u okviru sistema imaju otvoreni web \emph{REST API}. Korišćenjem \emph{Swagger} skupa alata su oni dokumentovani u standardizovanom formatu, u \emph{json} datoteci. Za generisanje ove specifikacije za \emph{.NET Core} aplikacije koristi se \emph{Swashbuckle} \cite{Swashbuckle} alat.
+Servisi kreirani u okviru sistema imaju otvoreni web \emph{REST API}. Korišćenjem skupa alata \emph{Swagger}, oni su dokumentovani u standardizovanom formatu, u \emph{json} datoteci. Za generisanje ove specifikacije za \emph{.NET Core} aplikacije koristi se alat \emph{Swashbuckle} \cite{Swashbuckle}.
 
 Sa klijentske strane, koristi se alat \emph{NSwag} \cite{NSwag}. Na osnovu prethodno generisane \emph{json} datoteke, on tokom kompilacije generiše klasu koja sadriži \emph{HTTP} klijenta i potrebnu dokumentaciju. Ovo je praktičan i efikasan način da se automatski generiše kod klijenta pomoću kojeg se šalju zahtevi serveru.
 
@@ -412,15 +412,15 @@ Arhitektura sistema je prikazana na slici \ref{fig:arhitektura}.
 
 Arhutekturalni obrazac korišćen prilikom razvoja pojedinačnih servisa sistema (Frontenda i Jedinice za izračunavanje) je Model-Pogled-Kontroler (eng. \emph{Model-View-Controller}), bez implementacije Pogled dela. Razlog za odabir ovog obrasca je što on uvodi podelu odgovornosti različitih delova servisa. Kontroler je okrenut ka spolja, i definiše interfejs za komunikaciju sa servisom. U slučaju Frontenda, on definiše API (eng. \emph{Application Programming Interface}) koji prima korisnikove zahteve za izvršavanje posla.
 
-\section{Autentikacija}
+\section{Autentifikacija}
 
-Proces autentikacije je prikazan na slici \ref{fig:autentikacija}.
+Proces autentikacije je prikazan na slici \ref{fig:autentifikacija}.
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1.0\textwidth]{./images/autentikacija_uml_dijagram_sekvence.png}
-  \caption{UML dijagram sekvence - Autentikacija}
-  \label{fig:autentikacija}
+  \caption{UML dijagram sekvence - Autentifikacija}
+  \label{fig:autentifikacija}
 \end{figure}
 
 
@@ -454,20 +454,20 @@ TODO
 \section{Pokretanje u oblaku}
 TODO
 
-\subsection{Integracija sa Azure platformom}
+\subsection{Integracija sa platofrmom emph{Microsoft Azure}}
 
-U realizaciji je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Za upravljanje i pristup resursima u okviru ove platforme koristi se  \emph{Azure portal} \cite{AzurePortal}.
+U realizaciji je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Za upravljanje i pristup resursima u okviru ove platforme koristi se portal \emph{Azure} \cite{AzurePortal}.
 
 % ------------------------------------------------------------------------------
 \chapter{Testiranje}
 \label{chp:testiranjesistema}
 % ------------------------------------------------------------------------------
 
-U ovom poglavlju su opisani načini testiranja implementiranog sistema. Za izradu testova korišćen je \emph{XUnit} \cite{XUnit} radni okvir.
+U ovom poglavlju su opisani načini testiranja implementiranog sistema. Za izradu testova korišćen je radni okvir \emph{XUnit} \cite{XUnit}.
 
 Svi testovi se nalaze na GitHub adresi projekta u \href{https://github.com/milana-kovacevic/DistributedComputationSystem/tree/main/tests}{tests} poddirektorijumu.
 
-\emph{XUnit} radni okvir ima podršku za pisanje dva tipa testova: činjenice (eng. \emph{Fact}) i teorije (eng. \emph{Theory}). Činjenice su testovi koji ne primaju argumente, dok teorije predstavljaju paremetrizovane testove. Specifikacijom atributa iznad tela funkcije teorije - testa, definišu se ulazi nad kojima se test pokreće, što značajno olakšava generisanje testova sa različitim ulazima.
+Radni okvir \emph{XUnit} ima podršku za pisanje dva tipa testova: činjenice (eng. \emph{Fact}) i teorije (eng. \emph{Theory}). Činjenice su testovi koji ne primaju argumente, dok teorije predstavljaju paremetrizovane testove. Specifikacijom atributa iznad tela funkcije teorije - testa, definišu se ulazi nad kojima se test pokreće, što značajno olakšava generisanje testova sa različitim ulazima.
 
 Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na slici \ref{fig:testexplorer} se nalazi vizuelni prikaz rezultata izvršavanja testova u okruženju \emph{Microsoft Visual Studio}.
 % (TODO nova slika sa jos testova)
@@ -509,7 +509,7 @@ Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na sli
 Sistem je testiran na više nivoa, počevši od testiranja jedinica koda za svaku komponentu, zatim testova integracije, i, na najvišem nivou, funkcionalnih testova koji ukljucuju klaster testove.
 
 \section{Testiranje jedinica koda}
-Komponente \emph{Frontend} i \emph{ComputeNode} prate testovi jedinica koda. Ovi testovi se nalaze u zasebnom projektu. Tokom izrade testova jedinica koda, korišćen je i radni okvir \emph{Moq} \cite{Moq} za "podmetanje" vrednosti u zavisnim delova koda. U nastavku se nalazi slika \ref{fig:testscheduler} sa primerom testa jedinice koda u okviru \emph{Frontend} komponente.
+Komponente \emph{Frontend} i \emph{ComputeNode} prate testovi jedinica koda. Ovi testovi se nalaze u zasebnom projektu. Tokom izrade testova jedinica koda, korišćen je i radni okvir \emph{Moq} \cite{Moq} za "podmetanje" vrednosti u zavisnim delova koda. U nastavku se nalazi slika \ref{fig:testscheduler} sa primerom testa jedinice koda u okviru komponente \emph{Frontend}.
 
 \begin{figure}[h!]
 \centering
@@ -549,7 +549,7 @@ public class DistributedSchedulerTests
 	}
 }
 \end{lstlisting}
-\caption{Primer testa koji koristi \emph{Moq} radni okvir}
+\caption{Primer testa koji koristi radni okvir \emph{Moq}}
 \label{fig:testscheduler}
 \end{figure}
 
@@ -557,11 +557,11 @@ public class DistributedSchedulerTests
 Integracioni testovi testiraju integraciju između komponenti sistema: \emph{Frontend}a i \emph{ComputeNode}-a.
 
 \section{Funkcionalni testovi}
-Funkcionalni testovi testiraju funkcionalnost sistema iz ugla korisnika. U ovim testovima koristi se automatski generisana klijentska klasa \emph{DistributedCalculationSystemClient} nastala korišćenjem \emph{Swagger} alata. Ovaj klijent šalje zahteve ka \emph{Frontend} servisu, a u telu testova se proverava da li je odgovor od sistema očekivan.
+Funkcionalni testovi testiraju funkcionalnost sistema iz ugla korisnika. U ovim testovima koristi se automatski generisana klijentska klasa \emph{DistributedCalculationSystemClient} nastala korišćenjem alata \emph{Swagger}. Ovaj klijent šalje zahteve ka servisu \emph{Frontend}, a u telu testova se proverava da li je odgovor od sistema očekivan.
 
 Funkcionalni testovi se dele na nekoliko grupa:
 \begin{enumerate}
-\item Testovi nad lokalnim okruženjem - Testiraju osnovne funkcionalnosti servisa, u razvojnom okruženju na lokalnoj mašini. Koriste se \emph{Frontend} i \emph{CumputeNode} aplikacije pokrenute u okviru Doker kontejnera sa predefinisanim adresama i portovima.
+\item Testovi nad lokalnim okruženjem - Testiraju osnovne funkcionalnosti servisa, u razvojnom okruženju na lokalnoj mašini. Koriste se aplikacije \emph{Frontend} i \emph{CumputeNode} pokrenute u okviru kontejnera Doker sa predefinisanim adresama i portovima.
 \item Testovi nad klasterom u oblaku - Testiraju osnovne funkcionalnosti servisa u produkcionom okruženju.
 \item Stres testovi - Skup testova koji se izvršavaju kako bi se analiziralo i unapredilo ponašanje sistema pod pritiskom. 
 \item Testovi performansi - Skup testova koji se pokreću nad servisom pokrenutim u oblaku, sa fokusom na praćenje vremena potrebnog da sistem odradi očekivani posao. Cilj ovog testiranje je uvid u performanse sistema u odnosu na resurse dodeljene klasteru.
@@ -583,13 +583,13 @@ TODO
 \label{chp:pracenjemetrika}
 % ------------------------------------------------------------------------------
 
-U ovom poglavlju će biti prikazane mogućnosti praćenja rada sistema uz pomoć \emph{Azure Monitor} servisa za praćenje ponašanja resursa u oblaku. Kako su glavne komponente sistema pokrenute u okviru \emph{Azure Kubernetes Service} klastera, dat je pregled načina na koji se analiziraju podaci o radu klastera. Na analogan način se može pratiti i ponašanje \emph{Azure SQL Database} baze podataka koju koristi sistem.
+U ovom poglavlju će biti prikazane mogućnosti praćenja rada sistema uz pomoć servisa \emph{Azure Monitor} za praćenje ponašanja resursa u oblaku. Kako su glavne komponente sistema pokrenute u okviru klastera \emph{Azure Kubernetes Service}, dat je pregled načina na koji se analiziraju podaci o radu klastera. Na analogan način se može pratiti i ponašanje baze podataka \emph{Azure SQL Database} koju koristi sistem.
 
 \section{Metrike}
 
 Metrike sistema predstavljaju koncizne informacije o njegovom radu u (skoro) realnom vremenu. Kroz metrike možemo da vidimo trenutnu iskorišćenost resursa klastera, status mašina, mahuna, kontejnera itd.
 
-Na slici \ref{fig:aksinsights} je prikazan pogled na \emph{Insight} sekciju pripadajuceg klastera kojem se pristupa preko portala \cite{AzurePortal}. 
+Na slici \ref{fig:aksinsights} je prikazan pogled na sekciju \emph{Insight} pripadajuceg klastera kojem se pristupa preko portala \cite{AzurePortal}. 
 
 (TODO slika sa vise korišćenja CPU - idealno nakon perf testiranja, i jos par recenica o tome)
 
@@ -600,7 +600,7 @@ Na slici \ref{fig:aksinsights} je prikazan pogled na \emph{Insight} sekciju prip
   \label{fig:aksinsights}
 \end{figure}
 
-Na slici \ref{fig:clusterunhealthy} je prikazan pogled na \emph{Insight} sekciju pripadajućeg klastera u slučaju nezdravog Frontend servisa.
+Na slici \ref{fig:clusterunhealthy} je prikazan pogled na \emph{Insight} sekciju pripadajućeg klastera u slučaju nezdravog servisa Frontend.
 
 \begin{figure}[!ht]
   \centering
@@ -613,14 +613,14 @@ Na slici \ref{fig:clusterunhealthy} je prikazan pogled na \emph{Insight} sekciju
 
 Logovi predstavljaju informacije o radu sistema koje ispisuju pokrenuti servisi u tekstualnom formatu. Oni su automatski sakupljeni sa mašina i prosleđeni na mesto za čuvanje, gde im je moguće pristupiti kroz propratne alate.
 
-Za pregled logova korišćen je servis \emph{Azure Log Analytics} dostupan u okviru \emph{Azure Monitor} servisa. Ovaj alat pruža moćan deskriptivni jezik kojim se mogu pretraživati, filtrirati, sortirati i analizirati logovi. Rezultate upita je takođe moguće vizuelizovati u vidu grafikona.
+Za pregled logova korišćen je servis \emph{Azure Log Analytics} dostupan u okviru servisa \emph{Azure Monitor}. Ovaj alat pruža moćan deskriptivni jezik kojim se mogu pretraživati, filtrirati, sortirati i analizirati logovi. Rezultate upita je takođe moguće vizuelizovati u vidu grafikona.
 
 Na slici \ref{fig:frontendlogs} se nalazi prikaz stranice za pregled logova kontejnera koji sadrži Frontend aplikaciju.
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{./images/frontend_logs.png}
-  \caption{Pregled logova Frontend servisa}
+  \caption{Pregled logova komponente Frontend}
   \label{fig:frontendlogs}
 \end{figure}
 
@@ -667,7 +667,7 @@ Dalja unapređenja bi mogla da uključe obradu poslova koji nisu nužno specific
 
 Implementirani frontend daje korisniku na korišćenje REST API. Dalji razvoj servisa bi mogao da podrži i druge klijent - server načine komunikacije, uključujući komunikaciju preko \emph{Web Socketa}. Takođe, moguće je izraditi \emph{Web} platformu i vizuelni korisnički interfejs za lakše korišćenje sistema.
 
-Sistem je moguće proširiti da uključuje podršku i za druge tipove autentikacije. Osnovna autentikacija je uključila integrisanje sa \emph{Azure Active Directory} provajderom identiteta. Ovo je moguće unaprediti dodavanjem odvojenu komponente za podršku za druge načine autentikacije (na primer, koriščenjem \emph{Google} naloga).
+Sistem je moguće proširiti da uključuje podršku i za druge tipove autentifikacije. Osnovna autentikacija je uključila integrisanje sa provajderom identiteta \emph{Azure Active Directory}. Ovo je moguće unaprediti dodavanjem odvojenu komponente za podršku za druge načine autentikacije (na primer, koriščenjem naloga \emph{Google}).
 
 Navedena poboljšanja bi dosta opteretila današnju implementaciju frontenda. Sa daljim razvojem u ovom delu servisa, trebalo bi razdvojiti implementaciju Frontend servisa od komponente za distribuirano zakazivanje, i nastaviti razvoj imajući u vidu pristup razvijanja kroz mikro-servise. To bi uključilo izradu drugih Frontend servisa koji bi komunicirali sa svojim klijentima, a poslove slali na centralni servis zadužen za distribuirano orkestriranje.
 
