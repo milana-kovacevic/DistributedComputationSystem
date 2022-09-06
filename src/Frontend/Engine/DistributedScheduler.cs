@@ -43,10 +43,14 @@ namespace Frontend.Engine
                 // Add parent job to list in progress tasks.
                 _jobExecutionMonitor.AddJob(job.Id, job.AtomicJobs.Count);
 
+                // Update parent job state.
+                _dbEntityManager.UpdateJobState(job.Id, newState: JobState.InProgress);
+
                 // NOT DONE:
                 // [ADVANCED] use custom routing to available ComputeNodes using ingress setup.
                 // [ADVANCED] Generate list of atomic jobs when input is more complex.
 
+                // Trigger asyncly all atomic jobs.
                 var result = new List<AtomicJobResult>();
                 foreach (var atomicJobUnit in job.AtomicJobs)
                 {
@@ -54,8 +58,6 @@ namespace Frontend.Engine
                 }
                 
                 _logger.LogInformation($"Scheduled job with id {job.Id}");
-
-                _dbEntityManager.UpdateJobState(job.Id, newState: JobState.InProgress); 
                 
             }
             catch (Exception e)

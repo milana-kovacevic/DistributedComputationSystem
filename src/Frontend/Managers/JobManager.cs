@@ -1,4 +1,5 @@
-﻿using Frontend.Engine;
+﻿using Frontend.Data;
+using Frontend.Engine;
 using Frontend.Models;
 
 namespace Frontend.Managers
@@ -10,10 +11,12 @@ namespace Frontend.Managers
     public class JobManager : IJobManager
     {
         private readonly JobQueue _jobQueue;
+        private DbEntityManager _dbEntityManager;
 
-        public JobManager(JobQueue jobQueue)
+        public JobManager(JobQueue jobQueue, DbEntityManager dbEntityManager)
         {
-            this._jobQueue = jobQueue;
+            _jobQueue = jobQueue;
+            _dbEntityManager = dbEntityManager;
         }
 
         /// </inheritdoc>
@@ -28,7 +31,14 @@ namespace Frontend.Managers
         /// </inheritdoc>
         public bool TryAddJob(Job job)
         {
-            return _jobQueue.TryEnqueueJob(job);
+            if (_jobQueue.TryEnqueueJob(job))
+            {
+                _dbEntityManager.UpdateJobState(job.Id, newState: JobState.Queued);
+
+                return true;
+            }
+
+            return false;
         }
 
         /// </inheritdoc>

@@ -34,13 +34,13 @@ namespace Frontend.Engine
             {
                 _logger.LogInformation($"Removing atomic job from dictionary: {jobId} : {atomicJobId}");
                 
-                jobDetails.RemoveAtomicJob(atomicJobId, out _);
+                int remainingAtomicJobs = jobDetails.RemoveAtomicJob(atomicJobId, out _);
 
                 // If that was the last job in the dictionary, update the state of the parent job.
                 // Job is succeeded if all atomic jobs passed.
                 // If some atomic job passed, the value of the state of the job should be already set to Failed.
                 //
-                if (jobDetails.NumberOfRemainingAtomicJobs == 0)
+                if (remainingAtomicJobs == 0)
                 {
                     JobState endResult = _dbEntityManager.UpdateJobStateToSuccessIfNotFailed(jobId, JobState.Succeeded);
 
