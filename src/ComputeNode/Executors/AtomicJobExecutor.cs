@@ -23,14 +23,22 @@ namespace ComputeNode.Executor
         {
             try
             {
+                _logger.LogInformation($"Executing AtomicJob: {atomicJob.ParentJobId}:{atomicJob.Id}");
+
+                atomicJob.AtomicJobResult.State = AtomicJobState.InProgress;
+
                 var specificJobExecutor = await _specificJobExecutorFactory.BuildAsync(atomicJob.JobType);
+                var result =  await specificJobExecutor.ExecuteAsync(atomicJob);
 
-                return await specificJobExecutor.ExecuteAsync(atomicJob);
+                atomicJob.AtomicJobResult.State = AtomicJobState.Succeeded;
 
+                _logger.LogInformation($"Completed execution for AtomicJob: {atomicJob.ParentJobId}:{atomicJob.Id}");
+
+                return result;
             }
             catch (Exception e)
             {
-                var errorMessage = string.Format(ExceptionMessages.UnhandledException, e.Message);
+                var errorMessage = string.Format(ExceptionMessages.UnhandledException, atomicJob.ParentJobId, atomicJob.Id, e.Message);
                 _logger.LogError(e, errorMessage);
 
                 return new AtomicJobResult()

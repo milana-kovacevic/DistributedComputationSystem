@@ -16,8 +16,8 @@ namespace Frontend.Mappers
                 Result = atomicJobResult.Result,
                 State = MapAtomicJobState(atomicJobResult.State),
                 Error = atomicJobResult.Error,
-                //StartTime = atomicJobResult.StartTime,
-                //EndTime = atomicJobResult.EndTime,
+                StartTime = atomicJobResult.StartTime.UtcDateTime,
+                EndTime = atomicJobResult.EndTime?.UtcDateTime,
             };
 
             return value;

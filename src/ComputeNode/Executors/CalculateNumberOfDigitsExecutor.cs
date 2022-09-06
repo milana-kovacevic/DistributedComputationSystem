@@ -7,11 +7,7 @@ namespace ComputeNode.Executors
     {
         public async Task<AtomicJobResult> ExecuteAsync(AtomicJob atomicJob)
         {
-            var result = new AtomicJobResult()
-            {
-                Id = atomicJob.Id,
-                ParentJobId = atomicJob.ParentJobId
-            };
+            var result = atomicJob.AtomicJobResult;
 
             if (TryCalculateSumOfDigits(atomicJob.InputData, out long sumOfDigits))
             {
@@ -23,6 +19,8 @@ namespace ComputeNode.Executors
                 result.Error = string.Format(ExceptionMessages.InvalidInputData, atomicJob.InputData);
                 result.State = AtomicJobState.Failed;
             }
+
+            result.EndTime = DateTime.UtcNow;
 
             return result;
         }

@@ -11,5 +11,9 @@
         public AtomicJobState State { get; set; }
 
         public string? Error { get; set; }
+
+        public DateTime StartTime { get; set; }
+
+        public DateTime? EndTime { get; set; }
     }
 }

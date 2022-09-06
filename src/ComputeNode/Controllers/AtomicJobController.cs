@@ -20,18 +20,6 @@ namespace ComputeNode.Controllers
             _executor = executor;
         }
 
-        [HttpGet("All")]
-        public IEnumerable<AtomicJob> GetRunningJobs()
-        {
-            return Enumerable.Range(1, 2).Select(index => new AtomicJob()
-            {
-                StartTime = DateTime.Now.AddDays(index),
-                EndTime = null,
-                AtomicJobResult = new AtomicJobResult() { State = AtomicJobState.NotRan }                
-            })
-            .ToArray();
-        }
-
         [HttpPost("Run")]
         public async Task<AtomicJobResult> PostJob(
             int atomicJobId,
@@ -39,7 +27,7 @@ namespace ComputeNode.Controllers
             [FromBody] string inputData,
             AtomicJobType jobType = AtomicJobType.CalculateSumOfDigits)
         {
-            _logger.LogInformation($"Executing job with id {parentJobId}, atomic job id: {atomicJobId}");
+            _logger.LogInformation($"Received request for execution: {parentJobId}:{atomicJobId}");
 
             var newJob = new AtomicJob()
             {
@@ -47,8 +35,11 @@ namespace ComputeNode.Controllers
                 ParentJobId = parentJobId,
                 JobType = jobType,
                 InputData = inputData,
-                StartTime = DateTime.UtcNow,
-                AtomicJobResult = new AtomicJobResult() { State = AtomicJobState.NotRan }
+                AtomicJobResult = new AtomicJobResult()
+                {
+                    State = AtomicJobState.NotRan,
+                    StartTime = DateTime.UtcNow
+                }
             };
             
             // Run job.
