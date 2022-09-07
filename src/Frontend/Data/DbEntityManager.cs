@@ -42,9 +42,10 @@ namespace Frontend.Data
         /// Updates job state only if it didn't fail previously.
         /// </summary>
         /// <param name="jobId">Job id</param>
-        /// <param name="new">Wanted new job state.</param>
+        /// <param name="newState">Wanted new job state.</param>
+        /// <param name="aggregatedResult">Aggregated parent job result.</param>
         /// <returns>Returns state pushed to database.</returns>
-        internal JobState UpdateJobStateToSuccessIfNotFailed(int jobId, JobState newState)
+        internal JobState UpdateJobStateToSuccessIfNotFailed(int jobId, JobState newState, string aggregatedResult)
         {
             _logger.LogInformation($"Updating job {jobId} state to: {newState}");
 
@@ -58,6 +59,7 @@ namespace Frontend.Data
                 if (jobResultFromDb != null && jobResultFromDb.State != JobState.Failed)
                 {
                     jobResultFromDb.State = newState;
+                    jobResultFromDb.Result = aggregatedResult;
                     jobResultFromDb.EndTime = DateTime.UtcNow;
                     jobContext.SaveChanges();
 

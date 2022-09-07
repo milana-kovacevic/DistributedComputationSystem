@@ -43,6 +43,10 @@ namespace Frontend.Engine
                 // Add parent job to list in progress tasks.
                 _jobExecutionMonitor.AddJob(job.Id, job.AtomicJobs.Count);
 
+                // Setup initial state for aggregated result stored in parent job.
+                // UNDONE: nice handling depending on the job type.
+                job.JobResult.Result = string.Empty;
+
                 // Update parent job state.
                 _dbEntityManager.UpdateJobState(job.Id, newState: JobState.InProgress);
 

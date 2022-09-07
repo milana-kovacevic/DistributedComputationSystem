@@ -74,8 +74,11 @@ namespace UnitTests.ComputeNode
             {
                 Id = 1,
                 ParentJobId = 2,
-                StartTime = DateTime.Now,
-                AtomicJobResult = new AtomicJobResult() { State = AtomicJobState.NotRan },
+                AtomicJobResult = new AtomicJobResult()
+                {
+                    State = AtomicJobState.NotRan,
+                    StartTime = DateTime.Now
+                },
                 InputData = inputData
             };
         }

@@ -64,14 +64,12 @@ namespace Frontend.Engine
 
                     _logger.LogInformation($"Completed: JobId {unit.JobId}; AtomicJobId {unit.AtomicJobId}; ResultState: {result.State}");
                     
-                    _jobExecutionMonitor.NotifyAtomicJobCompletion(unit.JobId, unit.AtomicJobId, result.State);
+                    _jobExecutionMonitor.NotifyAtomicJobCompletion(unit.JobId, unit.AtomicJobId, result);
                 }
                 catch (Exception e)
                 {
                     var errorMessage = string.Format(ExceptionMessages.UnhandledException, e.Message);
                     _logger.LogError(e, errorMessage);
-
-                    _jobExecutionMonitor.NotifyAtomicJobCompletion(job.JobId, job.AtomicJobId, AtomicJobState.Failed);
 
                     result = new AtomicJobResult()
                     {
@@ -80,6 +78,8 @@ namespace Frontend.Engine
                         Error = errorMessage,
                         State = AtomicJobState.Failed
                     };
+
+                    _jobExecutionMonitor.NotifyAtomicJobCompletion(job.JobId, job.AtomicJobId, result);
 
                     _dbEntityManager.UpdateAtomicJobResult(job.JobId, job.AtomicJobId, result);
                 }

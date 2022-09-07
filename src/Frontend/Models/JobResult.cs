@@ -10,6 +10,8 @@ namespace Frontend.Models
 
         public JobState State { get; set; }
 
+        public string? Result { get; set; }
+
         public string? Error { get; set; }
 
         [DataType(DataType.Date)]

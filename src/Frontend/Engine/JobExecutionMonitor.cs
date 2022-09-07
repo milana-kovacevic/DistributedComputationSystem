@@ -22,19 +22,19 @@ namespace Frontend.Engine
         }
 
         // Updates the internal state which tracks in progress atomic jobs.
-        internal void NotifyAtomicJobCompletion(int jobId, int atomicJobId, AtomicJobState atomicJobState)
+        internal void NotifyAtomicJobCompletion(int jobId, int atomicJobId, AtomicJobResult atomicJobResult)
         {
             // If atomic job failed, mark parent job as failed as well.
-            if (atomicJobState == AtomicJobState.Failed)
+            if (atomicJobResult.State == AtomicJobState.Failed)
             {
                 _dbEntityManager.UpdateJobState(jobId, JobState.Failed, error: ExceptionMessages.ParentJobFailed);
             }
 
             if (_inProgressTasks.TryGetValue(jobId, out var jobDetails))
             {
-                _logger.LogInformation($"Removing atomic job from dictionary: {jobId} : {atomicJobId}");
+                _logger.LogInformation($"Marking atomic job as completed: {jobId} : {atomicJobId}");
                 
-                int remainingAtomicJobs = jobDetails.RemoveAtomicJob(atomicJobId, out _);
+                int remainingAtomicJobs = jobDetails.MarkAtomicJobCompleted(atomicJobId, atomicJobResult);
 
                 // If that was the last job in the dictionary, update the state of the parent job.
                 // Job is succeeded if all atomic jobs passed.
@@ -42,7 +42,7 @@ namespace Frontend.Engine
                 //
                 if (remainingAtomicJobs == 0)
                 {
-                    JobState endResult = _dbEntityManager.UpdateJobStateToSuccessIfNotFailed(jobId, JobState.Succeeded);
+                    JobState endResult = _dbEntityManager.UpdateJobStateToSuccessIfNotFailed(jobId, JobState.Succeeded, $"{jobDetails.AggregatedJobResult}");
 
                     _logger.LogInformation($"Parent job {jobId} completed. End result: {endResult}");
                 }

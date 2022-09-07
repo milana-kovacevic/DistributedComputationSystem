@@ -191,30 +191,6 @@
   },
   "components": {
     "schemas": {
-      "AtomicJob": {
-        "type": "object",
-        "properties": {
-          "atomicJobId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "jobId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "jobType": {
-            "$ref": "#/components/schemas/AtomicJobType"
-          },
-          "inputData": {
-            "type": "string",
-            "nullable": true
-          },
-          "atomicJobResult": {
-            "$ref": "#/components/schemas/AtomicJobResult"
-          }
-        },
-        "additionalProperties": false
-      },
       "AtomicJobRequestData": {
         "required": [
           "inputData"
@@ -227,56 +203,6 @@
         },
         "additionalProperties": false
       },
-      "AtomicJobResult": {
-        "type": "object",
-        "properties": {
-          "atomicJobId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "jobId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "result": {
-            "type": "string",
-            "nullable": true
-          },
-          "state": {
-            "$ref": "#/components/schemas/AtomicJobState"
-          },
-          "error": {
-            "type": "string",
-            "nullable": true
-          },
-          "startTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endTime": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "AtomicJobState": {
-        "enum": [
-          "NotRan",
-          "InProgress",
-          "Succeeded",
-          "Failed",
-          "Cancelled"
-        ],
-        "type": "string"
-      },
-      "AtomicJobType": {
-        "enum": [
-          "CalculateSumOfDigits"
-        ],
-        "type": "string"
-      },
       "Job": {
         "type": "object",
         "properties": {
@@ -287,18 +213,8 @@
           "jobType": {
             "$ref": "#/components/schemas/JobType"
           },
-          "atomicJobs": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AtomicJob"
-            },
-            "nullable": true
-          },
           "jobResult": {
             "$ref": "#/components/schemas/JobResult"
-          },
-          "state": {
-            "$ref": "#/components/schemas/JobState"
           }
         },
         "additionalProperties": false
@@ -325,10 +241,6 @@
       "JobResult": {
         "type": "object",
         "properties": {
-          "jobId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "state": {
             "$ref": "#/components/schemas/JobState"
           },
