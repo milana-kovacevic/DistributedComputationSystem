@@ -66,211 +66,25 @@
 % ------------------------------------------------------------------------------
 Uvod TODO
 
-%\section{Primeri korišćenja klasičnih \LaTeX{} elemenata}
+\section{Distriburani sistemi}
+TODO opsta prica
 
-% Primer korišćenja fusnota
-%Iza ove rečenice sledi fusnota.\footnote{Ovo je fusnota.}
-% primer referisanja na poglavlja i strane poglavlja
-%Više detalja biće dato u glavi \ref{chp:razrada} na strani \pageref{chp:razrada}.
+\subsection{Distriburano izračunavanje}
+TODO
 
+\section{Analiza postujićih sistema}
 
-% ------------------------------------------------------------------------------
-\chapter{Analiza postujićih sistema}
-\label{chp:analizapostojucihsistema}
-% ------------------------------------------------------------------------------
 Analiza postujićih sistema TODO
 Azure Functions pregled
 AWS rešenje?
 
-% ------------------------------------------------------------------------------
-\chapter{Opis funkcionalnosti i rada sistema}
-\label{chp:opisfunkc}
-% ------------------------------------------------------------------------------
 
-U ovom poglavlju biće prikazan pregled funkcionalnosti sistema za distribuirano izvršavanje. Zvaničan naziv sistema je \emph{Distribuirani sistem za izračunavanje} (eng. \emph{Distributed Computation System}).
-Funkcionalnosti su opisane u narednim sekcijama kroz slučajeve upotrebe, iz ugla korisnisnika i iz ugla dva tipa administratora: bezbednosnog i klaster administratora.
+\section{Opis korišćenih tehnologija i alata}
 
-\section{Izvršavanje poslova na zahtev}
-Glavna funkcionalnost sistema je obrada korisnikovih zahteva za izvršavanje poslova. 
-Slučajevi upotrebe iz ugla korisnika su prikazani na slici \ref{fig:slucajupotrebe_korisnik}, a detaljnije su opisani u narednim podsekcijama.
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=0.6\textwidth]{./images/dijagram_slucajeva_upotrebe_korisnik.png}
-  \caption{UML dijagram slučajeva upotrebe - Korisnik}
-  \label{fig:slucajupotrebe_korisnik}
-\end{figure}
-
-% Zakazivanje
-\subsection{Zakazivanje posla}
-\begin{enumerate}
-\item Naziv: Zakazivanje posla
-\item Akter: Korisnik koji želi da izvrši posao nad ulaznim podacima
-\item Kratak opis: Korisnik šalje zahtev za izvršavanje posla. Sistem validira zahtev i vraća potvrdu o uspešnosti zakazivanja.
-\item Preduslovi: Korisnik ima pristup internetu. Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji.
-\item Postuslovi: Sistem je evidentirao novi zahtev za posao i prosledio ga na asinhrono izvršavanje.
-\item Tok događaja:
-	\begin{enumerate}
-	\item \label{zak:konstruisezahtev}Korisnik konstruiše zahtev za izvršavanje posla. Zahtev se sastoji od:
-		\begin{enumerate}
-		\item Specifikacije tipa posla,
-		\item Niza ulaznih podataka
-		\end{enumerate}
-	\item \label{zak:saljezahtev} Korisnik šalje zahtev sistemu preko interneta koristeći predefinisani interfejs.
-	\item \label{zak:proveraprava} Sistem proverava korisnikova prava.
-	\item \label{zak:validacijazahteva} Sistem validira novopridošli zahtev za izvršavanje posla.
-	\item Sistem evidentira novi zahtev za izvršavanje u bazi.
-	\item \label{zak:asinhzakazivanje} Sistem stavlja zahtev u red za asinhrono izvršavanje.
-	\item Korisnik dobija potvrdu da je posao zakazan i identifikator po kojem je posao zaveden u sistemu.
-	\end{enumerate}
-\item Alternativni tok događaja:
-	\begin{enumerate}
-	\item Korisnik nema prava da podnese zahtev. Ukoliko u koraku \ref{zak:proveraprava} korisnik nema neophodna prava, sistem odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{zak:saljezahtev} glavnog toka.
-	\item Zahtev je nevalidan. Ukoliko u koraku \ref{zak:validacijazahteva} sistem prepozna nevalidan zahtev, odbija ga uz odgovarajuću grešku. Nevalidan zahtev može biti:
-		\begin{enumerate}
-		\item Nevalidna specifikacija tipa posla. Zahtevani tip posla mora biti podržan od strane sistema,
-		\item Format ulaznih podataka nije odgovarajući.
-		\end{enumerate}
-Proces se nastavlja u koraku \ref{zak:konstruisezahtev} glavnog toka.
-	\item Sistem je preopterećen i nema dovoljno resursa da zakaže novi posao. Ukoliko u koraku \ref{zak:asinhzakazivanje} sistem proceni da nema dovoljno resursa za izvršavanje posla, on odbija zahtev uz grešku da je sistem preopterećen i da korisnik pokuša kasnije. Proces se nastavlja u koraku \ref{zak:saljezahtev} glavnog toka.
-	\end{enumerate}
-\item Podtokovi: /
-\item Specijalni zahtevi: Korisnik ima neophodno znanje za kreiranje zahteva i korišćenje interfejsa sistema.
-\item Dodatne informacije: /
-\end{enumerate}
-
-% Dohvatanje rezultata
-\subsection{Preuzimanje rezultata posla}
-\begin{enumerate}
-\item Naziv: Preuzimanje rezultata posla
-\item Akter: Korisnik koji želi da pruzme rezultate prethodno zakazanog posla
-\item Kratak opis: Korisnik šalje zahtev za preuzimanje rezultata izvršavanja. Sistem validira zahtev i vraća tražene rezultate.
-\item Preduslovi: Korisnik ima pristup internetu. Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji. Posao je izvršen i rezultati su dostupni u bazi.
-\item Postuslovi: Sistem je prosledio rezultate izvršavanja korisniku.
-\item Tok događaja:
-	\begin{enumerate}
-	\item \label{rez:konstruisezahtev} Korisnik konstruiše zahtev za preuzimanje rezultata posla. Zahtev se sastoji od identifikatora posla za koji želi da preuzme rezultate.
-	\item \label{rez:saljezahtev} Korisnik šalje zahtev sistemu preko interneta koristeći predefinisani interfejs.
-	\item \label{rez:proveraprava} Sistem proverava korisnikova prava.
-	\item \label{rez:validacijazahteva} Sistem validira novopridošli zahtev za preuzimanje rezultata posla.
-	\item \label{rez:sinhslanjerez} Sistem šalje rezultate korisniku.
-	\item Korisnik dobija rezultate.
-	\end{enumerate}
-\item Alternativni tok događaja:
-	\begin{enumerate}
-	\item Korisnik nema prava da podnese zahtev. Ukoliko u koraku \ref{rez:proveraprava} korisnik nema neophodna prava, sistem odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{rez:saljezahtev} glavnog toka.
-	\item Zahtev je nevalidan. Ukoliko u koraku \ref{rez:validacijazahteva} sistem prepozna da posao sa datim identifikatorom ne postoji, odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{rez:konstruisezahtev} glavnog toka.
-	\end{enumerate}
-\item Podtokovi: /
-\item Specijalni zahtevi: Korisnik ima neophodno znanje za generisanje zahteva i korišćenje interfejsa sistema.
-\item Dodatne informacije: Ukoliko je posao uspešno izvršen, rezultat izvršavanja se sastoji od traženog rezultata izračunavanja. Ukoliko je posao neuspešno obrađen, rezultat se sastoji od informacije o grešci.
-\end{enumerate}
-
-% Otkazivanje
-\subsection{Otkazivanje posla}
-\begin{enumerate}
-\item Naziv: Otkazivanje posla
-\item Akter: Korisnik koji želi da otkaže prethodno zakazani posao
-\item Kratak opis: Korisnik šalje zahtev za otkazivanje posla. Sistem validira zahtev i vraća potvrdu o uspešnosti otkazivanja.
-\item Preduslovi: Korisnik ima pristup internetu. Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji.
-\item Postuslovi: Sistem je otkazao posao i azurirao evidenciju posla u bazi.
-\item Tok događaja:
-	\begin{enumerate}
-	\item \label{otk:konstruisezahtev} Korisnik konstruiše zahtev za otkazivanje posla. Zahtev se sastoji od identifikatora posla koji želi da otkaže.
-	\item \label{otk:saljezahtev} Korisnik šalje zahtev sistemu preko interneta koristeći predefinisani interfejs.
-	\item \label{otk:proveraprava} Sistem proverava korisnikova prava.
-	\item \label{otk:validacijazahteva} Sistem validira novopridošli zahtev za otkazivanje posla.
-	\item \label{otk:sinhotkazivanje} Sistem sinhrono otkazuje sve operacije povezane sa poslom.
-	\item Korisnik dobija potvrdu da je posao otkazan.
-	\end{enumerate}
-\item Alternativni tok događaja:
-	\begin{enumerate}
-	\item Korisnik nema prava da podnese zahtev. Ukoliko u koraku \ref{otk:proveraprava} korisnik nema neophodna prava, sistem odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{otk:saljezahtev} glavnog toka.
-	\item Zahtev je nevalidan. Ukoliko u koraku \ref{otk:validacijazahteva} sistem prepozna da posao sa datim identifikatorom ne postoji ili nije aktivan, odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{otk:konstruisezahtev} glavnog toka.
-	\end{enumerate}
-\item Podtokovi: /
-\item Specijalni zahtevi: Korisnik ima neophodno znanje za generisanje zahteva i korišćenje interfejsa sistema.
-\item Dodatne informacije: /
-\end{enumerate}
-
-% Pregled poslova
-\subsection{Pregled poslova}
-\begin{enumerate}
-\item Naziv: Pregled poslova
-\item Akter: Korisnik koji želi da pruzme listu evidentiranih poslova u sistemu.
-\item Kratak opis: Korisnik šalje zahtev za izlistavanje evidentiranih poslova. Sistem validira zahtev i vraća tražene informacije o evidentiranim poslovima.
-\item Preduslovi: Korisnik ima pristup internetu. Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji. Posao je izvršen i rezultati su dostupni u bazi.
-\item Postuslovi: Sistem je prosledio rezultate izvršavanja korisniku.
-\item Tok događaja:
-	\begin{enumerate}
-	\item \label{pregledp:konstruisezahtev} Korisnik konstruiše zahtev za izlistavanje poslova.
-	\item \label{pregledp:saljezahtev} Korisnik šalje zahtev sistemu preko interneta koristeći predefinisani interfejs.
-	\item \label{pregledp:proveraprava} Sistem proverava korisnikova prava.
-	\item \label{pregledp:slanjeliste} Sistem šalje listu evidentiranih poslova dostupnih u bazi.
-	\item Korisnik dobija listu evidentiranih poslova.
-	\end{enumerate}
-\item Alternativni tok događaja:
-	\begin{enumerate}
-	\item Korisnik nema prava da podnese zahtev. Ukoliko u koraku \ref{pregledp:proveraprava} korisnik nema neophodna prava, sistem odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{pregledp:saljezahtev} glavnog toka.
-	\end{enumerate}
-\item Podtokovi: /
-\item Specijalni zahtevi: Korisnik ima neophodno znanje za generisanje zahteva i korišćenje interfejsa sistema.
-\item Dodatne informacije: Rezultujuća lista poslova sadrži informacije o svakom evidentiranom poslu, i to:
-	\begin{enumerate}
-	\item Identifikator posla
-	\item Status posla
-	\item Vreme početka zvršavanja posla
-	\item Vreme završetka izvršavanja posla
-	\end{enumerate}
-\end{enumerate}
-
-% Administratorovi slučajevi upotrebe
-\section{Podešavanje sistema}
-Dodatne funkcionalnosti sistema uključuju slučajeve upotrebe u kojima je učesnik administrator. Ovo uključuje podešavanje bezbednosti i prava pristupa sistemu, kao i prilagođavanje sistema da bude u u skladu sa korisnikovim korišćenjem, tj. opterećenosti sistema.
-
-% Pristup podacima je ograničen i neophodno je da mogu da im pristupe samo autorizovane osobe.  -- prebaci negde
-
-% AAD Admin
-\subsection{Podešavanja prava pristupa}
-Prava pristupa sistemu, tj. delovima sistema dodeljuje administrator za bezbednost. Prava pristupa pojedinačnim delovima sistema se kontrolišu kroz različta prava koja mogu biti dodeljena korisniku. Tipovi prava su:
-	\begin{enumerate}
-	\item Iskustvo krajnjeg korisnika - Mogućnost slanja zahteva sistemu kroz definisani javni interfejs,
-	\item Pravo za praćenje rada sistema - Pristup telemetriji i logovima za praćenje rada sistema,
-	\item Administrator klastera - Pristup klasteru za devops akcije,
-	\item Administrator bezbednosti.
-	\end{enumerate}
-Slučajevi upotrebe iz ugla administratora za bezbednost su prikazani na slici \ref{fig:slucajupotrebe_aadadmin}. Ovih slučajevi upotrebe su jednostavni i intuitivni, te nisu opisani u nastavku.
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=0.6\textwidth]{./images/dijagram_slucajeva_upotrebe_administrator_sistema_aadadmin.png}
-  \caption{UML dijagram slučajeva upotrebe - Administrator za bezbednost}
-  \label{fig:slucajupotrebe_aadadmin}
-\end{figure}
-
-
-% Podešavanje AKS klastera
-\subsection{Podešavanje klastera}
-Klaster administrator ima mogućnost da menja konfiguraciju sistema kako bi ga prilagodio potrebama krajnjeg korisnika. To uključuje horizontalno i vertikalno skaliranje sistema. Horizontalno skaliranje sistema podrazumeva menjanje broja pokrenutih servisa koji se koriste tokom izvršavanja posla. Vertikalno skaliranje podrazumeva ažuriranje konfiguracije kojom se dodeljuju resursi servisima (dostupna memorija i procesorsko vreme).
-
-Slučajevi upotrebe iz ugla klaster administratora su prikazani na slici \ref{fig:slucajupotrebe_admin_klastera}. Detalji ovih slučajeva upotrebe su konceptualno jasni, a uključuju poznavanje implementacionih detalja, te nisu dalje razrađivani.
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=0.6\textwidth]{./images/dijagram_slucajeva_upotrebe_administrator_klastera.png}
-  \caption{UML dijagram slučajeva upotrebe - Klaster administrator}
-  \label{fig:slucajupotrebe_admin_klastera}
-\end{figure}
-
-% ------------------------------------------------------------------------------
-\chapter{Opis korišćenih tehnologija i alata}
-\label{chp:opistehialata}
-% ------------------------------------------------------------------------------
-
-U ovom poglavlju biće opisane tehnologije i alati korišćenih prilikom programske realizacije sistema.
+U ovom podpoglavlju biće opisane tehnologije i alati korišćenih prilikom programske realizacije sistema.
 Za implementaciju je korišćen programski jezik C\#, i radni okvir \emph{.NET Core 6.0}. Korišćeno razvojno okruženje je \emph{Microsoft Visual Studio Community 2022} i operativni sistem \emph{Windows 10}.
 
-\section{Doker platforma}
+\subsection{Platforma Doker}
 Za pokretanje aplikacija je korišćena platforma Doker (eng. \emph{Docker}) \cite{Docker}. Prednosti korišćenja ove platforme su monogstuke. Za početak, ona razdvaja razvijanje aplikacije od infrastrukture na kojoj će biti pokrenuta. Aplikacija je spakovana u izolovano okruženje koje se naziva kontejner (eng. \emph{container}). Kontejneri sadrže sve (a u idealnom slučaju, samo) ono što je neophodno za pokretanje aplikacije, u vidu strukture koja se naziva slika (eng. \emph{image}). To čini da su kontejneri lagani za prenošenje, za razliku od virtuelnih mašina koje u teoriji mogu pružiti istu funkcionalnost. Spakovana aplikacija može biti pokrenuta neograničeni broj puta, u različitim okruženjima: prilikom ručnog i automatskog testiranja, u produkciji, itd. Prilikom pokretanja kontejnera, može se dodatno specificirati njegova konfiguracija (na primer, mapiranje portova).
 
 Arhitektura platforme je predstavljena na slici \ref{fig:dockerarch}, preuzetoj iz zvanične dokumentacije \cite{DockerArch}. 
@@ -296,7 +110,7 @@ Korišćeno okruženje za lokalno kreiranje i pokretanje kontejnera je \emph{Doc
 \end{figure}
 
 % Kubernetes detalji
-\section{Kubernetes platforma}
+\subsection{Platforma Kubernetes}
 
 Pokretanje sistema na praktičan i skalabilan način, omogućila je platforma \emph{Kubernetes} \cite{Kubernetes}. Ona pruža potrebnu infrastrukturu za pokretanje aplikacija zapakovanih u Doker kontejnere, kao i za upravljanje njima i ostalim pratećim delovima sistema.
 
@@ -368,7 +182,7 @@ kubectl exec mypod-m96mk -it mypod-m96mk  -- /bin/bash
 kubectl autoscale deployment computenode --cpu-percent=50 --min=1 --max=10
 \end{verbatim}
 
-\section{Platforma \emph{Microsoft Azure}}
+\subsection{Platforma \emph{Microsoft Azure}}
 
 Programska implementacija sistema je uključila njegovo pokretanje u oblaku, a za to je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Ova platforma pruža veliki broj softverskih i infrastrukturnih rešenja, kao i propratnih servisa i mogućnosti koje poboljšavaju celokupno iskustvo korišćenja.
 
@@ -380,9 +194,9 @@ Najrelevantniji resursi korišćeni za pokretanje sistema u na \emph{Azure} plat
 \item \emph{Azure Monitor} \cite{AzureMonitor} - Skup propratnih funkcionalnosti koje pružaju uvid u ponašanje Azure resursa. Sakuplja logove i metrike, daje alate za njihovo analiziranje, kao i mogućnost uzbunjivanja (eng. \emph{alerts}) i reagovanja na dešavanja od interesa. Ima podršku i za tehnike mašinskog učenja nad sakupljenim podacima. Više o integraciji sa \emph{Azure Monitor}-om se nalazu u poglavlju \ref{chp:pracenjemetrika}.
 \end{enumerate}
 
-\section{Dodatni alati}
+\subsection{Dodatni alati}
 
-\subsection{Swagger / OpenAPI}
+\subsubsection{Swagger / OpenAPI}
 
 \emph{OpenAPI} \cite{OpenAPI} je specifikacija \emph{REST API}-a koja ne zavisi od programskog jezika. \emph{Swagger} \cite{Swagger} predstavlja skup alata koji koriste \emph{OpenAPI} specifikaciju.
 
@@ -390,14 +204,196 @@ Servisi kreirani u okviru sistema imaju otvoreni web \emph{REST API}. Korišćen
 
 Sa klijentske strane, koristi se alat \emph{NSwag} \cite{NSwag}. Na osnovu prethodno generisane \emph{json} datoteke, on tokom kompilacije generiše klasu koja sadriži \emph{HTTP} klijenta i potrebnu dokumentaciju. Ovo je praktičan i efikasan način da se automatski generiše kod klijenta pomoću kojeg se šalju zahtevi serveru.
 
+
+
 % ------------------------------------------------------------------------------
-\chapter{Implementacija}
-\label{chp:impl}
+\chapter{Sistem DCS}
+\label{chp:sistemdcs}
 % ------------------------------------------------------------------------------
 
-U ovom poglavlju biće opisana implementacija sistema (eng. \emph{Distributed Computation System}).
-Projekat je javno dostupan na servisu GitHub na adresi \href{https://github.com/milana-kovacevic/DistributedComputationSystem}{https://github.com/milana-kovacevic/DistributedComputationSystem}. Na adresi se takođe nalaze datoteke potrebne za kreiranje i konfiguraciju servisa pokrenutih u okviru Kubernetes klastera, kao i pomoćne skripte koje automatizuju proces postavljanja nove verzije aplikacija na klaster.
 
+
+% ------------------------------------------------------------------------------
+\section{Funkcionalnosti}
+\label{chp:opisfunkc}
+% ------------------------------------------------------------------------------
+
+TODO na pocetku obavezno navesti osnovnu ideju/motivaciju/viziju sa kojom se ulazi u pricu
+
+U ovom poglavlju biće prikazan pregled funkcionalnosti sistema za distribuirano izvršavanje. Zvaničan naziv sistema je \emph{Distribuirani sistem za izračunavanje} (eng. \emph{Distributed Computation System}).
+Funkcionalnosti su opisane u narednim sekcijama kroz slučajeve upotrebe, iz ugla korisnisnika i iz ugla dva tipa administratora: bezbednosnog i klaster administratora.
+
+\subsection{Izvršavanje poslova na zahtev}
+Glavna funkcionalnost sistema je obrada korisnikovih zahteva za izvršavanje poslova. 
+Slučajevi upotrebe iz ugla korisnika su prikazani na slici \ref{fig:slucajupotrebe_korisnik}, a detaljnije su opisani u narednim podsekcijama.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{./images/dijagram_slucajeva_upotrebe_korisnik.png}
+  \caption{UML dijagram slučajeva upotrebe - Korisnik}
+  \label{fig:slucajupotrebe_korisnik}
+\end{figure}
+
+% Zakazivanje
+\subsubsection{Zakazivanje posla}
+\begin{enumerate}
+\item Naziv: Zakazivanje posla
+\item Akter: Korisnik koji želi da izvrši posao nad ulaznim podacima
+\item Kratak opis: Korisnik šalje zahtev za izvršavanje posla. Sistem validira zahtev i vraća potvrdu o uspešnosti zakazivanja.
+\item Preduslovi: Korisnik ima pristup internetu. Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji.
+\item Postuslovi: Sistem je evidentirao novi zahtev za posao i prosledio ga na asinhrono izvršavanje.
+\item Tok događaja:
+	\begin{enumerate}
+	\item \label{zak:konstruisezahtev}Korisnik konstruiše zahtev za izvršavanje posla. Zahtev se sastoji od:
+		\begin{enumerate}
+		\item Specifikacije tipa posla,
+		\item Niza ulaznih podataka
+		\end{enumerate}
+	\item \label{zak:saljezahtev} Korisnik šalje zahtev sistemu preko interneta koristeći predefinisani interfejs.
+	\item \label{zak:proveraprava} Sistem proverava korisnikova prava.
+	\item \label{zak:validacijazahteva} Sistem validira novopridošli zahtev za izvršavanje posla.
+	\item Sistem evidentira novi zahtev za izvršavanje u bazi.
+	\item \label{zak:asinhzakazivanje} Sistem stavlja zahtev u red za asinhrono izvršavanje.
+	\item Korisnik dobija potvrdu da je posao zakazan i identifikator po kojem je posao zaveden u sistemu.
+	\end{enumerate}
+\item Alternativni tok događaja:
+	\begin{enumerate}
+	\item Korisnik nema prava da podnese zahtev. Ukoliko u koraku \ref{zak:proveraprava} korisnik nema neophodna prava, sistem odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{zak:saljezahtev} glavnog toka.
+	\item Zahtev je nevalidan. Ukoliko u koraku \ref{zak:validacijazahteva} sistem prepozna nevalidan zahtev, odbija ga uz odgovarajuću grešku. Nevalidan zahtev može biti:
+		\begin{enumerate}
+		\item Nevalidna specifikacija tipa posla. Zahtevani tip posla mora biti podržan od strane sistema,
+		\item Format ulaznih podataka nije odgovarajući.
+		\end{enumerate}
+Proces se nastavlja u koraku \ref{zak:konstruisezahtev} glavnog toka.
+	\item Sistem je preopterećen i nema dovoljno resursa da zakaže novi posao. Ukoliko u koraku \ref{zak:asinhzakazivanje} sistem proceni da nema dovoljno resursa za izvršavanje posla, on odbija zahtev uz grešku da je sistem preopterećen i da korisnik pokuša kasnije. Proces se nastavlja u koraku \ref{zak:saljezahtev} glavnog toka.
+	\end{enumerate}
+\item Podtokovi: /
+\item Specijalni zahtevi: Korisnik ima neophodno znanje za kreiranje zahteva i korišćenje interfejsa sistema.
+\item Dodatne informacije: /
+\end{enumerate}
+
+% Dohvatanje rezultata
+\subsubsection{Preuzimanje rezultata posla}
+\begin{enumerate}
+\item Naziv: Preuzimanje rezultata posla
+\item Akter: Korisnik koji želi da pruzme rezultate prethodno zakazanog posla
+\item Kratak opis: Korisnik šalje zahtev za preuzimanje rezultata izvršavanja. Sistem validira zahtev i vraća tražene rezultate.
+\item Preduslovi: Korisnik ima pristup internetu. Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji. Posao je izvršen i rezultati su dostupni u bazi.
+\item Postuslovi: Sistem je prosledio rezultate izvršavanja korisniku.
+\item Tok događaja:
+	\begin{enumerate}
+	\item \label{rez:konstruisezahtev} Korisnik konstruiše zahtev za preuzimanje rezultata posla. Zahtev se sastoji od identifikatora posla za koji želi da preuzme rezultate.
+	\item \label{rez:saljezahtev} Korisnik šalje zahtev sistemu preko interneta koristeći predefinisani interfejs.
+	\item \label{rez:proveraprava} Sistem proverava korisnikova prava.
+	\item \label{rez:validacijazahteva} Sistem validira novopridošli zahtev za preuzimanje rezultata posla.
+	\item \label{rez:sinhslanjerez} Sistem šalje rezultate korisniku.
+	\item Korisnik dobija rezultate.
+	\end{enumerate}
+\item Alternativni tok događaja:
+	\begin{enumerate}
+	\item Korisnik nema prava da podnese zahtev. Ukoliko u koraku \ref{rez:proveraprava} korisnik nema neophodna prava, sistem odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{rez:saljezahtev} glavnog toka.
+	\item Zahtev je nevalidan. Ukoliko u koraku \ref{rez:validacijazahteva} sistem prepozna da posao sa datim identifikatorom ne postoji, odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{rez:konstruisezahtev} glavnog toka.
+	\end{enumerate}
+\item Podtokovi: /
+\item Specijalni zahtevi: Korisnik ima neophodno znanje za generisanje zahteva i korišćenje interfejsa sistema.
+\item Dodatne informacije: Ukoliko je posao uspešno izvršen, rezultat izvršavanja se sastoji od traženog rezultata izračunavanja. Ukoliko je posao neuspešno obrađen, rezultat se sastoji od informacije o grešci.
+\end{enumerate}
+
+% Otkazivanje
+\subsubsection{Otkazivanje posla}
+\begin{enumerate}
+\item Naziv: Otkazivanje posla
+\item Akter: Korisnik koji želi da otkaže prethodno zakazani posao
+\item Kratak opis: Korisnik šalje zahtev za otkazivanje posla. Sistem validira zahtev i vraća potvrdu o uspešnosti otkazivanja.
+\item Preduslovi: Korisnik ima pristup internetu. Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji.
+\item Postuslovi: Sistem je otkazao posao i azurirao evidenciju posla u bazi.
+\item Tok događaja:
+	\begin{enumerate}
+	\item \label{otk:konstruisezahtev} Korisnik konstruiše zahtev za otkazivanje posla. Zahtev se sastoji od identifikatora posla koji želi da otkaže.
+	\item \label{otk:saljezahtev} Korisnik šalje zahtev sistemu preko interneta koristeći predefinisani interfejs.
+	\item \label{otk:proveraprava} Sistem proverava korisnikova prava.
+	\item \label{otk:validacijazahteva} Sistem validira novopridošli zahtev za otkazivanje posla.
+	\item \label{otk:sinhotkazivanje} Sistem sinhrono otkazuje sve operacije povezane sa poslom.
+	\item Korisnik dobija potvrdu da je posao otkazan.
+	\end{enumerate}
+\item Alternativni tok događaja:
+	\begin{enumerate}
+	\item Korisnik nema prava da podnese zahtev. Ukoliko u koraku \ref{otk:proveraprava} korisnik nema neophodna prava, sistem odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{otk:saljezahtev} glavnog toka.
+	\item Zahtev je nevalidan. Ukoliko u koraku \ref{otk:validacijazahteva} sistem prepozna da posao sa datim identifikatorom ne postoji ili nije aktivan, odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{otk:konstruisezahtev} glavnog toka.
+	\end{enumerate}
+\item Podtokovi: /
+\item Specijalni zahtevi: Korisnik ima neophodno znanje za generisanje zahteva i korišćenje interfejsa sistema.
+\item Dodatne informacije: /
+\end{enumerate}
+
+% Pregled poslova
+\subsubsection{Pregled poslova}
+\begin{enumerate}
+\item Naziv: Pregled poslova
+\item Akter: Korisnik koji želi da pruzme listu evidentiranih poslova u sistemu.
+\item Kratak opis: Korisnik šalje zahtev za izlistavanje evidentiranih poslova. Sistem validira zahtev i vraća tražene informacije o evidentiranim poslovima.
+\item Preduslovi: Korisnik ima pristup internetu. Korisnik ima neophodna prava da bi poslao zahtev sistemu. Sistem je u funkciji. Posao je izvršen i rezultati su dostupni u bazi.
+\item Postuslovi: Sistem je prosledio rezultate izvršavanja korisniku.
+\item Tok događaja:
+	\begin{enumerate}
+	\item \label{pregledp:konstruisezahtev} Korisnik konstruiše zahtev za izlistavanje poslova.
+	\item \label{pregledp:saljezahtev} Korisnik šalje zahtev sistemu preko interneta koristeći predefinisani interfejs.
+	\item \label{pregledp:proveraprava} Sistem proverava korisnikova prava.
+	\item \label{pregledp:slanjeliste} Sistem šalje listu evidentiranih poslova dostupnih u bazi.
+	\item Korisnik dobija listu evidentiranih poslova.
+	\end{enumerate}
+\item Alternativni tok događaja:
+	\begin{enumerate}
+	\item Korisnik nema prava da podnese zahtev. Ukoliko u koraku \ref{pregledp:proveraprava} korisnik nema neophodna prava, sistem odbija zahtev uz odgovarajuću grešku. Proces se nastavlja u koraku \ref{pregledp:saljezahtev} glavnog toka.
+	\end{enumerate}
+\item Podtokovi: /
+\item Specijalni zahtevi: Korisnik ima neophodno znanje za generisanje zahteva i korišćenje interfejsa sistema.
+\item Dodatne informacije: Rezultujuća lista poslova sadrži informacije o svakom evidentiranom poslu, i to:
+	\begin{enumerate}
+	\item Identifikator posla
+	\item Status posla
+	\item Vreme početka zvršavanja posla
+	\item Vreme završetka izvršavanja posla
+	\end{enumerate}
+\end{enumerate}
+
+% Administratorovi slučajevi upotrebe
+\subsection{Podešavanje sistema}
+Dodatne funkcionalnosti sistema uključuju slučajeve upotrebe u kojima je učesnik administrator. Ovo uključuje podešavanje bezbednosti i prava pristupa sistemu, kao i prilagođavanje sistema da bude u u skladu sa korisnikovim korišćenjem, tj. opterećenosti sistema.
+
+% Pristup podacima je ograničen i neophodno je da mogu da im pristupe samo autorizovane osobe.  -- prebaci negde
+
+% AAD Admin
+\subsubsection{Podešavanja prava pristupa}
+Prava pristupa sistemu, tj. delovima sistema dodeljuje administrator za bezbednost. Prava pristupa pojedinačnim delovima sistema se kontrolišu kroz različta prava koja mogu biti dodeljena korisniku. Tipovi prava su:
+	\begin{enumerate}
+	\item Iskustvo krajnjeg korisnika - Mogućnost slanja zahteva sistemu kroz definisani javni interfejs,
+	\item Pravo za praćenje rada sistema - Pristup telemetriji i logovima za praćenje rada sistema,
+	\item Administrator klastera - Pristup klasteru za devops akcije,
+	\item Administrator bezbednosti.
+	\end{enumerate}
+Slučajevi upotrebe iz ugla administratora za bezbednost su prikazani na slici \ref{fig:slucajupotrebe_aadadmin}. Ovih slučajevi upotrebe su jednostavni i intuitivni, te nisu opisani u nastavku.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{./images/dijagram_slucajeva_upotrebe_administrator_sistema_aadadmin.png}
+  \caption{UML dijagram slučajeva upotrebe - Administrator za bezbednost}
+  \label{fig:slucajupotrebe_aadadmin}
+\end{figure}
+
+
+% Podešavanje AKS klastera
+\subsubsection{Podešavanje klastera}
+Klaster administrator ima mogućnost da menja konfiguraciju sistema kako bi ga prilagodio potrebama krajnjeg korisnika. To uključuje horizontalno i vertikalno skaliranje sistema. Horizontalno skaliranje sistema podrazumeva menjanje broja pokrenutih servisa koji se koriste tokom izvršavanja posla. Vertikalno skaliranje podrazumeva ažuriranje konfiguracije kojom se dodeljuju resursi servisima (dostupna memorija i procesorsko vreme).
+
+Slučajevi upotrebe iz ugla klaster administratora su prikazani na slici \ref{fig:slucajupotrebe_admin_klastera}. Detalji ovih slučajeva upotrebe su konceptualno jasni, a uključuju poznavanje implementacionih detalja, te nisu dalje razrađivani.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{./images/dijagram_slucajeva_upotrebe_administrator_klastera.png}
+  \caption{UML dijagram slučajeva upotrebe - Klaster administrator}
+  \label{fig:slucajupotrebe_admin_klastera}
+\end{figure}
 
 \section{Arhitektura sistema}
 
@@ -412,7 +408,16 @@ Arhitektura sistema je prikazana na slici \ref{fig:arhitektura}.
 
 Arhutekturalni obrazac korišćen prilikom razvoja pojedinačnih servisa sistema (Frontenda i Jedinice za izračunavanje) je Model-Pogled-Kontroler (eng. \emph{Model-View-Controller}), bez implementacije Pogled dela. Razlog za odabir ovog obrasca je što on uvodi podelu odgovornosti različitih delova servisa. Kontroler je okrenut ka spolja, i definiše interfejs za komunikaciju sa servisom. U slučaju Frontenda, on definiše API (eng. \emph{Application Programming Interface}) koji prima korisnikove zahteve za izvršavanje posla.
 
-\section{Autentifikacija}
+
+% ------------------------------------------------------------------------------
+\section{Implementacija}
+% ------------------------------------------------------------------------------
+
+U ovom poglavlju biće opisana implementacija sistema (eng. \emph{Distributed Computation System}).
+Projekat je javno dostupan na servisu GitHub na adresi \href{https://github.com/milana-kovacevic/DistributedComputationSystem}{https://github.com/milana-kovacevic/DistributedComputationSystem}. Na adresi se takođe nalaze datoteke potrebne za kreiranje i konfiguraciju servisa pokrenutih u okviru Kubernetes klastera, kao i pomoćne skripte koje automatizuju proces postavljanja nove verzije aplikacija na klaster.
+
+
+\subsection{Autentifikacija}
 
 Proces autentikacije je prikazan na slici \ref{fig:autentifikacija}.
 
@@ -424,7 +429,7 @@ Proces autentikacije je prikazan na slici \ref{fig:autentifikacija}.
 \end{figure}
 
 
-\section{Baza}
+\subsection{Baza}
 
 ER (eng. \emph{Entity-Relation}) dijagram modela posla je prikazanan na slici \ref{fig:erposao}.
 
@@ -437,7 +442,7 @@ ER (eng. \emph{Entity-Relation}) dijagram modela posla je prikazanan na slici \r
 
 
 
-\section{Proces izvršavanja posla}
+\subsection{Proces izvršavanja posla}
 Stanja kroz koja prolazi posao su pikazana na slici \ref{fig:stanjaposla}.
 
 \begin{figure}[!ht]
@@ -448,18 +453,18 @@ Stanja kroz koja prolazi posao su pikazana na slici \ref{fig:stanjaposla}.
 \end{figure}
 
 
-\section{Distribuiranje atomičnih jedinica posla}
+\subsection{Distribuiranje atomičnih jedinica posla}
 TODO
 
-\section{Pokretanje u oblaku}
+\subsection{Pokretanje u oblaku}
 TODO
 
-\subsection{Integracija sa platofrmom emph{Microsoft Azure}}
+\subsubsection{Integracija sa platofrmom emph{Microsoft Azure}}
 
 U realizaciji je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Za upravljanje i pristup resursima u okviru ove platforme koristi se portal \emph{Azure} \cite{AzurePortal}.
 
 % ------------------------------------------------------------------------------
-\chapter{Testiranje}
+\section{Testiranje}
 \label{chp:testiranjesistema}
 % ------------------------------------------------------------------------------
 
@@ -508,7 +513,7 @@ Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na sli
 
 Sistem je testiran na više nivoa, počevši od testiranja jedinica koda za svaku komponentu, zatim testova integracije, i, na najvišem nivou, funkcionalnih testova koji ukljucuju klaster testove.
 
-\section{Testiranje jedinica koda}
+\subsection{Testiranje jedinica koda}
 Komponente \emph{Frontend} i \emph{ComputeNode} prate testovi jedinica koda. Ovi testovi se nalaze u zasebnom projektu. Tokom izrade testova jedinica koda, korišćen je i radni okvir \emph{Moq} \cite{Moq} za "podmetanje" vrednosti u zavisnim delova koda. U nastavku se nalazi slika \ref{fig:testscheduler} sa primerom testa jedinice koda u okviru komponente \emph{Frontend}.
 
 \begin{figure}[h!]
@@ -553,10 +558,10 @@ public class DistributedSchedulerTests
 \label{fig:testscheduler}
 \end{figure}
 
-\section{Integracioni testovi}
+\subsection{Integracioni testovi}
 Integracioni testovi testiraju integraciju između komponenti sistema: \emph{Frontend}a i \emph{ComputeNode}-a.
 
-\section{Funkcionalni testovi}
+\subsection{Funkcionalni testovi}
 Funkcionalni testovi testiraju funkcionalnost sistema iz ugla korisnika. U ovim testovima koristi se automatski generisana klijentska klasa \emph{DistributedCalculationSystemClient} nastala korišćenjem alata \emph{Swagger}. Ovaj klijent šalje zahteve ka servisu \emph{Frontend}, a u telu testova se proverava da li je odgovor od sistema očekivan.
 
 Funkcionalni testovi se dele na nekoliko grupa:
@@ -574,18 +579,18 @@ TODO evaluacija kada budem imala ove testove u zadovoljavajućoj formi
 TODO Test koji ukljucuje neki kompleksniji posao
 -- na primer, obrada foldera sa slikama i output koji ukljucuje primenjeni filter nad slikama.
 
-\subsection{Testovi performansi nad klasterom sa različitim konfiguracijama}
+\subsubsection{Testovi performansi nad klasterom sa različitim konfiguracijama}
 TODO
 
 
 % ------------------------------------------------------------------------------
-\chapter{Praćenje rada sistema}
+\section{Praćenje rada sistema}
 \label{chp:pracenjemetrika}
 % ------------------------------------------------------------------------------
 
 U ovom poglavlju će biti prikazane mogućnosti praćenja rada sistema uz pomoć servisa \emph{Azure Monitor} za praćenje ponašanja resursa u oblaku. Kako su glavne komponente sistema pokrenute u okviru klastera \emph{Azure Kubernetes Service}, dat je pregled načina na koji se analiziraju podaci o radu klastera. Na analogan način se može pratiti i ponašanje baze podataka \emph{Azure SQL Database} koju koristi sistem.
 
-\section{Metrike}
+\subsection{Metrike}
 
 Metrike sistema predstavljaju koncizne informacije o njegovom radu u (skoro) realnom vremenu. Kroz metrike možemo da vidimo trenutnu iskorišćenost resursa klastera, status mašina, mahuna, kontejnera itd.
 
@@ -609,11 +614,11 @@ Na slici \ref{fig:clusterunhealthy} je prikazan pogled na \emph{Insight} sekciju
   \label{fig:clusterunhealthy}
 \end{figure}
 
-\section{Logovi}
+\subsection{Logovi}
 
 Logovi predstavljaju informacije o radu sistema koje ispisuju pokrenuti servisi u tekstualnom formatu. Oni su automatski sakupljeni sa mašina i prosleđeni na mesto za čuvanje, gde im je moguće pristupiti kroz propratne alate.
 
-Za pregled logova korišćen je servis \emph{Azure Log Analytics} dostupan u okviru servisa \emph{Azure Monitor}. Ovaj alat pruža moćan deskriptivni jezik kojim se mogu pretraživati, filtrirati, sortirati i analizirati logovi. Rezultate upita je takođe moguće vizuelizovati u vidu grafikona.
+Za pregled logova korišćen je alat \emph{Azure Log Analytics} dostupan u okviru servisa \emph{Azure Monitor}. Ovaj alat pruža moćan deskriptivni jezik kojim se mogu pretraživati, filtrirati, sortirati i analizirati logovi. Rezultate upita je takođe moguće vizuelizovati u vidu grafikona.
 
 Na slici \ref{fig:frontendlogs} se nalazi prikaz stranice za pregled logova kontejnera koji sadrži Frontend aplikaciju.
 
@@ -625,7 +630,7 @@ Na slici \ref{fig:frontendlogs} se nalazi prikaz stranice za pregled logova kont
 \end{figure}
 
 
-\section{Uzbunjivači}
+\subsection{Uzbunjivači}
 
 Korisnik koji ima pravo pristupa logovima i metrikama može da napravi automatsku uzbunu (eng. \emph{Alert}) u nekim situacijama od značaja. Ovaj servis periodično proverava dostupne metrike i logove, i proverava da li su se ispunjeni uslovi predefinisani tokom njegovog kreiranja. Ukoliko zaključi da postoji problem, podiže uzbunu na ranije definisan način (mejlom, SMS-om, pozivom, obaveštenjem) i, ukoliko postoje, automatski pokreće predefinisane akcije. Problemi u produkcionom okruženju se javljaju, i u tim slučajevima je cilj što pre reagovati i obezbediti da sistem bude zdrav i na raspolaganju korisnicima.
 
@@ -649,12 +654,16 @@ Na slici \ref{fig:alertmemory} nalazi primer aktivnog opšteg upozorenja u sluč
 
 
 % ------------------------------------------------------------------------------
-\chapter{Pravci daljeg razvoja sistema}
-\label{chp:daljirazvoj}
+\chapter{Diskusija i zaključak}
+\label{chp:diskusijaizakljucak}
 % ------------------------------------------------------------------------------
+
+TODO par opstih recenica Pravci daljeg razvoja sistema
+
+\section{Dalji razvoj sistema}
 U ovom poglavlju je predloženo nekoliko ideja u kojem smeru bi predstavljeni sistem za izračunavanje mogao da se razvija.
 
-\section{Generalizacija tipa poslova}
+\subsection{Generalizacija tipa poslova}
 
 Prikazani sistem u inicijalnoj implementaciji ume da obrađuje samo poslove koji se sastoji od niza atomičnih poslova. Dodavanje podrške za obradu novih tipova posla je moguća uz sitnije izmene, čija je suština u dodavanju klase koja izvršava specifični atomični posao. Ova klasa implementira \href{https://github.com/milana-kovacevic/DistributedComputationSystem/blob/main/src/ComputeNode/Executors/ISpecificJobExecutor.cs}{\emph{ISpecificJobExecutor} interfejs} u projektu jedinice za izvršavanje. Izbor koji tip posla će sledeći biti implementiran zavisi od potražnje na tržištu.
 
@@ -663,7 +672,7 @@ Potpunu generalizaciju obrade atomičnih jedinica posla moguće je izvesti proš
 Dalja unapređenja bi mogla da uključe obradu poslova koji nisu nužno specificirani nizom svojih atomičnih podjedinica. Ovo podrazumeva da programer razume suštinu izvršavanja novog tipa posla, te generiše plan za distribuirano izvršavanje. Plan može da uključuje i agregaciju podrezultata zbog eventualnih zavisnosti podposlova.
 
 
-\section{Podrška za različite frontende}
+\subsection{Podrška za različite frontende}
 
 Implementirani frontend daje korisniku na korišćenje REST API. Dalji razvoj servisa bi mogao da podrži i druge klijent - server načine komunikacije, uključujući komunikaciju preko \emph{Web Socketa}. Takođe, moguće je izraditi \emph{Web} platformu i vizuelni korisnički interfejs za lakše korišćenje sistema.
 
@@ -671,7 +680,7 @@ Sistem je moguće proširiti da uključuje podršku i za druge tipove autentifik
 
 Navedena poboljšanja bi dosta opteretila današnju implementaciju frontenda. Sa daljim razvojem u ovom delu servisa, trebalo bi razdvojiti implementaciju Frontend servisa od komponente za distribuirano zakazivanje, i nastaviti razvoj imajući u vidu pristup razvijanja kroz mikro-servise. To bi uključilo izradu drugih Frontend servisa koji bi komunicirali sa svojim klijentima, a poslove slali na centralni servis zadužen za distribuirano orkestriranje.
 
-\section{Napredno zakazivanje poslova}
+\subsection{Napredno zakazivanje poslova}
 
 Urađena implementacija se, prilikom izvršavanja atomičnih jedinica posla na jedinicama za izvršavanje, oslanja na Kubernetes podršku za balansiranje zahteva koji idu kroz mrežu do servisa. Napredniji način zakazivanja poslova bi uključio prepoznavanje adresa jedinica za izvšavanje (tj. njihovih podova) a zatim tu informaciju iskoristio za pametnije usmeravanje poslova na izvršavanje na tim adresama. U kalkulacije bi uključio i procene kompleksnosti posla, kao i dostupne resurse.
 
@@ -680,9 +689,7 @@ Ova implementacija je dosta zahtevnija ali pruža potencijalnu priliku za bolje 
 Ukoliko je unapređenje opravdano, za početak, potrebno je napraviti infrastrukturu za pronalaženje adresa u okviru komponente koja vrši zakazivanje poslova. Dodatno, treba implementirati algoritam koji procenjuje kompleksnost posla u vidu potrebnih resursa za njegovo izračunavanje. Na kraju, potrebno je i implementirati novi orkestrator. Kada je ovo sve urađeno, potrebno je uraditi testiranje sistema sa novom implementacijom, kao i AB testiranje sistema kako bi se doneli zaključci koji je princip bolji i zašto.
 
 
-% ------------------------------------------------------------------------------
-\chapter{Zaključak}
-% ------------------------------------------------------------------------------
+\section{Zaključak}
 Zaključak, TODO
 
 % ------------------------------------------------------------------------------
