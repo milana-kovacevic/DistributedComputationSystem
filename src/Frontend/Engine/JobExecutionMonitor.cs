@@ -43,6 +43,7 @@ namespace Frontend.Engine
                 if (remainingAtomicJobs == 0)
                 {
                     JobState endResult = _dbEntityManager.UpdateJobStateToSuccessIfNotFailed(jobId, JobState.Succeeded, $"{jobDetails.AggregatedJobResult}");
+                    RemoveJob(jobId);
 
                     _logger.LogInformation($"Parent job {jobId} completed. End result: {endResult}");
                 }
@@ -52,6 +53,11 @@ namespace Frontend.Engine
         internal void AddJob(int jobId, int totalNumberAfAtomicJobs)
         {
             _inProgressTasks.TryAdd(jobId, new JobDetails(jobId, totalNumberAfAtomicJobs));
+        }
+
+        private void RemoveJob(int jobId)
+        {
+            _inProgressTasks.Remove(jobId, out _);
         }
 
         internal void AddAtomicJob(int jobId, int atomicJobId, AtomicJobResult atomicJobResult)
