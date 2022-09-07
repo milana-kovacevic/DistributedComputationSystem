@@ -53,12 +53,12 @@ namespace FunctionalTests
             Assert.NotNull(job);
 
             // Verify job
-            var jobFromSystem = await _client.JobsAsync(job.Id);
+            var jobFromSystem = await _client.JobsAsync(job.JobId);
             Assert.NotNull(jobFromSystem);
 
             // Poll and verify job state.
             await TestUtils.PollUntilSatisfied(
-                job.Id,
+                job.JobId,
                 (jobId) =>
                 {
                     var jobFromSys = _client.JobsAsync(jobId).GetAwaiter().GetResult();
@@ -67,14 +67,14 @@ namespace FunctionalTests
                 timeout: defaultTimeout);
 
             // Verify aggregated result
-            var completedJob = await _client.JobsAsync(job.Id);
+            var completedJob = await _client.JobsAsync(job.JobId);
             Assert.Equal("10", completedJob.JobResult.Result);
 
             // Delete job
-            await _client.DeleteAsync(job.Id);
+            await _client.DeleteAsync(job.JobId);
 
             // Now getting job should throw 404.
-            var exception = Assert.ThrowsAsync<ApiException>(async () => await _client.JobsAsync(job.Id));
+            var exception = Assert.ThrowsAsync<ApiException>(async () => await _client.JobsAsync(job.JobId));
             Assert.Equal<int>((int)HttpStatusCode.NotFound, exception.Result.StatusCode);
         }
     }

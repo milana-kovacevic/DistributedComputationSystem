@@ -206,7 +206,7 @@
       "Job": {
         "type": "object",
         "properties": {
-          "id": {
+          "jobId": {
             "type": "integer",
             "format": "int32"
           },
