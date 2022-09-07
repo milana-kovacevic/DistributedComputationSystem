@@ -17,7 +17,7 @@ namespace Frontend.Models
         [DataType(DataType.Date)]
         public DateTime? EndTime { get; set; }
 
-        // Forgein key.
+        // Foreign key.
         [JsonIgnore]
         public int JobId { get; set; }
 

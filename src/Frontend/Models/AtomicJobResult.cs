@@ -18,7 +18,7 @@ namespace Frontend.Models
 
         public DateTime? EndTime { get; set; }
 
-        // Forgein key.
+        // Foreign key.
         [JsonIgnore]
         public virtual AtomicJob AtomicJob { get; set; }
     }

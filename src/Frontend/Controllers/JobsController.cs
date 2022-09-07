@@ -36,7 +36,7 @@ namespace Frontend.Controllers
                 return NotFound();
             }
 
-            // TODO fetch result as forgein key
+            // TODO fetch result as foreign key
             var jobResults = await _context.JobResult.ToListAsync();
             var jobs = await _context.Job.ToListAsync();
             foreach (var job in jobs)
@@ -62,7 +62,7 @@ namespace Frontend.Controllers
                 return NotFound();
             }
 
-            // TODO fetch result as forgein key
+            // TODO fetch result as foreign key
             var jobResult = await _context.JobResult.FindAsync(id);
             job.JobResult = jobResult;
 

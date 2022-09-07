@@ -12,7 +12,7 @@ namespace Frontend.Models
 
         public AtomicJobResult AtomicJobResult { get; set; }
 
-        // Forgein key.
+        // Foreign key.
         public int JobId { get; set; }
 
         [JsonIgnore]

@@ -20,7 +20,7 @@ namespace Frontend.Models
                     // Populate internally Job manager with active jobs from the db.
                     // This is needed to reschedule unfinished jobs in case of the service restart.
 
-                    // TODO this should be automatically populated due to forgein key constraint when seeding Job object
+                    // TODO this should be automatically populated due to foreign key constraint when seeding Job object
                     // BUG
                     var activeJobIds = context.JobResult.AsEnumerable()
                         .Where(jobResult => jobResult.IsActive())
@@ -32,7 +32,7 @@ namespace Frontend.Models
                     {
                         var activeAtomicJobs = context.AtomicJob.AsEnumerable().ToList();
 
-                        // TODO this should be automatically populated due to forgein key constraint when seeding Job object
+                        // TODO this should be automatically populated due to foreign key constraint when seeding Job object
                         // BUG
                         foreach (var job in activeJobs)
                         {
