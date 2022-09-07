@@ -67,16 +67,43 @@
 Uvod TODO
 
 \section{Distriburani sistemi}
-TODO opsta prica
+
+Distribuirani sistemi se sastoje od skupa fizički odvojenih mašina koje su međusobno povezane mrežom. Na ovim mašinama su pokrenute softverske jedinice koje međusobno dele odgovornost, poslove, komuniciraju i sinhronizuju se.
+
+Prednosti ovako struktuiranog softvera su značajne. Neke od njih su:
+\begin{enumerate}
+\item Mogućnost postizanja visokog nivao paralelizacije prilikom raspodele poslova na mašine,
+\item Deljenje resursa,
+\item Prevazilaženje problema jednog mesta otkazivanja sistema (eng. \emph{single point of failure}). Ovim se povećava dostupnost softvera i njegova otpornost na greške,
+\item Mogućnost skaliranja broja mašina uključenih u sistem, čime se sistem  može prilagoditi potrebama.
+\item 
+\item 
+\end{enumerate}
+
+Glavna mana distribuiranih sistema je se oni oslanjaju na transport poruka kroz mrežu. Prezasićenjem mreže može se doći do povećanog kašnjenja prilikom transporta informacije od jednog dela sistema do drugog. Dodatna mana predstavlja kako obezbediti sistem, što je teže uraditi nego na sistemima sa jednom mašinom. Na kraju, implementacija i održavanje distribuiranih sistema su načelno kompleksniji nego rad sa aotmičnim sistemima.
+
+Distribuirani sistemi se mogu razvrstati u zavisnosti od načina povezivanja njegovih mašina. Postoje dva tipa arhitekture:
+\begin{enumerate}
+\item Klijent-server - Klijent 
+\item Peer-to-peer - 
+\end{enumerate}
+
+
+%Тиме се добија софтвер који успешно враћа тражени резултат и над великим и захтевним улазима – што повећава његову употребљивост и трајност. 
 
 \subsection{Distriburano izračunavanje}
-TODO
+
+Količina podataka u svetu kao i broj zahteva za njegovo obrađivanje neprekidno rastu. Obrada velikih podataka su postala potreba svakodnevnice. Međutim, često zbog fizičkih ograničenja nije moguće izvršiti izračunavanje u najednoj mašini, ili, ukoliko je to moguće, ono ne zadovoljava očekivane performanse. Sistemi za distribuirano izračunavanje predstavljaju rešenje za obradu velike količine podataka i potražnja za njima raste u koraku sa globalnom količinom podataka.
 
 \section{Analiza postujićih sistema}
 
 Analiza postujićih sistema TODO
+
+Spark
+
 Azure Functions pregled
-AWS rešenje?
+
+neko rešenje u AWS?
 
 
 \section{Opis korišćenih tehnologija i alata}
@@ -211,20 +238,33 @@ Sa klijentske strane, koristi se alat \emph{NSwag} \cite{NSwag}. Na osnovu preth
 \label{chp:sistemdcs}
 % ------------------------------------------------------------------------------
 
+U ovom poglavlju je predstavljan prateći projekat nazvan \emph{Distributed Computation System} (skr. \emph{DCS}).
 
+Glavni zadatak sistema je da omogući korisniku obradu podataka na distribuirani način.
+U jednostavnom slučaju, sistem obrađuje prosleđeni niz atomičnih poslova, a zatim agregira njihove rezultate. Ovo predstavlja distribuiranu implementaciju funkcionalnosti eng. \emph{map-reduce}.
+U naprednijem slučaju, sistem DCS je moguće usko specijalizovati za obradu određenog tipa posla. Tada se prilikom implementacije koristi i poznavanje prirode posla, što omogućava da se on podeli na njegove podjedinice. Krajnji rezultat se takodje dobija agregiranjem podrezultata, s tim da podjedinice posla mogu biti međusobno zavisne, te je za njegovo celokupno izvršavanje potrebno platiti plan distribuiranog izvršavanja.
+
+TODO primer nekog kompleksijeg posla
+
+Jedan od glavnih ciljeva sistema DCS je njegova modularnost i primenljivost. On je uz jednostavne izmene proširiv kako bi podržao različite tipove poslova koje su od značaja njegovim korisnicima, pritom, oslanjajući se na zajedničku infrastrukturu za izvršavanje poslova. Ova infrastruktura je opisana u narednim poglavljima.
+
+%, a predstavlja glavni deo sistema koji služi za zakazivanje i praćenje poslova, kao i čuvanje rezultata izvršavanja.
 
 % ------------------------------------------------------------------------------
 \section{Funkcionalnosti}
 \label{chp:opisfunkc}
 % ------------------------------------------------------------------------------
 
-TODO na pocetku obavezno navesti osnovnu ideju/motivaciju/viziju sa kojom se ulazi u pricu
+TODO 
+%Pre opisivanja slucajeva upotrebe bi trebalo da se oni ukratko navedu, sa nazivima i kratkim opisima
+%	- lakse je razumeti pojedinacan slucaj ako se razume kontekst u kome se on nalazi
+%	- mozda ima smisla staviti i neki dijagram aktivnosti ili bolje BPMN koji povezuje slucajeve upotrebe, tj. njihove ulaze i izlaze
 
-U ovom poglavlju biće prikazan pregled funkcionalnosti sistema za distribuirano izvršavanje. Zvaničan naziv sistema je \emph{Distribuirani sistem za izračunavanje} (eng. \emph{Distributed Computation System}).
+U ovom poglavlju biće prikazan pregled funkcionalnosti sistema za distribuirano izvršavanje DCS. 
+Glavna funkcionalnost sistema je obrada korisnikovih zahteva za izvršavanje poslova. 
 Funkcionalnosti su opisane u narednim sekcijama kroz slučajeve upotrebe, iz ugla korisnisnika i iz ugla dva tipa administratora: bezbednosnog i klaster administratora.
 
 \subsection{Izvršavanje poslova na zahtev}
-Glavna funkcionalnost sistema je obrada korisnikovih zahteva za izvršavanje poslova. 
 Slučajevi upotrebe iz ugla korisnika su prikazani na slici \ref{fig:slucajupotrebe_korisnik}, a detaljnije su opisani u narednim podsekcijama.
 
 \begin{figure}[!ht]
