@@ -34,7 +34,7 @@ namespace ComputeNode.Executor
             }
             catch (Exception e)
             {
-                var errorMessage = string.Format(ExceptionMessages.UnhandledException, atomicJob.ParentJobId, atomicJob.Id, e.Message);
+                var errorMessage = string.Format(ExceptionMessages.UnhandledException, atomicJob.ParentJobId, atomicJob.Id, e.ToString());
                 _logger.LogError(e, errorMessage);
 
                 return new AtomicJobResult()

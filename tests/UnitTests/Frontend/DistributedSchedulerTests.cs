@@ -28,6 +28,8 @@ namespace UnitTests.Frontend
             mockedComputeNodeClient.Setup(m => m.RunAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<FrontendAtomicJobType>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(new FrontendAtomicJobResult()));
             services.AddScoped((services) => mockedComputeNodeClient.Object);
+            
+            // TODO db setup
 
             services.AddScoped<IScheduler, DistributedScheduler>();
 

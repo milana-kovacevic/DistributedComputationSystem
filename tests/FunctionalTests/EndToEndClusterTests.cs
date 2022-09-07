@@ -1,6 +1,7 @@
 using DistributedCalculationSystem;
 using System.Collections.ObjectModel;
 using System.Net;
+using TestCommons;
 using Xunit;
 
 namespace FunctionalTests
@@ -8,17 +9,18 @@ namespace FunctionalTests
     public class EndToEndClusterTests
     {
         private const string baseUrl = "https://matf-distr-comp-sys.westeurope.cloudapp.azure.com/";
-        DistributedCalculationSystemClient client = null;
+        private DistributedCalculationSystemClient _client = null;
+        private TimeSpan defaultTimeout = TimeSpan.FromSeconds(5);
 
         public EndToEndClusterTests()
         {
-            this.client = new DistributedCalculationSystemClient(baseUrl, new HttpClient());
+            this._client = new DistributedCalculationSystemClient(baseUrl, new HttpClient());
         }
 
         [Fact]
         public async void ListJobs_Success()
         {
-            var jobs = await client.AllAsync();
+            var jobs = await _client.AllAsync();
 
             Console.WriteLine("Jobs:");
             foreach (var job in jobs)
@@ -32,26 +34,48 @@ namespace FunctionalTests
         [Fact]
         public async void RunJob_Success()
         {
-            int i = 0;
-            while (true)
+            int i = 1;
+            var inputData = new Collection<AtomicJobRequestData>()
             {
-                var inputData = new Collection<AtomicJobRequestData>()
+                new AtomicJobRequestData() { InputData =$"{i++}" },
+                new AtomicJobRequestData() { InputData =$"{i++}" },
+                new AtomicJobRequestData() { InputData =$"{i++}" },
+                new AtomicJobRequestData() { InputData =$"{i++}" },
+            };
+
+            var request = new JobRequestData()
+            {
+                JobType = JobType.CalculateSumOfDigits,
+                InputData = inputData
+            };
+
+            var job = await _client.CreateAsync(request);
+            Assert.NotNull(job);
+
+            // Verify job
+            var jobFromSystem = await _client.JobsAsync(job.Id);
+            Assert.NotNull(jobFromSystem);
+
+            // Poll and verify job state.
+            await TestUtils.PollUntilSatisfied(
+                job.Id,
+                (jobId) =>
                 {
-                    new AtomicJobRequestData() { InputData =$"{i++}" }
-                };
+                    var jobFromSys = _client.JobsAsync(jobId).GetAwaiter().GetResult();
+                    return jobFromSys.JobResult.State == JobState.Succeeded;
+                },
+                timeout: defaultTimeout);
 
-                var request = new JobRequestData()
-                {
-                    JobType = JobType.CalculateSumOfDigits,
-                    InputData = inputData
-                };
+            // Verify aggregated result
+            var completedJob = await _client.JobsAsync(job.Id);
+            Assert.Equal("10", completedJob.JobResult.Result);
 
-                var job = await client.CreateAsync(request);
+            // Delete job
+            await _client.DeleteAsync(job.Id);
 
-                Assert.NotNull(job);
-
-                await Task.Delay(30000);
-            }
+            // Now getting job should throw 404.
+            var exception = Assert.ThrowsAsync<ApiException>(async () => await _client.JobsAsync(job.Id));
+            Assert.Equal<int>((int)HttpStatusCode.NotFound, exception.Result.StatusCode);
         }
     }
 }

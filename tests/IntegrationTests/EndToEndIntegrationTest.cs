@@ -2,6 +2,8 @@ using DistributedCalculationSystem;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
+using System.Threading;
+using TestCommons;
 
 namespace IntegrationTests
 {
@@ -16,11 +18,12 @@ namespace IntegrationTests
     public class EndToEndIntegrationTest
     {
         private const string baseUrl = "http://host.docker.internal:8081";
-        DistributedCalculationSystemClient client = null;
+        private DistributedCalculationSystemClient _client = null;
+        private TimeSpan defaultTimeout = TimeSpan.FromSeconds(5);
 
         public EndToEndIntegrationTest()
         {
-            this.client = new DistributedCalculationSystemClient(baseUrl, new HttpClient());
+            _client = new DistributedCalculationSystemClient(baseUrl, new HttpClient());
         }
 
         [Fact]
@@ -37,23 +40,39 @@ namespace IntegrationTests
                 InputData = inputData
             };
 
-            var job = await client.CreateAsync(request);
-
+            var job = await _client.CreateAsync(request);
             Assert.NotNull(job);
 
             // Verify job
-            var jobFromSystem = await client.JobsAsync(job.Id);
+            var jobFromSystem = await _client.JobsAsync(job.Id);
             Assert.NotNull(jobFromSystem);
 
-            // TODO: Poll and verify result
+            // Poll and verify job state
+            await TestUtils.PollUntilSatisfied(
+                job.Id,
+                (jobId) =>
+                {
+                    var jobFromSys = _client.JobsAsync(jobId).GetAwaiter().GetResult();
+                    return jobFromSys.JobResult.State == JobState.Succeeded;
+                },
+                timeout: defaultTimeout);
+
+            // Verify aggregated result
+            var completedJob = await _client.JobsAsync(job.Id);
+            Assert.Equal("12", completedJob.JobResult.Result);
 
             // Delete job
+            await _client.DeleteAsync(job.Id);
+
+            // Now getting job should throw 404.
+            var exception = Assert.ThrowsAsync<ApiException>(async () => await _client.JobsAsync(job.Id));
+            Assert.Equal<int>((int)HttpStatusCode.NotFound, exception.Result.StatusCode);
         }
 
         [Fact]
         public async Task ListAllJobs_Success()
         {
-            var jobs = await client.AllAsync();
+            var jobs = await _client.AllAsync();
 
             Console.WriteLine("Jobs:");
             foreach (var job in jobs)
@@ -72,7 +91,7 @@ namespace IntegrationTests
                 InputData = new Collection<AtomicJobRequestData>()
             };
 
-            var exception = Assert.ThrowsAsync<ApiException>(() => client.CreateAsync(request));
+            var exception = Assert.ThrowsAsync<ApiException>(() => _client.CreateAsync(request));
             Assert.Equal<int>((int)HttpStatusCode.BadRequest, exception.Result.StatusCode);
         }
     }
