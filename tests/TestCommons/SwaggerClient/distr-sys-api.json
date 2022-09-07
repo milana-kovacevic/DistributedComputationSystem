@@ -244,6 +244,10 @@
           "state": {
             "$ref": "#/components/schemas/JobState"
           },
+          "result": {
+            "type": "string",
+            "nullable": true
+          },
           "error": {
             "type": "string",
             "nullable": true

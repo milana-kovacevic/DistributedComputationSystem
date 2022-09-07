@@ -1,6 +1,8 @@
-﻿using Frontend.Engine;
+﻿using Frontend.Data;
+using Frontend.Engine;
 using Frontend.Managers;
 using Microsoft.Extensions.DependencyInjection;
+using TestCommons;
 
 namespace UnitTests.Frontend
 {
@@ -11,8 +13,8 @@ namespace UnitTests.Frontend
         public JobManagerTests()
         {
             var services = new ServiceCollection();
-            services.AddSingleton<IJobManager, JobManager>();
-            services.AddSingleton<JobQueue>();
+            TestBootstraper.ConfigureServices_Frontend(services);
+
             serviceProvider = services.BuildServiceProvider();
         }
 

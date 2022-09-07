@@ -10,6 +10,7 @@ namespace IntegrationTests
     /// In order to run these tests, local setup must be created.
     /// There should be:
     ///     1. Frontend service running locally at http://host.docker.internal:8081
+    ///         a. It must have environment variable COMPUTENODE_SERVICE_HOST set to host.docker.internal
     ///     2. ComputeNode service running at corresponding port (8080).
     /// </summary>
     public class EndToEndIntegrationTest

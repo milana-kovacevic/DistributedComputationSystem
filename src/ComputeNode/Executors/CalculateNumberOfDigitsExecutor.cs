@@ -7,7 +7,11 @@ namespace ComputeNode.Executors
     {
         public async Task<AtomicJobResult> ExecuteAsync(AtomicJob atomicJob)
         {
-            var result = atomicJob.AtomicJobResult;
+            var result = new AtomicJobResult()
+            {
+                Id = atomicJob.Id,
+                ParentJobId = atomicJob.ParentJobId
+            };
 
             if (TryCalculateSumOfDigits(atomicJob.InputData, out long sumOfDigits))
             {

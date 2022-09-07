@@ -25,12 +25,8 @@ namespace ComputeNode.Executor
             {
                 _logger.LogInformation($"Executing AtomicJob: {atomicJob.ParentJobId}:{atomicJob.Id}");
 
-                atomicJob.AtomicJobResult.State = AtomicJobState.InProgress;
-
                 var specificJobExecutor = await _specificJobExecutorFactory.BuildAsync(atomicJob.JobType);
                 var result =  await specificJobExecutor.ExecuteAsync(atomicJob);
-
-                atomicJob.AtomicJobResult.State = AtomicJobState.Succeeded;
 
                 _logger.LogInformation($"Completed execution for AtomicJob: {atomicJob.ParentJobId}:{atomicJob.Id}");
 
