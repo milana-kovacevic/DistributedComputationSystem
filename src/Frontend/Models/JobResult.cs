@@ -5,9 +5,6 @@ namespace Frontend.Models
 {
     public class JobResult
     {
-        [JsonIgnore]
-        public int JobId { get; set; }
-
         public JobState State { get; set; }
 
         public string? Result { get; set; }
@@ -21,6 +18,9 @@ namespace Frontend.Models
         public DateTime? EndTime { get; set; }
 
         // Forgein key.
+        [JsonIgnore]
+        public int JobId { get; set; }
+
         [JsonIgnore]
         public virtual Job Job { get; set; }
     }

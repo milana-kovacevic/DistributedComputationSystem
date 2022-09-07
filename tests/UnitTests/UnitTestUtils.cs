@@ -20,7 +20,7 @@ namespace UnitTests
         {
             return new Job()
             {
-                Id = id,
+                JobId = id,
                 JobType = JobType.CalculateSumOfDigits,
                 AtomicJobs =  new List<AtomicJob>()
                 {

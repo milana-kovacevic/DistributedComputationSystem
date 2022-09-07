@@ -18,8 +18,8 @@ namespace Frontend.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Setup primary keys & defaults.
-            modelBuilder.Entity<Job>().HasKey(e => e.Id);
-            modelBuilder.Entity<Job>().Property(e => e.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Job>().HasKey(e => e.JobId);
+            modelBuilder.Entity<Job>().Property(e => e.JobId).ValueGeneratedOnAdd();
 
             modelBuilder.Entity<JobResult>().HasKey(aj => aj.JobId);
 

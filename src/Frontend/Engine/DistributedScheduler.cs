@@ -38,17 +38,17 @@ namespace Frontend.Engine
         {
             try
             {
-                _logger.LogInformation($"Scheduling job with id {job.Id}...");
+                _logger.LogInformation($"Scheduling job with id {job.JobId}...");
 
                 // Add parent job to list in progress tasks.
-                _jobExecutionMonitor.AddJob(job.Id, job.AtomicJobs.Count);
+                _jobExecutionMonitor.AddJob(job.JobId, job.AtomicJobs.Count);
 
                 // Setup initial state for aggregated result stored in parent job.
                 // UNDONE: nice handling depending on the job type.
                 job.JobResult.Result = string.Empty;
 
                 // Update parent job state.
-                _dbEntityManager.UpdateJobState(job.Id, newState: JobState.InProgress);
+                _dbEntityManager.UpdateJobState(job.JobId, newState: JobState.InProgress);
 
                 // NOT DONE:
                 // [ADVANCED] use custom routing to available ComputeNodes using ingress setup.
@@ -61,13 +61,13 @@ namespace Frontend.Engine
                     await _atomicJobScheduler.ScheduleAsync(atomicJobUnit);
                 }
                 
-                _logger.LogInformation($"Scheduled job with id {job.Id}");
+                _logger.LogInformation($"Scheduled job with id {job.JobId}");
                 
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Failed to schedule job with id {job.Id}");
-                _dbEntityManager.UpdateJobState(job.Id, newState: JobState.Failed);
+                _logger.LogError(e, $"Failed to schedule job with id {job.JobId}");
+                _dbEntityManager.UpdateJobState(job.JobId, newState: JobState.Failed);
             }
         }
 

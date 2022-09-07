@@ -43,13 +43,13 @@ namespace Frontend.Engine
                     // Check if the job is canceled in the meantime.
                     if (jobToBeScheduled.State == JobState.Cancelled)
                     {
-                        _logger.LogWarning($"Job {jobToBeScheduled.Id} is canceled. Skipping scheduling.");
+                        _logger.LogWarning($"Job {jobToBeScheduled.JobId} is canceled. Skipping scheduling.");
                         continue;
                     }
 
                     // Schedule job one at the time.
                     // TODO use thread pooling
-                    _logger.LogInformation($"Scheduling job with id {jobToBeScheduled.Id}.");
+                    _logger.LogInformation($"Scheduling job with id {jobToBeScheduled.JobId}.");
                     await this._scheduler.ScheduleJobAsync(jobToBeScheduled);
                 }
                 catch (OperationCanceledException oce)

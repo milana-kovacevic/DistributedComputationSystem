@@ -13,13 +13,13 @@ namespace Frontend.Migrations
                 name: "Job",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    JobId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     JobType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Job", x => x.Id);
+                    table.PrimaryKey("PK_Job", x => x.JobId);
                 });
 
             migrationBuilder.CreateTable(
@@ -39,7 +39,7 @@ namespace Frontend.Migrations
                         name: "FK_AtomicJob_Job_JobId",
                         column: x => x.JobId,
                         principalTable: "Job",
-                        principalColumn: "Id",
+                        principalColumn: "JobId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -49,6 +49,7 @@ namespace Frontend.Migrations
                 {
                     JobId = table.Column<int>(type: "int", nullable: false),
                     State = table.Column<int>(type: "int", nullable: false),
+                    Result = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Error = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -60,7 +61,7 @@ namespace Frontend.Migrations
                         name: "FK_JobResult_Job_JobId",
                         column: x => x.JobId,
                         principalTable: "Job",
-                        principalColumn: "Id",
+                        principalColumn: "JobId",
                         onDelete: ReferentialAction.Cascade);
                 });
 

@@ -45,7 +45,7 @@ namespace UnitTests.Frontend
             var jobToBeScheduled = UnitTestUtils.GetDummyJob();
             await scheduler.ScheduleJobAsync(jobToBeScheduled);
 
-            mockedComputeNodeClient.Verify(client => client.RunAsync(It.IsAny<int>(), jobToBeScheduled.Id, It.IsAny<FrontendAtomicJobType>(), It.IsAny<string>()), Times.AtLeastOnce());
+            mockedComputeNodeClient.Verify(client => client.RunAsync(It.IsAny<int>(), jobToBeScheduled.JobId, It.IsAny<FrontendAtomicJobType>(), It.IsAny<string>()), Times.AtLeastOnce());
             Assert.NotEmpty(scheduler.GetInProgressTasks());
         }
     }

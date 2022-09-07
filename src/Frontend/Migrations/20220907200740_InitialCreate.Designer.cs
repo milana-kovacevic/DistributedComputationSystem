@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Frontend.Migrations
 {
     [DbContext(typeof(JobContext))]
-    [Migration("20220830011435_InitialCreate")]
+    [Migration("20220907200740_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,16 +79,16 @@ namespace Frontend.Migrations
 
             modelBuilder.Entity("Frontend.Models.Job", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("JobId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("JobId"), 1L, 1);
 
                     b.Property<int>("JobType")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("JobId");
 
                     b.ToTable("Job");
                 });
@@ -102,6 +102,9 @@ namespace Frontend.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Error")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Result")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartTime")

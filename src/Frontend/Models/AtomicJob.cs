@@ -6,8 +6,6 @@ namespace Frontend.Models
     {
         public int AtomicJobId { get; set; }
 
-        public int JobId { get; set; }
-
         public AtomicJobType JobType { get; set; }
 
         public string InputData { get; set; }
@@ -15,6 +13,8 @@ namespace Frontend.Models
         public AtomicJobResult AtomicJobResult { get; set; }
 
         // Forgein key.
+        public int JobId { get; set; }
+
         [JsonIgnore]
         public virtual Job Job { get; set; }
 

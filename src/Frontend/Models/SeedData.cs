@@ -26,7 +26,7 @@ namespace Frontend.Models
                         .Where(jobResult => jobResult.IsActive())
                         .Select(jobResult => jobResult.JobId);
 
-                    activeJobs = activeJobs.Where(job => activeJobIds.Contains(job.Id));
+                    activeJobs = activeJobs.Where(job => activeJobIds.Contains(job.JobId));
 
                     if (activeJobs.Any() && context.AtomicJob.Any())
                     {
@@ -36,7 +36,7 @@ namespace Frontend.Models
                         // BUG
                         foreach (var job in activeJobs)
                         {
-                            job.AtomicJobs ??= activeAtomicJobs.Where(atomicJob => atomicJob.JobId == job.Id).ToList();
+                            job.AtomicJobs ??= activeAtomicJobs.Where(atomicJob => atomicJob.JobId == job.JobId).ToList();
                             //job.AtomicJobs.AddRange(activeAtomicJobs.Where(atomicJob => atomicJob.JobId == job.Id));
                         }
 

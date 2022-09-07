@@ -33,7 +33,7 @@ namespace Frontend.Managers
         {
             if (_jobQueue.TryEnqueueJob(job))
             {
-                _dbEntityManager.UpdateJobState(job.Id, newState: JobState.Queued);
+                _dbEntityManager.UpdateJobState(job.JobId, newState: JobState.Queued);
 
                 return true;
             }

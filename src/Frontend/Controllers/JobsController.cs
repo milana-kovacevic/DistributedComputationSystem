@@ -41,7 +41,7 @@ namespace Frontend.Controllers
             var jobs = await _context.Job.ToListAsync();
             foreach (var job in jobs)
             {
-                job.JobResult = jobResults.SingleOrDefault(jr => job.Id == jr.JobId);
+                job.JobResult = jobResults.SingleOrDefault(jr => job.JobId == jr.JobId);
             }
 
             return jobs;
@@ -99,7 +99,7 @@ namespace Frontend.Controllers
                 return Problem(ExceptionMessages.SystemTooBusy, statusCode: (int)StatusCodes.Status503ServiceUnavailable);
             }
 
-            return AcceptedAtAction("GetJob", new { id = addedJob.Entity.Id }, addedJob.Entity);
+            return AcceptedAtAction("GetJob", new { id = addedJob.Entity.JobId }, addedJob.Entity);
         }
 
         // POST: api/Jobs/Cancel/5
@@ -128,11 +128,11 @@ namespace Frontend.Controllers
             // TODO make this nicer.
             job.JobResult.State = JobState.PendingCancellation;
             var updatedJob = _context.Job.Update(job);
-            await _jobManager.CancelJobAsync(job.Id);
+            await _jobManager.CancelJobAsync(job.JobId);
 
             await _context.SaveChangesAsync();
 
-            return AcceptedAtAction("GetJob", new { id = updatedJob.Entity.Id }, updatedJob.Entity);
+            return AcceptedAtAction("GetJob", new { id = updatedJob.Entity.JobId }, updatedJob.Entity);
         }
 
         // DELETE: api/Jobs/5
@@ -157,7 +157,7 @@ namespace Frontend.Controllers
 
         private bool JobExists(int id)
         {
-            return (_context.Job?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Job?.Any(e => e.JobId == id)).GetValueOrDefault();
         }
     }
 }

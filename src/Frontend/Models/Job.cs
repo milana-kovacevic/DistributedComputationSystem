@@ -4,7 +4,7 @@ namespace Frontend.Models
 {
     public class Job
     {
-        public int Id { get; set; }
+        public int JobId { get; set; }
 
         public JobType JobType { get; set; }
 
