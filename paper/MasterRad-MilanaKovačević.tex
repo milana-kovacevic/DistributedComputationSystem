@@ -84,8 +84,8 @@ Glavna mana distribuiranih sistema je se oni oslanjaju na transport poruka kroz 
 
 Distribuirani sistemi se mogu razvrstati u zavisnosti od načina povezivanja njegovih mašina. Postoje dva tipa arhitekture:
 \begin{enumerate}
-\item Klijent-server - Klijent 
-\item Peer-to-peer - 
+\item Klijent-server - TODO
+\item Peer-to-peer - TODO
 \end{enumerate}
 
 
@@ -95,11 +95,12 @@ Distribuirani sistemi se mogu razvrstati u zavisnosti od načina povezivanja nje
 
 Količina podataka u svetu kao i broj zahteva za njegovo obrađivanje neprekidno rastu. Obrada velikih podataka su postala potreba svakodnevnice. Međutim, često zbog fizičkih ograničenja nije moguće izvršiti izračunavanje u najednoj mašini, ili, ukoliko je to moguće, ono ne zadovoljava očekivane performanse. Sistemi za distribuirano izračunavanje predstavljaju rešenje za obradu velike količine podataka i potražnja za njima raste u koraku sa globalnom količinom podataka.
 
-\section{Analiza postujićih sistema}
+\section{Analiza postojećih sistema}
+\label{sec:postojeca_resenja}
 
-Analiza postujićih sistema TODO
+Analiza postojećih sistema TODO
 
-Spark
+Spark \cite{Spark}
 
 Azure Functions pregled
 
@@ -109,9 +110,10 @@ neko rešenje u AWS?
 \section{Opis korišćenih tehnologija i alata}
 
 U ovom podpoglavlju biće opisane tehnologije i alati korišćenih prilikom programske realizacije sistema.
-Za implementaciju je korišćen programski jezik C\#, i radni okvir \emph{.NET Core 6.0}. Korišćeno razvojno okruženje je \emph{Microsoft Visual Studio Community 2022} i operativni sistem \emph{Windows 10}.
 
 \subsection{Platforma Doker}
+\label{subs:docker_platform}
+
 Za pokretanje aplikacija je korišćena platforma Doker (eng. \emph{Docker}) \cite{Docker}. Prednosti korišćenja ove platforme su monogstuke. Za početak, ona razdvaja razvijanje aplikacije od infrastrukture na kojoj će biti pokrenuta. Aplikacija je spakovana u izolovano okruženje koje se naziva kontejner (eng. \emph{container}). Kontejneri sadrže sve (a u idealnom slučaju, samo) ono što je neophodno za pokretanje aplikacije, u vidu strukture koja se naziva slika (eng. \emph{image}). To čini da su kontejneri lagani za prenošenje, za razliku od virtuelnih mašina koje u teoriji mogu pružiti istu funkcionalnost. Spakovana aplikacija može biti pokrenuta neograničeni broj puta, u različitim okruženjima: prilikom ručnog i automatskog testiranja, u produkciji, itd. Prilikom pokretanja kontejnera, može se dodatno specificirati njegova konfiguracija (na primer, mapiranje portova).
 
 Arhitektura platforme je predstavljena na slici \ref{fig:dockerarch}, preuzetoj iz zvanične dokumentacije \cite{DockerArch}. 
@@ -125,7 +127,7 @@ Arhitektura platforme je predstavljena na slici \ref{fig:dockerarch}, preuzetoj 
 
 Koraci potrebni da se napravi slika aplikacije se definišu u \emph{Dockerfile} datoteci. Svaka instrukcija u ovom fajlu kreira sloj slike (eng. \emph{layer}). U sličaju \emph{.NET Core} aplikacija, prvi korak je učitavanje željenog radnog okvira, zatim, (primera radi) pokretanje kompilacije izvornog koda i smeštanje izvršnog koda na željenu lokaciju. Krajnji korak je uglavnom definisanje komande za pokretanje aplikacije. Bitno je naglasiti da tokom razvijanja aplikacije, Doker prepoznaje koji slojevi slike koji su se promenili, te ponovo kreira samo njih i njihove naredne slojeve. Ovo čini generisanje slike efikasnom i brzom operacijom koja ne usporava programera, koji najčeće menja samo delove aplikacije. Kreirane slike se čuvaju u registru slika koji može biti lokalni ili negde u oblaku.
 
-Kontejner sadrži specifikaciju operativnog sistema na kojem se pokreće slika. Izbor radnog okvira \emph{.NET Core} omogućava pokretanje servisa na različitim platformama \emph{Windows}, \emph{Mac} i \emph{Linux}, bez izmena izvornog koda. Za izradu sistema su korišćeni \emph{Linux} kontejneri.
+Kontejner sadrži specifikaciju operativnog sistema na kojem se pokreće slika, i on može biti \emph{Windows}, \emph{Mac} i \emph{Linux}.
 
 Korišćeno okruženje za lokalno kreiranje i pokretanje kontejnera je \emph{Docker Desktop} prikazan na slici \ref{fig:dockerdesktop}.
 
@@ -138,6 +140,7 @@ Korišćeno okruženje za lokalno kreiranje i pokretanje kontejnera je \emph{Doc
 
 % Kubernetes detalji
 \subsection{Platforma Kubernetes}
+\label{subs:kubernetes_platform}
 
 Pokretanje sistema na praktičan i skalabilan način, omogućila je platforma \emph{Kubernetes} \cite{Kubernetes}. Ona pruža potrebnu infrastrukturu za pokretanje aplikacija zapakovanih u Doker kontejnere, kao i za upravljanje njima i ostalim pratećim delovima sistema.
 
@@ -210,15 +213,16 @@ kubectl autoscale deployment computenode --cpu-percent=50 --min=1 --max=10
 \end{verbatim}
 
 \subsection{Platforma \emph{Microsoft Azure}}
+\label{sub:azureplatform}
 
 Programska implementacija sistema je uključila njegovo pokretanje u oblaku, a za to je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Ova platforma pruža veliki broj softverskih i infrastrukturnih rešenja, kao i propratnih servisa i mogućnosti koje poboljšavaju celokupno iskustvo korišćenja.
 
 Najrelevantniji resursi korišćeni za pokretanje sistema u na \emph{Azure} platformi su:
 \begin{enumerate}
-\item \emph{Azure Kubernetes Service} \cite{AKS} - Resurs koji predstavlja \emph{Kubernetes} klaster.
-\item \emph{Azure SQL Database} \cite{AzureSQLDB} - Resurs koji predstavlja relacionu bazu podataka.
-\item \emph{Azure Active Directory} \cite{AAD} - Resurs koji omogućava kreiranje identiteta (npr. korisnike, grupe) i njihovo njegovo podešavanje (prava pristupa, login...).
-\item \emph{Azure Monitor} \cite{AzureMonitor} - Skup propratnih funkcionalnosti koje pružaju uvid u ponašanje Azure resursa. Sakuplja logove i metrike, daje alate za njihovo analiziranje, kao i mogućnost uzbunjivanja (eng. \emph{alerts}) i reagovanja na dešavanja od interesa. Ima podršku i za tehnike mašinskog učenja nad sakupljenim podacima. Više o integraciji sa \emph{Azure Monitor}-om se nalazu u poglavlju \ref{chp:pracenjemetrika}.
+\item \emph{Azure Kubernetes Service} (skr. AKS) \cite{AKS} - Resurs koji predstavlja \emph{Kubernetes} klaster.
+\item \emph{Azure SQL Database} (skr. AzureSQLDB) \cite{AzureSQLDB} - Resurs koji predstavlja relacionu bazu podataka.
+\item \emph{Azure Active Directory} \cite{AAD}  (skr. AAD)- Resurs koji omogućava kreiranje identiteta (npr. korisnike, grupe) i njihovo njegovo podešavanje (prava pristupa, login...).
+\item \emph{Azure Monitor} (skr. AM) \cite{AzureMonitor} - Skup propratnih funkcionalnosti koje pružaju uvid u ponašanje Azure resursa. Sakuplja logove i metrike, daje alate za njihovo analiziranje, kao i mogućnost uzbunjivanja (eng. \emph{alerts}) i reagovanja na dešavanja od interesa. Ima podršku i za tehnike mašinskog učenja nad sakupljenim podacima. Više o integraciji sa \emph{Azure Monitor}-om se nalazu u poglavlju \ref{chp:pracenjemetrika}.
 \end{enumerate}
 
 \subsection{Dodatni alati}
@@ -244,7 +248,7 @@ Glavni zadatak sistema je da omogući korisniku obradu podataka na distribuirani
 U jednostavnom slučaju, sistem obrađuje prosleđeni niz atomičnih poslova, a zatim agregira njihove rezultate. Ovo predstavlja distribuiranu implementaciju funkcionalnosti eng. \emph{map-reduce}.
 U naprednijem slučaju, sistem DCS je moguće usko specijalizovati za obradu određenog tipa posla. Tada se prilikom implementacije koristi i poznavanje prirode posla, što omogućava da se on podeli na njegove podjedinice. Krajnji rezultat se takodje dobija agregiranjem podrezultata, s tim da podjedinice posla mogu biti međusobno zavisne, te je za njegovo celokupno izvršavanje potrebno platiti plan distribuiranog izvršavanja.
 
-TODO primer nekog kompleksijeg posla
+TODO primer nekog kompleksnijeg posla
 
 Jedan od glavnih ciljeva sistema DCS je njegova modularnost i primenljivost. On je uz jednostavne izmene proširiv kako bi podržao različite tipove poslova koje su od značaja njegovim korisnicima, pritom, oslanjajući se na zajedničku infrastrukturu za izvršavanje poslova. Ova infrastruktura je opisana u narednim poglavljima.
 
@@ -435,7 +439,15 @@ Slučajevi upotrebe iz ugla klaster administratora su prikazani na slici \ref{fi
   \label{fig:slucajupotrebe_admin_klastera}
 \end{figure}
 
+% ------------------------------------------------------------------------------
 \section{Arhitektura sistema}
+% ------------------------------------------------------------------------------
+
+Sistem DCS je implementiran po uzoru na klijent-server arhitekturu.
+
+Centralni deo sistema DCS se sastoji od dva tipa aplikacija: Frontenda (skr. FE) i jedinice za izvršavanje (eng. \emph{ComputeNode}, skr. CN). 
+U sistemu postoji tačno jedna FE aplikacija, koja je zadužena za dve logički odvojene celine: primanje zahteva od korisnika i orkestriranje izvršavanja prethodno zakazanog posla.
+Sa druge strane, u zavisnosti od potreba, DCS se sastoji od jedne ili više CN aplikacije koja je zadužena za izvršavanje atomičnih (nedeljivih) poslova. CN prima zahteve za izvršavanje atomičnih poslova od FE.
 
 Arhitektura sistema je prikazana na slici \ref{fig:arhitektura}.
 
@@ -446,30 +458,54 @@ Arhitektura sistema je prikazana na slici \ref{fig:arhitektura}.
   \label{fig:arhitektura}
 \end{figure}
 
-Arhutekturalni obrazac korišćen prilikom razvoja pojedinačnih servisa sistema (Frontenda i Jedinice za izračunavanje) je Model-Pogled-Kontroler (eng. \emph{Model-View-Controller}), bez implementacije Pogled dela. Razlog za odabir ovog obrasca je što on uvodi podelu odgovornosti različitih delova servisa. Kontroler je okrenut ka spolja, i definiše interfejs za komunikaciju sa servisom. U slučaju Frontenda, on definiše API (eng. \emph{Application Programming Interface}) koji prima korisnikove zahteve za izvršavanje posla.
+Arhutekturalni obrazac korišćen prilikom razvoja gore navedenih komponenti je u osnovi Model-Pogled-Kontroler (eng. \emph{Model-View-Controller}), s tim da nema implementaciju dela Pogled. Posmatrajući na drugi način, njihova arhitektura bi mogla da se klasifikuje kao slojevita. Bez obzira kako klasifikujemo arhitekturu sistema, ona jasno uvodi podelu odgovornosti različitih delova servisa.
+
+Prvi sloj aplikacija predstavlja REST API (eng. \emph{Application Programming Interface}) imlementiran u okviru kontrolera. Ovaj sloj aplikacije je okrenut ka spolja i definiše interfejs za komunikaciju sa servisom. U slučaju FE je to API preko kog prima korisnikove zahteve za izvršavanje posla, a u slučaju CN je to API preko kojeg on prima zahteve od FE. Drugi sloj aplikacija predstavlja njihov centralni deo sa glavnom logikom. Treći sloj aplikacija predstavlja njenu integraciju sa bazom podataka. U inicijalnoj verziji servisa, samo FE ima direktnu komunikaciju sa bazom.
 
 
 % ------------------------------------------------------------------------------
 \section{Implementacija}
 % ------------------------------------------------------------------------------
 
-U ovom poglavlju biće opisana implementacija sistema (eng. \emph{Distributed Computation System}).
-Projekat je javno dostupan na servisu GitHub na adresi \href{https://github.com/milana-kovacevic/DistributedComputationSystem}{https://github.com/milana-kovacevic/DistributedComputationSystem}. Na adresi se takođe nalaze datoteke potrebne za kreiranje i konfiguraciju servisa pokrenutih u okviru Kubernetes klastera, kao i pomoćne skripte koje automatizuju proces postavljanja nove verzije aplikacija na klaster.
+U ovom poglavlju biće opisana implementacija sistema DCS.
 
+Projekat je javno dostupan na servisu GitHub na adresi \href{https://github.com/milana-kovacevic/DistributedComputationSystem}{https://github.com/milana-kovacevic/Distributed}\label{githubdsc}. Za implementaciju je korišćen programski jezik C\#, i radni okvir \emph{.NET Core 6.0}. Korišćeno razvojno okruženje je \emph{Microsoft Visual Studio Community 2022} i operativni sistem \emph{Windows 10}.
 
-\subsection{Autentifikacija}
+Glavna logika distribuiranog izvršavanja nalazi se u okviru aplikacije Frontend. Jedinice za izvršavanje su jednostavni servisi koji imaju jasan cilj koji podrazumeva izvršavanje atomičnog posla i vraćanje rezultata izvršavanja. U nastavku, razrađuje se implementacija FE komponente (ukoliko nije naglašeno drugačije).
 
-Proces autentikacije je prikazan na slici \ref{fig:autentifikacija}.
+Detaljnija zaduženja FE komponente su, redom:
+\begin{enumerate}
+\item Autentifikacija klijenta,
+\item Primanje i validacija zahteva,
+\item \label{podela_planiranje}Podela zahteva na podposlove i pravljenje plana izvršavanja,
+\item \label{orkestriranje}Orkestiranje izvršavanja podposlova i agregacija (pod)rezultata,
+\item \label{cuvanje_u_bazi}Čuvanje rezultata u bazi (ili nekom drugom skladištu).
+\end{enumerate}
+
+Kada je FE primio i evidentirao zahtev za izvršavanje posla, on ubacuje posao u red za izvršavanje. U slučaju da je sistem zauzet obradom drugih poslova, novi zahtev će čekati dok sistem ne postane spreman da ga obradi. Sporedna nit aplikacije uzima poslove iz reda i šalje ga na dalju obradu jedan po jedan komponenti koja se naziva Distriburiani orkestrator (skr. DO). Za implementaciju reda za čekanje, korišćeno je postojeće rešenje bezbedno u radu sa nitima \emph{BlockingCollection} \cite{BlockingCollection}.
+
+Moguća stanja kroz koja prolazi posao su prikazana na slici \ref{fig:stanjaposla}.
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=1.0\textwidth]{./images/autentikacija_uml_dijagram_sekvence.png}
-  \caption{UML dijagram sekvence - Autentifikacija}
-  \label{fig:autentifikacija}
+  \includegraphics[width=1.0\textwidth]{./images/dijagram_stanja_posao.png}
+  \caption{UML dijagram stanja - Posao}
+  \label{fig:stanjaposla}
 \end{figure}
 
+Navedena zaduženja \ref{podela_planiranje} i \ref{orkestriranje} uključuju glavni deo logike distribuiranog izvršavanja. U slučaju da korisnikov zahtev već sadrži niz atomičnih poslova, podelu početnog zahteva nije potrebno raditi. Plan izvršavanja zavisi od tipa posla, a u slučaju \emph{map-reduce} funkcionalnosti porazumeva da je svaki atomični posao nezavisno obrađuje (funkcijom \emph{map}), a krajnje rešenje se dobija predefinisanon agregacijom atomičnih rezultata (funkcijom \emph{reduce}). Prva verzija sistema DSC implementira \emph{map-reduce} funkcionalnost u kojom računa ukupan zbir cifara brojeva niza, gde svaki broj predstavlja jedan ulazni podatak za atomični posao. U naprednoj verziji sistema, plan bi bio predstavljan u vidu stabla u kojem listovi predstavljaju početne atomične poslove, unutrašnji čvorovi agregacije, a grane prenos međurezultata kroz mrežu. Ovakve planove koriste sistemi poput Sparka \cite{Spark} predstavljeni u uvodu \ref{sec:postojeca_resenja} .
+
+Na osnovu plana izvršavanja, komponenta DO sprovodi dalje izvršavanje posla: šalje atomične poslove preko mreže do CN na izvršavanje. Zakazivanje atomičnih poslova se dešava asinhrono i ono ne blokira DO da obraduje naredni posao. Dobijeni rezultati se šalju odvojenoj komponenti koja zna da agregara rezultate (u zavisnosti od kompleksnosti agregacije, i onda bi mogla da se prosledi CN na izračunavanje) na osnovu plana izvršavanja.
+
+DO dodatno prati uspešnost izvršavanja poslova i u slučaju uspešnog završetka poslova upisuje rezultat u bazu. Ukoliko dođe do nepoznate greške prilikom izvršavanja posla, nekoliko puta će pokušati ponovo da izvrši posao. Logika koja ponovo pokreće poslove je potrebna kako bi se povećao stepen pouzdanosti tokom izvršavanja poslova, u slučaju da se na primer jedna od CN aplikacija restartuje. Ukoliko i nakon toga dođe do greške, posao se završava i kao krajnji rezultat se upisuje greška.
+
+Klijent ima mogućnost da otkaže aktivan posao. Ova operacija uključuje i otkazivanje svih njegovih podposlova koji su u procesu izvršavanja ili koji čekaju na izvršavanje, te se ukupno otkazivanje dešava globalno u celom sistemu. Otkazivanje zakazanih poslova nije podržano u inicijalnoj verziji.
+
+TODO dijagram klasa DO
 
 \subsection{Baza}
+
+Sistem DSC koristi bazu za evidentiranje poslova, ažuriranje stanja u kojem se nalazi posao (kako bi korisnik mogao da prati šta se dešava u sistemu), kao i za čuvanje rezultata i međurezultata poslova. Ukoliko su ulazni podaci ili rezultat veliki, te ih nije moguće čuvati u bazi, DCS je moguće proštiriti kako bi koristio neko drugo skladište za pristup ulaznim podacima i za čuvanje rezultata.
 
 ER (eng. \emph{Entity-Relation}) dijagram modela posla je prikazanan na slici \ref{fig:erposao}.
 
@@ -481,27 +517,39 @@ ER (eng. \emph{Entity-Relation}) dijagram modela posla je prikazanan na slici \r
 \end{figure}
 
 
+\subsection{Autentifikacija}
 
-\subsection{Proces izvršavanja posla}
-Stanja kroz koja prolazi posao su pikazana na slici \ref{fig:stanjaposla}.
+Za autentifikaciju klijenta je korišćen servis AAD \cite{AAD} opisan u uvodnom poglavlju u sekciji \ref{sub:azureplatform}. Korisniku su dodeljena prava korišćenja servisa time što je njegov identitet član grupe korisnika definisane u okviru servisa AAD.
+
+Proces autentikacije je prikazan na slici \ref{fig:autentifikacija}. Korisnik pre kontaktiranja sistema DSC šalje zahtev servisu AAD kako bi preuzeo token za autentifikaciju. Ovaj token ima rok trajanja (uobičajeno je 60 minuta) i specifičan je za autentifikaciju na DSC sistem. Kada klijent ima token, prosleđuje ga u HEADER delu HTTP zahteva u polju za autentifikaciju. Sistem DCS prima zahtev i pre nego što počne da ga obrađuje, izvrši validaciju AAD tokena. Token sadrži otisak (eng. \emph{thumbprint}) koji garantuje njegovu validnost. Ukoliko je token validan, nastavlja se sa obradom zahteva, a ukoliko nije, korisnikov zahtev se odbija uz odgovarajuću grešku.
+
+Za bezbednu komunikaciju u produkcionom okruženju, forsiran je protokol HTTPS.
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=1.0\textwidth]{./images/dijagram_stanja_posao.png}
-  \caption{UML dijagram stanja - Posao}
-  \label{fig:stanjaposla}
+  \includegraphics[width=1.0\textwidth]{./images/autentikacija_uml_dijagram_sekvence.png}
+  \caption{UML dijagram sekvence - Autentifikacija}
+  \label{fig:autentifikacija}
 \end{figure}
 
 
-\subsection{Distribuiranje atomičnih jedinica posla}
+\section{Pokretanje u oblaku}
 TODO
 
-\subsection{Pokretanje u oblaku}
-TODO
+Opisana implementacija dobija smisao i punu moć pokretanjem sistema DCS na klasteru Kubernetes predstavljenom u uvodu u delu \ref{subs:kubernetes_platform}. Komponente Frontend i Compute Node se pokreću u okviru kontejnera Doker (uvodni deo, sekcija \label{subs:docker_platform}). Izbor radnog okvira \emph{.NET Core} omogućava pokretanje servisa na različitim platformama \emph{Windows}, \emph{Mac} i \emph{Linux}, bez izmena izvornog koda. Za izradu sistema su korišćeni \emph{Linux} kontejneri Doker.
 
-\subsubsection{Integracija sa platofrmom emph{Microsoft Azure}}
+Za pokretanje sistema DCS u oblaku je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Za upravljanje i pristup resursima u okviru ove platforme koristi se portal \emph{Azure} \cite{AzurePortal}.
 
-U realizaciji je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Za upravljanje i pristup resursima u okviru ove platforme koristi se portal \emph{Azure} \cite{AzurePortal}.
+TODO još detalja o setapu
+
+yaml primer
+objasnjenje load balansinga ka CN
+prikaz mahuna iz portala ili kubectl klijenta
+DNS / https / ingress setup
+
+
+Na adresi projekta na sevisu GitHub \ref{githubdsc} se nalaze datoteke potrebne za kreiranje i konfiguraciju servisa pokrenutih u okviru Kubernetes klastera, kao i pomoćne skripte koje automatizuju proces postavljanja nove verzije aplikacija na klaster.
+
 
 % ------------------------------------------------------------------------------
 \section{Testiranje}
