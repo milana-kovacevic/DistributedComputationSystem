@@ -1,6 +1,6 @@
-﻿using ControlNode.Frontend.Models;
+﻿using ControlNode.Abstraction.Models;
 
-namespace ControlNode.Frontend.Models
+namespace ControlNode.Abstraction.Models
 {
     /// <summary>
     /// Extension methods for Job and its related objects.

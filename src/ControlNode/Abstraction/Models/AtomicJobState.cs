@@ -1,4 +1,4 @@
-﻿namespace ControlNode.Frontend.Models
+﻿namespace ControlNode.Abstraction.Models
 {
     public enum AtomicJobState
     {

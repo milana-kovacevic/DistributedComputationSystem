@@ -3,8 +3,8 @@ using ControlNode.DCS.Core.Engine;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using TestCommons;
-using FrontendAtomicJobResult = ControlNode.Frontend.Models.AtomicJobResult;
-using FrontendAtomicJobType = ControlNode.Frontend.Models.AtomicJobType;
+using FrontendAtomicJobResult = ControlNode.Abstraction.Models.AtomicJobResult;
+using FrontendAtomicJobType = ControlNode.Abstraction.Models.AtomicJobType;
 
 namespace UnitTests.ControlNode
 {

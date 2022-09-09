@@ -1,6 +1,6 @@
 ﻿using ControlNode.DCS.Core.Managers;
-using ControlNode.Frontend.Data;
-using ControlNode.Frontend.Models;
+using ControlNode.Abstraction.Data;
+using ControlNode.Abstraction.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

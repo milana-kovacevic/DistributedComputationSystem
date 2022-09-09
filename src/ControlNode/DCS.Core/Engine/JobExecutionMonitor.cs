@@ -1,6 +1,6 @@
 ﻿using ControlNode.DCS.Core.Exceptions;
-using ControlNode.Frontend.Data;
-using ControlNode.Frontend.Models;
+using ControlNode.Abstraction.Data;
+using ControlNode.Abstraction.Models;
 using System.Collections.Concurrent;
 
 namespace ControlNode.DCS.Core.Engine

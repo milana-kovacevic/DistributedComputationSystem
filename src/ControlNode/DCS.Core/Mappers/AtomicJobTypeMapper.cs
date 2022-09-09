@@ -1,5 +1,5 @@
 ﻿using ComputeNodeAtomicJobType = ComputeNodeSwaggerClient.AtomicJobType;
-using FrontendAtomicJobType = ControlNode.Frontend.Models.AtomicJobType;
+using FrontendAtomicJobType = ControlNode.Abstraction.Models.AtomicJobType;
 
 namespace ControlNode.DCS.Core.Mappers
 {

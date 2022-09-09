@@ -1,6 +1,6 @@
-﻿using ControlNode.DCS.Core.Engine;
-using ControlNode.Frontend.Data;
-using ControlNode.Frontend.Models;
+﻿using ControlNode.Abstraction.Data;
+using ControlNode.Abstraction.Models;
+using ControlNode.DCS.Core.Engine;
 
 namespace ControlNode.DCS.Core.Managers
 {

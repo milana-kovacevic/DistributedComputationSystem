@@ -1,5 +1,5 @@
-﻿using ControlNode.Frontend.Data;
-using ControlNode.Frontend.Models;
+﻿using ControlNode.Abstraction.Data;
+using ControlNode.Abstraction.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ControlNode.Frontend.Controllers

@@ -1,13 +1,13 @@
 ﻿using ComputeNode.Controllers;
 using ComputeNode.Executor;
 using ComputeNode.Executors;
+using ControlNode.Abstraction.Data;
 using ControlNode.Configuration;
 using ControlNode.DCS.Core.ComputeNodeSwaggerClient;
 using ControlNode.DCS.Core.Engine;
 using ControlNode.DCS.Core.Managers;
 using ControlNode.DCS.Core.Topology;
 using ControlNode.Frontend.Controllers;
-using ControlNode.Frontend.Data;
 using ControlNode.Frontend.Providers;
 using IntegrationTests;
 using Microsoft.EntityFrameworkCore;

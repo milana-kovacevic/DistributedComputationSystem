@@ -3,7 +3,7 @@ using ControlNode.DCS.Core.ComputeNodeSwaggerClient;
 using ControlNode.DCS.Core.Engine;
 using ControlNode.DCS.Core.Managers;
 using ControlNode.DCS.Core.Topology;
-using ControlNode.Frontend.Data;
+using ControlNode.Abstraction.Data;
 using ControlNode.Frontend.Providers;
 using System.Text.Json.Serialization;
 

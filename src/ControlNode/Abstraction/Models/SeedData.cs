@@ -1,8 +1,8 @@
-﻿using ControlNode.DCS.Core.Managers;
-using ControlNode.Frontend.Data;
+﻿using ControlNode.Abstraction.Data;
+using ControlNode.DCS.Core.Managers;
 using Microsoft.EntityFrameworkCore;
 
-namespace ControlNode.Frontend.Models
+namespace ControlNode.Abstraction.Models
 {
     public class SeedData
     {

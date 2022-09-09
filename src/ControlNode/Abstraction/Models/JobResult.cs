@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace ControlNode.Frontend.Models
+namespace ControlNode.Abstraction.Models
 {
     public class JobResult
     {

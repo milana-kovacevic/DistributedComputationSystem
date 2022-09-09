@@ -1,7 +1,7 @@
 ﻿using ControlNode.DCS.Core.ComputeNodeSwaggerClient;
 using ControlNode.DCS.Core.Exceptions;
-using ControlNode.Frontend.Data;
-using ControlNode.Frontend.Models;
+using ControlNode.Abstraction.Data;
+using ControlNode.Abstraction.Models;
 
 namespace ControlNode.DCS.Core.Engine
 {

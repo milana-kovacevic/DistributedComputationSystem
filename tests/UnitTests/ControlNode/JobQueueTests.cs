@@ -1,5 +1,5 @@
 ﻿using ControlNode.DCS.Core.Engine;
-using ControlNode.Frontend.Models;
+using ControlNode.Abstraction.Models;
 
 namespace UnitTests.ControlNode
 {

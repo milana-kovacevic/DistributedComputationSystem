@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ControlNode.Frontend.Models
+namespace ControlNode.Abstraction.Models
 {
     public class AtomicJobRequestData
     {

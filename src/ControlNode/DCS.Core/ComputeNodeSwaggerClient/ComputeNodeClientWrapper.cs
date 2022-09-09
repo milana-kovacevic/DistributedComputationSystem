@@ -2,8 +2,8 @@
 using ControlNode.DCS.Core.Mappers;
 using ControlNode.DCS.Core.Topology;
 using ComputeNodeAtomicJobResult = ComputeNodeSwaggerClient.AtomicJobResult;
-using FrontendAtomicJobResult = ControlNode.Frontend.Models.AtomicJobResult;
-using FrontendAtomicJobState = ControlNode.Frontend.Models.AtomicJobType;
+using FrontendAtomicJobResult = ControlNode.Abstraction.Models.AtomicJobResult;
+using FrontendAtomicJobState = ControlNode.Abstraction.Models.AtomicJobType;
 
 namespace ControlNode.DCS.Core.ComputeNodeSwaggerClient
 {

@@ -1,4 +1,4 @@
-﻿using ControlNode.Frontend.Models;
+﻿using ControlNode.Abstraction.Models;
 using System.Collections.Concurrent;
 
 namespace ControlNode.DCS.Core.Engine

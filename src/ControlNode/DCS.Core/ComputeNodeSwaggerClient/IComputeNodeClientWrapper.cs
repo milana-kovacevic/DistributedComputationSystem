@@ -1,5 +1,5 @@
-﻿using FrontendAtomicJobResult = ControlNode.Frontend.Models.AtomicJobResult;
-using FrontendAtomicJobType = ControlNode.Frontend.Models.AtomicJobType;
+﻿using FrontendAtomicJobResult = ControlNode.Abstraction.Models.AtomicJobResult;
+using FrontendAtomicJobType = ControlNode.Abstraction.Models.AtomicJobType;
 
 namespace ControlNode.DCS.Core.ComputeNodeSwaggerClient
 {

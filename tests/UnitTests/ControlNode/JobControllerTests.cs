@@ -1,6 +1,6 @@
 ﻿using ControlNode.Frontend;
 using ControlNode.Frontend.Controllers;
-using ControlNode.Frontend.Models;
+using ControlNode.Abstraction.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;

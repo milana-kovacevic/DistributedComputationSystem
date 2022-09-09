@@ -1,6 +1,6 @@
-﻿using ControlNode.Frontend.Models;
+﻿using ControlNode.Abstraction.Models;
 
-namespace ControlNode.Frontend.Data
+namespace ControlNode.Abstraction.Data
 {
     public class DbEntityManager
     {

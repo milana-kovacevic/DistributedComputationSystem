@@ -1,7 +1,7 @@
-﻿using ControlNode.Frontend.Models;
+﻿using ControlNode.Abstraction.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ControlNode.Frontend.Data
+namespace ControlNode.Abstraction.Data
 {
     public class JobContext : DbContext
     {
