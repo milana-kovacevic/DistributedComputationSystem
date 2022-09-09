@@ -52,13 +52,15 @@ namespace IntegrationTests
                 (jobId) =>
                 {
                     var jobFromSys = _client.JobsAsync(jobId).GetAwaiter().GetResult();
-                    return jobFromSys.JobResult.State == JobState.Succeeded;
+                    return jobFromSys.State == JobState.Succeeded;
                 },
                 timeout: defaultTimeout);
 
             // Verify aggregated result
-            var completedJob = await _client.JobsAsync(job.JobId);
-            Assert.Equal("12", completedJob.JobResult.Result);
+            var jobResult = await _client.JobResultsAsync(job.JobId);
+            Assert.Null(jobResult.Error);
+            Assert.Equal("12", jobResult.Result);
+            Assert.Equal(JobState.Succeeded, jobResult.State);
 
             // Delete job
             await _client.DeleteAsync(job.JobId);

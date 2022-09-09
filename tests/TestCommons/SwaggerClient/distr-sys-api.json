@@ -1,7 +1,7 @@
 ﻿{
   "openapi": "3.0.1",
   "info": {
-    "title": "Frontend",
+    "title": "ControlNode",
     "version": "1.0"
   },
   "paths": {
@@ -213,8 +213,8 @@
           "jobType": {
             "$ref": "#/components/schemas/JobType"
           },
-          "jobResult": {
-            "$ref": "#/components/schemas/JobResult"
+          "state": {
+            "$ref": "#/components/schemas/JobState"
           }
         },
         "additionalProperties": false

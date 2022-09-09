@@ -3,6 +3,7 @@ using ControlNode.Abstraction.Data;
 using ControlNode.Abstraction.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ControlNode.Frontend.Entities;
 
 namespace ControlNode.Frontend.Controllers
 {

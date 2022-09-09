@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ControlNode.Abstraction.Models;
+using System.ComponentModel.DataAnnotations;
 
-namespace ControlNode.Abstraction.Models
+namespace ControlNode.Frontend.Entities
 {
     public class JobRequestData
     {

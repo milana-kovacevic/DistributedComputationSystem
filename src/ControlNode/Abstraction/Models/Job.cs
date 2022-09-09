@@ -11,9 +11,9 @@ namespace ControlNode.Abstraction.Models
         [JsonIgnore]
         public ICollection<AtomicJob> AtomicJobs { get; set; }
 
+        [JsonIgnore]
         public JobResult JobResult { get; set; }
         
-        [JsonIgnore]
         public JobState State => JobResult.State;
 
         public Job()
@@ -30,7 +30,7 @@ namespace ControlNode.Abstraction.Models
             this.JobType = jobType;
             this.AtomicJobs = atomicJobs;
 
-            JobResult = new JobResult()
+            this.JobResult = new JobResult()
             {
                 State = JobState.Pending,
                 StartTime = DateTime.UtcNow
