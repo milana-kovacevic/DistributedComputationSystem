@@ -1,9 +1,8 @@
 using DistributedCalculationSystem;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
-using System.Threading;
 using TestCommons;
+using Xunit;
 
 namespace IntegrationTests
 {

@@ -1,14 +1,14 @@
 ﻿using ComputeNode.Controllers;
 using ComputeNode.Executor;
 using ComputeNode.Executors;
-using Frontend.ComputeNodeSwaggerClient;
-using Frontend.Configuration;
-using Frontend.Controllers;
-using Frontend.Data;
-using Frontend.Engine;
-using Frontend.Managers;
-using Frontend.Providers;
-using Frontend.Topology;
+using ControlNode.Configuration;
+using ControlNode.DCS.Core.ComputeNodeSwaggerClient;
+using ControlNode.DCS.Core.Engine;
+using ControlNode.DCS.Core.Managers;
+using ControlNode.DCS.Core.Topology;
+using ControlNode.Frontend.Controllers;
+using ControlNode.Frontend.Data;
+using ControlNode.Frontend.Providers;
 using IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +22,7 @@ namespace TestCommons
         {
             // Add services to the TEST container.
 
-            services.AddSingleton<IFrontendConfiguration, FrontendConfiguration>();
+            services.AddSingleton<IControlNodeConfiguration, ControlNodeConfiguration>();
             services.AddSingleton<IConnectionStringProvider, AzureSqlDbConnectionStringProvider>();
             services.AddSingleton<IJobManager, JobManager>();
             services.AddSingleton<JobQueue>();

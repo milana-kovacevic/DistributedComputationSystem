@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deploy-computenode
+  name: frontend
   namespace: distributed-system-dev-ns
   labels:
-    app: computenode
+    app: frontend
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      service: computenode
+      app: frontend
+  strategy: {}
   template:
     metadata:
       labels:
-        app: computenode
-        service: computenode
+        app: frontend
     spec:
       containers:
-        - name: computenode
-          image: matfmastercr.azurecr.io/computenode:v5.7
+        - name: frontend-container
+          image: matfmastercr.azurecr.io/frontend:v5.7
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -26,18 +26,26 @@ spec:
           env:
             - name: ASPNETCORE_URLS
               value: http://+:80
+            - name: ASPNETCORE_HTTPS_PORT 
+              value: http://+:443
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: computenode
+  name: frontend
   namespace: distributed-system-dev-ns
   labels:
-    app: computenode
+    app: frontend
 spec:
+  type: ClusterIP
   ports:
   - port: 80
+    name: 80-80
     protocol: TCP
+    targetPort: 80
+  - port: 443
+    name: 443-443
+    protocol: TCP
+    targetPort: 443
   selector:
-    app: computenode
-  internalTrafficPolicy: Local
+    app: frontend

@@ -1,4 +1,4 @@
-﻿using Frontend.Models;
+﻿using ControlNode.Frontend.Models;
 
 namespace UnitTests
 {

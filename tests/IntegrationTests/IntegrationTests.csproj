@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Frontend\Frontend.csproj" />
+    <ProjectReference Include="..\..\src\ControlNode\ControlNode.csproj" />
     <ProjectReference Include="..\TestCommons\TestCommons.csproj" />
   </ItemGroup>
 

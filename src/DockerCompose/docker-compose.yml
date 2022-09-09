@@ -2,11 +2,11 @@ version: '3.4'
 
 services:
   frontendservice:
-    image: ${DOCKER_REGISTRY-}frontend
-    container_name: frontend
+    image: ${DOCKER_REGISTRY-}controlnode
+    container_name: controlnode
     build:
       context: .
-      dockerfile: ../Frontend/Dockerfile
+      dockerfile: ../ControlNode/Dockerfile
 
   computenodeservice:
     image: ${DOCKER_REGISTRY-}computenode

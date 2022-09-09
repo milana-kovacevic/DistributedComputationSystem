@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeNode\ComputeNode.csproj" />
-    <ProjectReference Include="..\..\src\Frontend\Frontend.csproj" />
+    <ProjectReference Include="..\..\src\ControlNode\ControlNode.csproj" />
     <ProjectReference Include="..\TestCommons\TestCommons.csproj" />
   </ItemGroup>
 

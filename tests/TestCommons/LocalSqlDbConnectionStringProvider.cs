@@ -1,5 +1,5 @@
-﻿using Frontend.Configuration;
-using Frontend.Providers;
+﻿using ControlNode.Configuration;
+using ControlNode.Frontend.Providers;
 
 namespace IntegrationTests
 {

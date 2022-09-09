@@ -3,9 +3,9 @@ src/bin/**
 src/obj/**
 src/DockerCompose/bin/**
 src/DockerCompose/obj/**
-src/Frontend/bin/**
-src/Frontend/obj/**
-src/Frontend/Frontend.csproj.user
+src/ControlNode/bin/**
+src/ControlNode/obj/**
+src/ControlNode/ControlNode.csproj.user
 src/ComputeNode/bin/**
 src/ComputeNode/obj/**
 src/ComputeNode/ComputeNode.csproj.user
