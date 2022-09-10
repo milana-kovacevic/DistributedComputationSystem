@@ -1,7 +1,7 @@
 ﻿apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: frontend
+  name: controlnode
   namespace: distributed-system-dev-ns
 spec:
   ingressClassName: nginx
@@ -12,6 +12,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: frontend
+            name: controlnode
             port:
               number: 80

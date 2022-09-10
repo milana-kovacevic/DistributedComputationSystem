@@ -1,24 +1,24 @@
 # Script  push docker images to AKS.
 # Using predefined image repository.
 # Example usage:
-# .\scripts\deploy_images_to_aks.ps1 -serviceType frontend
-param ($serviceType='frontend', $namespace='distributed-system-dev-ns')
+# .\scripts\deploy_images_to_aks.ps1 -serviceType controlnode
+param ($serviceType='controlnode', $namespace='distributed-system-dev-ns')
 
 Write-Host "Running the deploy tp AKS for $serviceType "
 
 $ROOT_PATH = 'C:\Users\v-milkov\Documents\private\faks\master_rad\DistributedComputationSystem\'
 cd $ROOT_PATH
 
-$FRONTEND_NAME = 'frontend'
+$CONTROLNODE_NAME = 'controlnode'
 $COMPUTENODE_NAME = 'computenode'
 
 
 
-# Frontend
-if ($serviceType -eq $FRONTEND_NAME -or $serviceType -eq 'all')
+# controlnode
+if ($serviceType -eq $CONTROLNODE_NAME -or $serviceType -eq 'all')
 {
-	Write-Host "Running update for $FRONTEND_NAME ..."
-	kubectl apply --namespace=$namespace -f .\src\Frontend\deploy-frontend.yml
+	Write-Host "Running update for $CONTROLNODE_NAME ..."
+	kubectl apply --namespace=$namespace -f .\src\ControlNode\deploy-controlnode.yml
 }
 
 

@@ -1,30 +1,30 @@
 # Script to build and tag docker images.
 # Example usage:
 # .\scripts\prepare_images.ps1 -serviceType computenode -tag v2 -push $True
-# .\scripts\prepare_images.ps1 -serviceType frontend -tag v3.5 -push $True
-param ($serviceType='frontend', $tag='v2', $push=$False)
+# .\scripts\prepare_images.ps1 -serviceType controlnode -tag v3.5 -push $True
+param ($serviceType='controlnode', $tag='v2', $push=$False)
 Write-Host "Running the build and tag for $serviceType using tag $tag"
 
 $ROOT_PATH = 'C:\Users\v-milkov\Documents\private\faks\master_rad\DistributedComputationSystem\'
 cd $ROOT_PATH
 
-$FRONTEND_NAME = 'frontend'
+$CONTROLNODE_NAME = 'controlnode'
 $COMPUTENODE_NAME = 'computenode'
 
-# Frontend
-if ($serviceType -eq $FRONTEND_NAME -or $serviceType -eq 'all')
+# ControlNode
+if ($serviceType -eq $CONTROLNODE_NAME -or $serviceType -eq 'all')
 {
-	Write-Host "Running build for $FRONTEND_NAME ..."
-	docker build -t frontend -f .\src\Frontend\Dockerfile --force-rm -t $FRONTEND_NAME ".\src"
+	Write-Host "Running build for $CONTROLNODE_NAME ..."
+	docker build -t controlnode -f .\src\ControlNode\Dockerfile --force-rm -t $CONTROLNODE_NAME ".\src"
 
-	Write-Host "Running docker tag for $FRONTEND_NAME ..."
-	docker tag frontend:latest matfmastercr.azurecr.io/frontend:$tag
+	Write-Host "Running docker tag for $CONTROLNODE_NAME ..."
+	docker tag controlnode:latest matfmastercr.azurecr.io/controlnode:$tag
 	
 	if ($push -eq $True)
 	{
-		Write-Host "Pushing image $FRONTEND_NAME to default repository ..."
-		Write-Host "Image: matfmastercr.azurecr.io/frontend:$tag"
-		docker push matfmastercr.azurecr.io/frontend:$tag
+		Write-Host "Pushing image $CONTROLNODE_NAME to default repository ..."
+		Write-Host "Image: matfmastercr.azurecr.io/controlnode:$tag"
+		docker push matfmastercr.azurecr.io/controlnode:$tag
 	}
 }
 

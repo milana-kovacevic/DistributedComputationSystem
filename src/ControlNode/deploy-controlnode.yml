@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: controlnode
   namespace: distributed-system-dev-ns
   labels:
-    app: frontend
+    app: controlnode
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend
+      app: controlnode
   strategy: {}
   template:
     metadata:
       labels:
-        app: frontend
+        app: controlnode
     spec:
       containers:
-        - name: frontend-container
-          image: matfmastercr.azurecr.io/frontend:v5.7
+        - name: controlnode-container
+          image: matfmastercr.azurecr.io/controlnode:v0.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -32,10 +32,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend
+  name: controlnode
   namespace: distributed-system-dev-ns
   labels:
-    app: frontend
+    app: controlnode
 spec:
   type: ClusterIP
   ports:
@@ -48,4 +48,4 @@ spec:
     protocol: TCP
     targetPort: 443
   selector:
-    app: frontend
+    app: controlnode

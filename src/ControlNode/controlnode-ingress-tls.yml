@@ -1,7 +1,7 @@
 ﻿apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: frontend-tls
+  name: controlnode-tls
   namespace: distributed-system-dev-ns
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
@@ -10,16 +10,16 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - frontend-tls.matf-distr-comp-sys.westeurope.cloudapp.azure.com
+    - controlnode-tls.matf-distr-comp-sys.westeurope.cloudapp.azure.com
     secretName: tls-secret
   rules:
-  - host: frontend-tls.matf-distr-comp-sys.westeurope.cloudapp.azure.com
+  - host: controlnode-tls.matf-distr-comp-sys.westeurope.cloudapp.azure.com
   - http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: frontend
+            name: controlnode
             port:
               number: 80
