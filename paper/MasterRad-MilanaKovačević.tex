@@ -564,23 +564,117 @@ Za bezbednu komunikaciju u produkcionom okruženju, forsiran je protokol HTTPS.
 
 \section{Pokretanje u oblaku}
 
-Opisana implementacija dobija smisao i punu moć pokretanjem sistema DCS na klasteru Kubernetes predstavljenom u uvodu u delu \ref{subs:kubernetes_platform}. Komponente Frontend i Compute Node se pokreću u okviru kontejnera Doker (uvodni deo, odeljak \ref{subs:docker_platform}). Izbor radnog okvira \emph{.NET Core} omogućava pokretanje servisa na različitim platformama \emph{Windows}, \emph{Mac} i \emph{Linux}, bez izmena izvornog koda. Za izradu sistema su korišćeni kontejneri Doker sa operativnim sistemom \emph{Linux}.
-
-Za pokretanje sistema DCS u oblaku je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Za upravljanje i pristup resursima u okviru ove platforme koristi se portal \emph{Azure} \cite{AzurePortal}.
-
-TODO još detalja o setapu
-
-yaml primer
-
-objasnjenje load balansinga ka CN
-
-prikaz mahuna iz portala ili kubectl klijenta
-
-DNS / https / ingress setup
-
+Opisana implementacija dobija smisao i punu moć pokretanjem sistema DCS na klasteru Kubernetes predstavljenom u uvodu u delu \ref{subs:kubernetes_platform}. Komponente Control Node i Compute Node se pokreću u okviru kontejnera Doker (uvodni deo, odeljak \ref{subs:docker_platform}). Izbor radnog okvira \emph{.NET Core} omogućava pokretanje servisa na različitim platformama \emph{Windows}, \emph{Mac} i \emph{Linux}, bez izmena izvornog koda. Za izradu sistema su korišćeni kontejneri Doker sa operativnim sistemom \emph{Linux}. Za pokretanje sistema DCS u oblaku je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Za upravljanje i pristup resursima u okviru ove platforme koristi se portal \emph{Azure} \cite{AzurePortal}.
 
 Na adresi projekta na servisu GitHub \ref{githubdsc} se nalaze datoteke potrebne za kreiranje i konfigurisanje servisa pokrenutih u okviru klastera Kubernetes, kao i pomoćne skripte koje automatizuju proces postavljanja nove verzije aplikacija na klaster.
 
+U nastavku, na slici \ref{fig:controlnode_yaml} je prikazana datoteka yaml  koja definiše kreiranje aplikacije Control Node na klasteru Kubernetes.
+
+\begin{figure}[h!]
+\centering
+\begin{lstlisting}[style=yaml]
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controlnode
+  namespace: distributed-system-dev-ns
+  labels:
+    app: controlnode
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: controlnode
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: controlnode
+    spec:
+      containers:
+        - name: controlnode-container
+          image: matfmastercr.azurecr.io/controlnode:v1.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+\end{lstlisting}
+\caption{Definisanje deploymenta aplikacije Control Node}
+\label{fig:controlnode_yaml}
+\end{figure}
+
+Kako bi se efikasno pristupalo aplikaciji preko mreže, kreira se i odgovarajući servis koristeći datoteku yaml prikazanu na slici \ref{fig:controlnode_service_yaml}. Tada je moguće pristupiti servisu koristeći njegovo ime ili dodeljenu statičku adresu servisa.
+
+\begin{figure}[h!]
+\centering
+\begin{lstlisting}[style=yaml]
+apiVersion: v1
+kind: Service
+metadata:
+  name: controlnode
+  namespace: distributed-system-dev-ns
+  labels:
+    app: controlnode
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    name: 80-80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: controlnode
+  internalTrafficPolicy: Local
+\end{lstlisting}
+\caption{Definisanje deploymenta servisa Control Node}
+\label{fig:controlnode_service_yaml}
+\end{figure}
+
+Specifikacije za aplikaciju i servis komponente Compute Node su analogne, s tim da on može imati i više od jedne replike. Kreiranjem servisa CmpN, omogućava se da CtrlN komunicira prema njemu koristeći samo poznatu IP adresu servisa. Ova adresa se ne menja tokom postojanja servisa, a klaster Kubernetes automatski usmerava zahteve prema dostupnim, odgovarajućim mahunama, tj. kontejnerima. Više o ovome se nalazi u odeljku \ref{subs:kubernetes_platform}. Na ovaj način, sistem DCS se oslanja na postojeći mehanizan balansiranja saobraćaja u okviru klastera. Iz ugla CtrlN, on uvek šalje zahteve na jednu adresu CmpN, a tu adresu čita iz promenljive postavljene u okruženje (eng. \emph{environment variable}).
+
+Servisi su definisani tako da primaju samo lokalni saobraćaj, odnosno saobraćaj u okviru mreže klastera. Koriste lokalni port 80, što je standardni port za http protokol, a smatra se da je komunikacija unutar klastera bezbedna. CtrlN je potrebno otvoriti prema korisniku putem interneta, odnosno, dodeliti mu javnu IP adresu, što je moguće uraditi na više načina. Jedan od načina je kreiranjem servisa tipa LoadBalanser, koji mu automatski dodeljuje eksternu IP adresu. Međutim, ovaj način dodeljivanja adrese komplikuje podešavanja bezbednosnog protokola https, koji zahteva instalaciju sertifikata TLS na serverskoj mašini. Zbog ovoga je kreiran dodatni API objekat koji se naziva \emph{Ingress}, a način njegovog kreiranja je prikazan na slici \ref{fig:controlnode_ingress_yaml}. Ovaj objekat predstavlja vezu između spoljašnjosti i unutrašnjosti klastera. Dodeljena mu je statička IP adresa sa uvezanim DNS imenom, koji su prethodno kreirani preko portala. Ovaj objekat takođe usmerava zahteve ka željenim servisima na osnovu definisanih pravila. U sučaju DCS, sve zahteve (označene prefiksom /) usmerava na CtrlN. Za instaliranje i automatsko rotiranje sertifikata, kreiran je i objekat \emph{ClusterIssuer}, koji koristi javnog snabdevača TLS sertifikatima, \emph{Let\'s encrypt} \cite{letsencrypt}. Uz ovakvo podešavanje, produkcionom sistemu DCS se može pristupiti preko javno dostupne adrese \emph{matf-distr-comp-sys.westeurope.cloudapp.azure.com} koristeći https protokol.
+
+\begin{figure}[h!]
+\centering
+\begin{lstlisting}[style=yaml]
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cn-tls
+  namespace: distributed-system-dev-ns
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - matf-distr-comp-sys.westeurope.cloudapp.azure.com
+    secretName: tls-secret
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: controlnode
+            port:
+              number: 80
+\end{lstlisting}
+\caption{Kreiranje objekta ingress za pristup CtrlN preko DNS imena i https protokola}
+\label{fig:controlnode_ingress_yaml}
+\end{figure}
+
+Broj mahuna aplikacije CmpN je moguće automatski skalirati kreiranjem \emph{autoscale} objekta. Komanda koja skalira broj CmpN u odnosu na procenat iskorišćenosti procesora je sledeća:
+
+\begin{verbatim}
+kubectl autoscale deployment computenode --cpu-percent=60 --min=2 --max=7 \
+ --namespace=distributed-system-dev-ns
+\end{verbatim}
 
 % ------------------------------------------------------------------------------
 \section{Okvir za testiranje}
@@ -594,7 +688,6 @@ Svi testovi se nalaze na GitHub adresi projekta u poddirektorijumu \href{https:/
 Radni okvir \emph{XUnit} ima podršku za pisanje dva tipa testova: činjenice (eng. \emph{Fact}) i teorije (eng. \emph{Theory}). Činjenice su testovi koji ne primaju argumente, dok teorije predstavljaju paremetrizovane testove. Specifikacijom atributa iznad tela funkcije teorijskog testa, definišu se ulazi nad kojima se test pokreće, što značajno olakšava generisanje testova sa različitim ulazima.
 
 Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na slici \ref{fig:testexplorer} se nalazi vizuelni prikaz rezultata izvršavanja testova u okruženju \emph{Microsoft Visual Studio}.
-% (TODO nova slika sa jos testova)
 
 \begin{figure}[!ht]
   \centering
@@ -609,26 +702,6 @@ Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na sli
   \caption{Pokretanje testova u okruženju \emph{Microsoft Visual Studio}}
   \label{fig:testexplorer}
 \end{figure}
-
-
-%subfigures primer
-%\begin{figure}[ht]
-%\begin{subfigure}{.5\textwidth}
-%  \centering
-%  \includegraphics[width=1\textwidth]{./images/testexplorer.png}
-%  \caption{Struktura foldera sa testovima}
-%  \label{fig:testovi2}
-%\end{subfigure}
-%\begin{subfigure}{.5\textwidth}
-%  \centering
-%  \includegraphics[width=1\textwidth]{./images/testovi.png}
-%  \caption{Pokretanje testova iz \emph{Test Explorer}-a u okruženju \emph{Microsoft Visual Studio}}
-%  \label{fig:testexplorer2}
-%\end{subfigure}
-%\caption{Put your caption here}
-%\label{fig:fig}
-%\end{figure}
-
 
 Sistem je testiran na više nivoa, počevši od testiranja jedinica koda za svaku komponentu, zatim testova integracije, i, na najvišem nivou, funkcionalnih testova koji ukljucuju klaster testove.
 
@@ -736,13 +809,13 @@ public async void RunJob_Success()
 		},
 		timeout: defaultTimeout);
 
-	// Verify aggregated result
+	// Verify aggregated result.
 	var jobResult = await _client.JobResultsAsync(job.JobId);
 	Assert.Equal(string.Empty, jobResult.Error);
 	Assert.Equal(expectedTotalSum, jobResult.Result);
 	Assert.Equal(JobState.Succeeded, jobResult.State);
 
-	// Delete job
+	// Delete job.
 	await _client.DeleteAsync(job.JobId);
 
 	// Now getting job should throw 404.
