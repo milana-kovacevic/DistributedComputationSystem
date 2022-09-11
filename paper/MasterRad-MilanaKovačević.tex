@@ -106,7 +106,6 @@ Azure Functions pregled
 
 neko rešenje u AWS?
 
-
 \section{Opis korišćenih tehnologija i alata}
 
 U ovom podpoglavlju biće opisane tehnologije i alati korišćenih prilikom programske realizacije sistema.
@@ -229,11 +228,11 @@ Najrelevantniji resursi korišćeni za pokretanje sistema u na \emph{Azure} plat
 
 \subsubsection{Swagger / OpenAPI}
 
-\emph{OpenAPI} \cite{OpenAPI} je specifikacija \emph{REST API}-a koja ne zavisi od programskog jezika. \emph{Swagger} \cite{Swagger} predstavlja skup alata koji koriste \emph{OpenAPI} specifikaciju.
+\emph{OpenAPI} \cite{OpenAPI} je specifikacija \emph{REST API}-a (eng. \emph{Application Programming Interface}) koja ne zavisi od programskog jezika. \emph{Swagger} \cite{Swagger} predstavlja skup alata koji koriste \emph{OpenAPI} specifikaciju.
 
-Servisi kreirani u okviru sistema imaju otvoreni web \emph{REST API}. Korišćenjem skupa alata \emph{Swagger}, oni su dokumentovani u standardizovanom formatu, u \emph{json} datoteci. Za generisanje ove specifikacije za \emph{.NET Core} aplikacije koristi se alat \emph{Swashbuckle} \cite{Swashbuckle}.
+Korišćenjem skupa alata \emph{Swagger}, moguće je dokumentovati serverski web \emph{REST API} u standardizovanom formatu, u datoteci \emph{json}. Za pravljenje ove specifikacije, koristi se alat \emph{Swashbuckle} \cite{Swashbuckle}.
 
-Sa klijentske strane, koristi se alat \emph{NSwag} \cite{NSwag}. Na osnovu prethodno generisane \emph{json} datoteke, on tokom kompilacije generiše klasu koja sadriži \emph{HTTP} klijenta i potrebnu dokumentaciju. Ovo je praktičan i efikasan način da se automatski generiše kod klijenta pomoću kojeg se šalju zahtevi serveru.
+Za generisanje klijenta u rednom okviru \emph{.NET Core}, koristi se alat \emph{NSwag} \cite{NSwag}. Na osnovu prethodno generisane \emph{json} datoteke, on generiše klasu koja sadriži \emph{HTTP} klijenta i potrebnu dokumentaciju. Ovo je praktičan i efikasan način da se automatski generiše kod klijenta pomoću kojeg se šalju zahtevi serveru.
 
 
 
@@ -472,9 +471,9 @@ Slučajevi upotrebe iz ugla administratora klastera su prikazani na slici \ref{f
 
 Sistem DCS je implementiran po uzoru na arhitekturu klijent-server.
 
-Centralni deo sistema DCS se sastoji od dva tipa aplikacija: Frontenda (skr. FE) i jedinice za izvršavanje (eng. \emph{Compute Node}, skr. CN). 
-U sistemu postoji tačno jedna aplikacija FE, koja je zadužena za dve logički odvojene celine: primanje zahteva od korisnika i orkestriranje izvršavanja prethodno zakazanih poslova.
-Sa druge strane, u zavisnosti od potreba, DCS se sastoji od jedne ili više aplikacija CN koje su zadužene za izvršavanje atomičnih (nedeljivih) poslova. CN prima zahteve za izvršavanje atomičnih poslova od FE.
+Centralni deo sistema DCS se sastoji od dva tipa aplikacija: Kontrolne jedinice (eng. \emph{Control Node}, skr. CtrlN) i jedinice za izračunavanje (eng. \emph{Compute Node}, skr. CmpN). 
+U sistemu postoji tačno jedna aplikacija kontrolne jedinice, koja je zadužena za dve logički odvojene celine: primanje zahteva od korisnika i orkestriranje izvršavanja prethodno zakazanih poslova.
+Sa druge strane, u zavisnosti od potreba, DCS se sastoji od jedne ili više jedinica za izračunavanje koje su zadužene za izvršavanje atomičnih (nedeljivih) poslova. CmpN prima zahteve za izvršavanje atomičnih poslova od CtrlN.
 
 Arhitektura sistema je prikazana na slici \ref{fig:arhitektura}.
 
@@ -485,31 +484,35 @@ Arhitektura sistema je prikazana na slici \ref{fig:arhitektura}.
   \label{fig:arhitektura}
 \end{figure}
 
-Arhutekturalni obrazac korišćen prilikom razvoja sistema je u Prezentacija-Apstrakcija-Kontrola (eng. \emph{Presentation-Abstraction-Control}, skr. PAC). Sistem je hijerarhijski podeljen na agente FE i CN. FE je agent višeg novoa, koji je pozvezan sa CN agentima. Ovakvom arhitekturom se uvodi podela odgovornosti različitih delova servisa.
+Arhutekturalni obrazac korišćen prilikom razvoja sistema je u Prezentacija-Apstrakcija-Kontrola (eng. \emph{Presentation-Abstraction-Control}, skr. PAC). Sistem je hijerarhijski podeljen na agente CtrlN i CmpN. CtrlN je agent višeg novoa, koji je pozvezan sa CmpN agentima. Ovakvom arhitekturom se uvodi podela odgovornosti različitih delova servisa.
 
-PAC je slojevita arhitektura, te svaki od agenata FE i CN ima PAC slojeve. Prvi sloj aplikacija je \emph{prezenter} koji predstavlja REST API (eng. \emph{Application Programming Interface}). Ovaj sloj aplikacije je okrenut ka spolja i definiše interfejs za komunikaciju sa servisom. U slučaju FE je to API preko kog prima korisnikove zahteve, a u slučaju CN je to API preko kog prima zahteve od FE. Drugi sloj aplikacija je \emph{kontroler} koji predstavlja centralni agenta gde je glavnom logika. Treći sloj aplikacija je \emph{apstrakcija} i predstavlja model podataka i interfejs prema bazi podataka. U inicijalnoj verziji servisa, samo FE ima direktnu komunikaciju sa bazom.
+PAC je slojevita arhitektura, te svaki od agenata CtrlN i CmpN ima PAC slojeve. Prvi sloj aplikacija je \emph{prezenter} koji predstavlja REST API. Ovaj sloj aplikacije je okrenut ka spolja i definiše interfejs za komunikaciju sa servisom. U slučaju CtrlN je to API preko kog prima korisnikove zahteve, a u slučaju CmpN je to API preko kog prima on zahteve od CtrlN. Drugi sloj aplikacija je \emph{kontroler} koji predstavlja centralni deo agenta gde je glavna logika. Treći sloj aplikacija je \emph{apstrakcija} i predstavlja model podataka i interfejs prema bazi podataka. 
 
 
 % ------------------------------------------------------------------------------
 \section{Implementacija}
 % ------------------------------------------------------------------------------
 
-Sistem DCS je javno dostupan na servisu GitHub na adresi \href{https://github.com/milana-kovacevic/DistributedComputationSystem}{https://github.com/milana-kovacevic/Distributed}\label{githubdsc}. Za implementaciju je korišćen programski jezik C\#, i radni okvir \emph{.NET Core 6.0}. Korišćeno je razvojno okruženje \emph{Microsoft Visual Studio Community 2022} i operativni sistem \emph{Windows 10}.
+Sistem DCS je javno dostupan na servisu GitHub na adresi \href{https://github.com/milana-kovacevic/DistributedComputationSystem}{https://github.com/milana-kovacevic/DistributedComputationSystem}\label{githubdsc}. Za implementaciju je korišćen programski jezik C\#, i radni okvir \emph{.NET Core 6.0}. Korišćeno je razvojno okruženje \emph{Microsoft Visual Studio Community 2022} i operativni sistem \emph{Windows 10}.
 
-Glavna logika distribuiranog izvršavanja nalazi se u okviru aplikacije Frontend. Jedinice za izvršavanje su jednostavni servisi koji imaju jasan cilj koji podrazumeva izvršavanje atomičnog posla i vraćanje rezultata izvršavanja. U nastavku, razrađuje se implementacija FE komponente (ukoliko nije naglašeno drugačije).
+Glavna logika distribuiranog izvršavanja nalazi se u okviru kontrolne jedinice. Jedinice za izvršavanje su jednostavni servisi koji imaju jasan cilj koji podrazumeva izvršavanje atomičnog posla i vraćanje rezultata izvršavanja. U nastavku, razrađuje se implementacija CtrlN komponente (ukoliko nije naglašeno drugačije).
 
-Detaljnija zaduženja FE komponente su, redom:
+Kontrolna jedinica se sastoji od dve komponente koje se nazivaju: Frontend (skr. FE) i Distribuirani orkestrator (skr. DO). Detaljnije, zaduženja CtrlN su, redom:
 \begin{enumerate}
-\item Autentifikacija klijenta,
-\item Primanje i validacija zahteva,
-\item \label{podela_planiranje}Podela zahteva na potposlove i pravljenje plana izvršavanja,
-\item \label{orkestriranje}Orkestiranje izvršavanja potposlova i agregacija (pod)rezultata,
-\item \label{cuvanje_u_bazi}Čuvanje rezultata u bazi (ili nekom drugom skladištu).
+\item Frontend
+	\begin{enumerate}
+	\item Autentifikacija klijenta,
+	\item Primanje i validacija zahteva,
+	\end{enumerate}
+\item Distribuirani orkestrator
+	\begin{enumerate}
+	\item \label{podela_planiranje}Podela zahteva na potposlove i pravljenje plana izvršavanja,
+	\item \label{orkestriranje}Orkestiranje izvršavanja potposlova i agregacija podrezultata,
+	\item \label{cuvanje_u_bazi}Čuvanje rezultata u bazi ili nekom drugom skladištu.
+	\end{enumerate}
 \end{enumerate}
 
-Kada je FE primio i evidentirao zahtev za izvršavanje posla, on ubacuje posao u red za izvršavanje. U slučaju da je sistem zauzet obradom drugih poslova, novi zahtev će čekati dok sistem ne postane spreman da ga obradi. Posebna nit aplikacije uzima poslove iz reda i šalje ih jednog po jednog na dalju obradu komponenti koja se naziva Distriburiani orkestrator (skr. DO). Za implementaciju reda za čekanje, korišćeno je postojeće rešenje bezbedno pri radu sa nitima \emph{BlockingCollection} \cite{BlockingCollection}.
-
-Moguća stanja kroz koja prolazi posao su prikazana na slici \ref{fig:stanjaposla}.
+Moguća stanja kroz koja prolazi posao su prikazana na slici \ref{fig:stanjaposla} a u nastavku je objašnjen način njegove obrade.
 
 \begin{figure}[!ht]
   \centering
@@ -518,27 +521,27 @@ Moguća stanja kroz koja prolazi posao su prikazana na slici \ref{fig:stanjaposl
   \label{fig:stanjaposla}
 \end{figure}
 
-Navedena zaduženja \ref{podela_planiranje} i \ref{orkestriranje} uključuju glavni deo logike distribuiranog izvršavanja. U slučaju da korisnikov zahtev već sadrži niz atomičnih poslova, podelu početnog zahteva nije potrebno raditi. Plan izvršavanja zavisi od tipa posla, a u slučaju \emph{map-reduce} funkcionalnosti porazumeva da je svaki atomični posao nezavisno obrađuje (funkcijom \emph{map}), a krajnje rešenje se dobija definisanom agregacijom atomičnih rezultata (funkcijom \emph{reduce}). 
+Kada je FE primio i evidentirao zahtev za izvršavanje posla, on ubacuje posao u red za izvršavanje. U slučaju da je sistem zauzet obradom drugih poslova, novi zahtev će čekati dok sistem ne postane spreman da ga obradi. Za implementaciju reda za čekanje, korišćeno je postojeće rešenje bezbedno pri radu sa nitima \emph{BlockingCollection} \cite{BlockingCollection}. Posebna nit aplikacije uzima poslove iz reda i šalje ih jednog po jednog na dalju obradu komponenti DO.
 
-Na osnovu plana izvršavanja, komponenta DO sprovodi dalje izvršavanje posla: šalje atomične poslove preko mreže do izabranih CN na izvršavanje. Zakazivanje atomičnih poslova se dešava asinhrono i ono ne blokira DO da obrađuje naredni posao. Dobijeni rezultati se šalju odvojenoj komponenti koja zna da agregara rezultate na osnovu plana izvršavanja. U zavisnosti od kompleksnosti agregacije, i ona bi mogla da se prosledi CN na izračunavanje.
+Navedena zaduženja \ref{podela_planiranje} i \ref{orkestriranje} uključuju glavni deo logike distribuiranog izvršavanja. Pre nego što se počne sa izvršavanjem, neophodno je podeliti posao na potposlove i definisati njihove zavisnosti. Rezultat ovoga je predstavljen u vidu stabla u kojem listovi predstavljaju početne atomične poslove, unutrašnji čvorovi agregacije podrezultata, a grane prenos međurezultata. Koren predstavlja krajnje rešenje. U slučaju da korisnikov zahtev već sadrži niz atomičnih poslova, podela početnog zahteva je trivijalna. Na osnovu stabla zavisnosti, pravi se plan izvršavanja. Sličan način planiranja koriste baze podataka \cite{SQLServerInternals}, kao i sistemi poput Sparka \cite{Spark} predstavljen u odeljku \ref{sec:postojeca_resenja}. Plan izvršavanja zavisi od tipa posla, a u slučaju \emph{map-reduce} funkcionalnosti podrazumeva se da se svaki atomični posao nezavisno obrađuje (funkcijom \emph{map}), a krajnje rešenje se dobija definisanom agregacijom atomičnih rezultata (funkcijom \emph{reduce}). Na osnovu plana izvršavanja, komponenta DO sprovodi dalje izvršavanje posla: šalje atomične poslove preko mreže do izabranih CmpN na izvršavanje. Zakazivanje i izvršavanje atomičnih poslova se dešava asinhrono i ono ne blokira DO da uzme naredni posao iz reda i započne njegovu obradu. Dobijeni rezultati se šalju odvojenoj komponenti koja zna da agregara rezultate na osnovu plana izvršavanja. U zavisnosti od kompleksnosti agregacije, i ona može da se prosledi CmpN na izračunavanje.
 
-DO dodatno prati uspešnost izvršavanja poslova i u slučaju uspešnog završetka poslova upisuje rezultat u bazu. Ukoliko dođe do greške prilikom izvršavanja posla, posao može da se ponovi ili da se evidentira neispravan krajnji rezultat. Ponovno pokretanje poslova je potrebno kako bi se povećao stepen pouzdanosti tokom izvršavanja poslova, u slučaju da se na primer jedna od aplikacija CN restartuje i to uzrokuje grešku. Ukoliko i nakon toga dođe do greške, posao se završava i kao krajnji rezultat se upisuje greška.
+DO dodatno prati uspešnost izvršavanja poslova i u slučaju uspešnog završetka, upisuje rezultat u bazu. Ukoliko dođe do greške prilikom izvršavanja, posao može da se ponovi ili da se evidentira greška u krajnjem rezultatu. Ponovno pokretanje poslova je potrebno kako bi se povećao stepen pouzdanosti izvršavanja. U distribuiranim sistemima treba imati u vidu da često može doći do problema u komunikaciji među servisima, bilo zbog preopterećenosti mreže ili eventualnih restarta individualnih aplikacija. Ovo može uzrokovati prolaznu grešku, koju je moguće prevazići novim pokušajem. Ukoliko i nakon ponovnog izvršavanja dođe do greške, posao se završava i kao krajnji rezultat se upisuje greška.
 
-Klijent ima mogućnost da otkaže aktivan posao. Ova operacija uključuje i otkazivanje svih njegovih potposlova koji su u procesu izvršavanja ili koji čekaju na izvršavanje, te se ukupno otkazivanje dešava globalno u celom sistemu. Otkazivanje zakazanih poslova nije podržano u inicijalnoj verziji.
-Kada zahtev za otkazivanje stigne do komponente DO, on proverava status posla i status njegovih potposlova. Ukoliko u tom trenutku postoji barem jedan atomični posao koji čeka na izvršavanje ili se izvršava, DO prekida dalje zakazivanje i asinhrono otkazuje poslove koji su u toku izvršavanja. Tada se ažurira status posla i on čeka da se otkažu svi atomični poslovi. Kada sistem globalno otkaže sva izvršavanja atomičnih poslova, posao je otkazan i klijentu se vraća potvrda o upešnosti.
+Klijent ima mogućnost da otkaže aktivan posao. Ova operacija uključuje i otkazivanje svih njegovih potposlova koji su u procesu izvršavanja ili koji čekaju na izvršavanje, te se ukupno otkazivanje dešava globalno u celom sistemu.
+Kada zahtev za otkazivanje stigne do komponente DO, on proverava status posla i status njegovih potposlova. Ukoliko u tom trenutku postoji barem jedan atomični posao koji čeka na izvršavanje ili se izvršava, DO prekida dalje zakazivanje i asinhrono otkazuje poslove koji su u toku izvršavanja. Tada se ažurira status posla i on čeka da se otkažu svi atomični poslovi. Kada sistem globalno otkaže sva izvršavanja, posao je otkazan i klijentu se vraća potvrda o upešnosti.
 
 TODO dijagram klasa DO
 
 \subsection{Baza podataka}
 
-Sistem DSC koristi relacionu bazu podataka za evidentiranje poslova, ažuriranje stanja u kojem se nalazi posao (kako bi korisnik mogao da prati šta se dešava u sistemu), kao i za čuvanje rezultata i međurezultata poslova. 
+Sistem DSC koristi relacionu bazu podataka za evidentiranje poslova. DCS ažurira stanja u kojem se nalazi posao kako bi korisnik mogao da prati šta se dešava u sistemu. Dodatno, baza podataka služi i za čuvanje rezultata i međurezultata poslova.
 
-ER (eng. \emph{Entity-Relation}) dijagram modela posla je prikazanan na slici \ref{fig:erposao}.
+ER (eng. \emph{Entity-Relation}) dijagram modela posla je prikazan na slici \ref{fig:erposao}.
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1.0\textwidth]{./images/uml_er_dijagram_posao.png}
-  \caption{ER dijagram entiteta - Posao}
+  \caption{ER dijagram entiteta u bazi podataka}
   \label{fig:erposao}
 \end{figure}
 
@@ -547,7 +550,7 @@ ER (eng. \emph{Entity-Relation}) dijagram modela posla je prikazanan na slici \r
 
 Za autentifikaciju klijenta je korišćen servis AAD \cite{AAD} opisan u uvodnom poglavlju u odeljku \ref{sub:azureplatform}. Korisniku su dodeljena prava korišćenja servisa time što je njegov identitet član grupe korisnika definisane u okviru servisa AAD.
 
-Proces autentikacije je prikazan na slici \ref{fig:autentifikacija}. Korisnik pre kontaktiranja sistema DSC šalje zahtev servisu AAD kako bi preuzeo token za autentifikaciju. Ovaj token ima rok trajanja (uobičajeno je 60 minuta) i specifičan je za autentifikaciju na DSC sistem. Kada klijent ima token, prosleđuje ga u HEADER delu HTTP zahteva u polju za autentifikaciju. Sistem DCS prima zahtev i pre nego što počne da ga obrađuje, izvrši validaciju AAD tokena. Token sadrži otisak (eng. \emph{thumbprint}) koji garantuje njegovu validnost. Ukoliko je token validan, nastavlja se sa obradom zahteva, a ukoliko nije, korisnikov zahtev se odbija uz odgovarajuću grešku.
+Proces autentikacije je prikazan na slici \ref{fig:autentifikacija}. Korisnik pre kontaktiranja sistema DSC šalje zahtev servisu AAD kako bi preuzeo token za autentifikaciju. Ovaj token ima rok trajanja (uobičajeno je 60 minuta) i specifičan je za autentifikaciju na DSC sistem. Kada klijent ima token, prosleđuje ga u \emph{header} delu HTTP zahteva u polju za autentifikaciju. Sistem DCS prima zahtev i pre nego što počne da ga obrađuje, izvrši validaciju AAD tokena. Token sadrži otisak (eng. \emph{thumbprint}) koji garantuje njegovu validnost. Ukoliko je token ispravan, nastavlja se sa obradom zahteva, a ukoliko nije, korisnikov zahtev se odbija uz odgovarajuću grešku.
 
 Za bezbednu komunikaciju u produkcionom okruženju, forsiran je protokol HTTPS.
 
@@ -780,8 +783,12 @@ Na slici \ref{fig:alertmemory} nalazi primer aktivnog opšteg upozorenja u sluč
 
 TODO par opstih recenica Pravci daljeg razvoja sistema
 
+U inicijalnoj verziji servisa, samo CtrlN ima direktnu komunikaciju sa bazom.
+Otkazivanje zakazanih poslova nije podržano u inicijalnoj verziji.
+
 Prva verzija sistema DSC implementira \emph{map-reduce} funkcionalnost u kojom računa ukupan zbir cifara brojeva niza, gde svaki broj predstavlja jedan ulazni podatak za atomični posao. U naprednoj verziji sistema, plan bi bio predstavljan u vidu stabla u kojem listovi predstavljaju početne atomične poslove, unutrašnji čvorovi agregacije, a grane prenos međurezultata kroz mrežu. Ovakve planove koriste sistemi poput Sparka \cite{Spark} predstavljeni u uvodu \ref{sec:postojeca_resenja}.
 
+Tip posla može i da preusmeri pisanje rezultata na proizvoljnu lokaciju.
 Ukoliko su ulazni podaci ili rezultat veliki, te ih nije praktično čuvati u bazi podataka, DCS je moguće proštiriti kako bi koristio neko drugo skladište za pristup ulaznim podacima i za čuvanje rezultata.
 
 \section{Dalji razvoj sistema}
