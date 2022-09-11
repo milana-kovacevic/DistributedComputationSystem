@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deploy-computenode
+  name: computenode
   namespace: distributed-system-dev-ns
   labels:
     app: computenode
 spec:
-  replicas: 2
+  replicas: 5
   selector:
     matchLabels:
       service: computenode
