@@ -17,7 +17,7 @@ namespace TestCommons
 
             if (!successCondition(pollingObject))
             {
-                Assert.True(false, $"Polling failed for object '{pollingObject.ToString()}'.");
+                Assert.True(false, $"Timeout occurred. Polling failed for object '{pollingObject.ToString()}'.");
             }
         }
     }

@@ -81,8 +81,6 @@ namespace IntegrationTests
             {
                 Console.WriteLine(job.ToString());
             }
-
-            Assert.NotEmpty(jobs);
         }
 
         [Fact]

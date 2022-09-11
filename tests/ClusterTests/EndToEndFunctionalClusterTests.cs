@@ -6,13 +6,13 @@ using Xunit;
 
 namespace FunctionalTests
 {
-    public class EndToEndClusterTests
+    public class EndToEndFunctionalClusterTests
     {
         private const string baseUrl = "https://matf-distr-comp-sys.westeurope.cloudapp.azure.com/";
         private DistributedCalculationSystemClient _client = null;
         private TimeSpan defaultTimeout = TimeSpan.FromSeconds(5);
 
-        public EndToEndClusterTests()
+        public EndToEndFunctionalClusterTests()
         {
             this._client = new DistributedCalculationSystemClient(baseUrl, new HttpClient());
         }
@@ -27,8 +27,6 @@ namespace FunctionalTests
             {
                 Console.WriteLine(job.ToString());
             }
-
-            Assert.NotEmpty(jobs);
         }
 
         [Fact]

@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{6260
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "paper", "paper", "{3F50B050-35BC-4BB9-9C26-5260223FC925}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests", "tests\FunctionalTests\FunctionalTests.csproj", "{E138F610-F681-41C5-8A7F-1C1618A77150}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClusterTests", "tests\ClusterTests\ClusterTests.csproj", "{E138F610-F681-41C5-8A7F-1C1618A77150}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCommons", "tests\TestCommons\TestCommons.csproj", "{4887518B-1402-4F9D-9FE8-B7629FA0F228}"
 EndProject
