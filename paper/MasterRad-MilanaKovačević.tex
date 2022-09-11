@@ -771,9 +771,7 @@ U ovom odeljku su prikazane mogućnosti praćenja rada sistema uz pomoć servisa
 
 Metrike sistema predstavljaju koncizne informacije o njegovom radu u (skoro) realnom vremenu. Kroz metrike možemo da vidimo trenutnu iskorišćenost resursa klastera, status mašina, mahuna, kontejnera itd.
 
-Na slici \ref{fig:aksinsights} je prikazan pogled na sekciju \emph{Insight} pripadajuceg klastera kojem se pristupa preko portala \cite{AzurePortal}. 
-
-(TODO slika sa vise korišćenja CPU - idealno nakon perf testiranja, i jos par recenica o tome. TODO Odvojena slika po metrici kako bi bilo čitljivo)
+Na slici \ref{fig:aksinsights} je prikazan pogled na sekciju \emph{Insight} pripadajuceg klastera kojem se pristupa preko portala \cite{AzurePortal}.
 
 \begin{figure}[!ht]
   \centering
@@ -782,13 +780,12 @@ Na slici \ref{fig:aksinsights} je prikazan pogled na sekciju \emph{Insight} prip
   \label{fig:aksinsights}
 \end{figure}
 
-Na slici \ref{fig:clusterunhealthy} je prikazan pogled na \emph{Insight} sekciju pripadajućeg klastera u slučaju nezdravog servisa Frontend. Na slici se vidi da je servis markiran uzvičnikom, jer nije dostignut željeni broj zdravih replika (0\% replika je zdravo).
-
-TODO lepsa slika
+Na slici \ref{fig:clusterunhealthy} je prikazan pogled na \emph{Insight} sekciju pripadajućeg klastera u slučaju zdravih servisa 
+% Na slici se vidi da je servis markiran uzvičnikom, jer nije dostignut željeni broj zdravih replika (0\% replika je zdravo).
 
 \begin{figure}[!ht]
   \centering
-  \frame{\includegraphics[width=1\textwidth]{./images/metrics_cluster_unhealthy.png}}
+  \frame{\includegraphics[width=1\textwidth]{./images/metrics_cluster.png}}
   \caption{Pogled na metrike o statusu klastera}
   \label{fig:clusterunhealthy}
 \end{figure}
@@ -799,15 +796,13 @@ Logovi predstavljaju informacije o radu sistema koje ispisuju pokrenuti servisi 
 
 Za pregled logova korišćen je alat \emph{Azure Log Analytics} dostupan u okviru servisa \emph{Azure Monitor}. Ovaj alat pruža moćan deskriptivni jezik kojim se mogu pretraživati, filtrirati, sortirati i analizirati logovi. Rezultate upita je takođe moguće vizuelizovati u vidu grafikona.
 
-Na slici \ref{fig:frontendlogs} se nalazi prikaz stranice za pregled logova kontejnera koji sadrži Frontend aplikaciju.
-
-TODO jasnija slika
+Na slici \ref{fig:computenodelogs} se nalazi prikaz stranice za pregled logova kontejnera koji sadrži Frontend aplikaciju.
 
 \begin{figure}[!ht]
   \centering
-  \frame{\includegraphics[width=1\textwidth]{./images/frontend_logs.png}}
-  \caption{Pregled logova komponente Frontend}
-  \label{fig:frontendlogs}
+  \frame{\includegraphics[width=1\textwidth]{./images/computenode_logs.png}}
+  \caption{Pregled logova komponente ComputeNode}
+  \label{fig:computenodelogs}
 \end{figure}
 
 
