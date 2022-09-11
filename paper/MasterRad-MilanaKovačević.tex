@@ -606,7 +606,7 @@ Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na sli
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.8\textwidth]{./images/testexplorer.png}
-  \caption{Pokretanje testova iz \emph{Test Explorer}-a u okruženju \emph{Microsoft Visual Studio}}
+  \caption{Pokretanje testova u okruženju \emph{Microsoft Visual Studio}}
   \label{fig:testexplorer}
 \end{figure}
 
@@ -633,7 +633,7 @@ Struktura foldera sa testovima je prikazana na slici \ref{fig:testovi}, a na sli
 Sistem je testiran na više nivoa, počevši od testiranja jedinica koda za svaku komponentu, zatim testova integracije, i, na najvišem nivou, funkcionalnih testova koji ukljucuju klaster testove.
 
 \subsection{Testiranje jedinica koda}
-Komponente \emph{Frontend} i \emph{ComputeNode} prate odgovarajući testovi jedinica koda. Ovi testovi se nalaze u zasebnom projektu. Tokom izrade testova jedinica koda, korišćen je i radni okvir \emph{Moq} \cite{Moq} za "podmetanje" vrednosti u zavisnim delova koda. U nastavku se nalazi slika \ref{fig:testscheduler} sa primerom testa jedinice koda u okviru komponente \emph{Frontend}.
+Komponente \emph{Control Node} i \emph{ComputeNode} prate odgovarajući testovi jedinica koda. Ovi testovi se nalaze u zasebnom projektu. Tokom izrade testova jedinica koda, korišćen je i radni okvir \emph{Moq} \cite{Moq} za "podmetanje" vrednosti u zavisnim delova koda. U nastavku se nalazi slika \ref{fig:testscheduler} sa primerom testa jedinice koda u okviru komponente CtrlN.
 
 \begin{figure}[h!]
 \centering
@@ -645,17 +645,16 @@ public class DistributedSchedulerTests
 
 	public DistributedSchedulerTests()
 	{
+		// Configure services using common bootstraper for tests
 		var services = new ServiceCollection();
-		services.AddSingleton<ILoggerFactory, LoggerFactory>();
-		services.AddSingleton<ILogger<DistributedScheduler>, Logger<DistributedScheduler>>();
+		TestBootstraper.ConfigureServices_Frontend(services);
 
 		// Setup mocked ComputeNodeClient
-		mockedComputeNodeClient.Setup(m => m.RunAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
-			.Returns(Task.FromResult(new ComputeNodeSwaggerClient.AtomicJobResult()));
+		mockedComputeNodeClient.Setup(m => m.RunAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<FrontendAtomicJobType>(), It.IsAny<string>()))
+			.Returns(Task.FromResult(new FrontendAtomicJobResult()));
 		services.AddScoped((services) => mockedComputeNodeClient.Object);
 
 		services.AddScoped<IScheduler, DistributedScheduler>();
-
 		serviceProvider = services.BuildServiceProvider();
 	}
 
@@ -668,7 +667,7 @@ public class DistributedSchedulerTests
 		var jobToBeScheduled = UnitTestUtils.GetDummyJob();
 		await scheduler.ScheduleJobAsync(jobToBeScheduled);
 
-		mockedComputeNodeClient.Verify(client => client.RunAsync(It.IsAny<int>(), jobToBeScheduled.Id, It.IsAny<string>()), Times.AtLeastOnce());
+		mockedComputeNodeClient.Verify(client => client.RunAsync(It.IsAny<int>(), jobToBeScheduled.JobId, It.IsAny<FrontendAtomicJobType>(), It.IsAny<string>()), Times.AtLeastOnce());
 		Assert.NotEmpty(scheduler.GetInProgressTasks());
 	}
 }
@@ -678,25 +677,84 @@ public class DistributedSchedulerTests
 \end{figure}
 
 \subsection{Integracioni testovi}
-Integracioni testovi testiraju integraciju između komponenti sistema FE i CN.
 
-\subsection{Funkcionalni testovi}
-Funkcionalni testovi testiraju funkcionalnost sistema iz ugla korisnika. U ovim testovima koristi se automatski generisana klijentska klasa \emph{DistributedCalculationSystemClient} nastala korišćenjem alata \emph{Swagger}. Ovaj klijent šalje zahteve ka servisu \emph{Frontend}, a u telu testova se proverava da li je odgovor od sistema očekivan.
-
-Funkcionalni testovi se dele na nekoliko grupa:
+Postoje dva tipa integracionih testova:
 \begin{enumerate}
-\item Testovi nad lokalnim okruženjem - Testiraju osnovne funkcionalnosti servisa, u razvojnom okruženju na lokalnoj mašini. Koriste se aplikacije \emph{Frontend} i \emph{CumputeNode} pokrenute u okviru kontejnera Doker sa ranije definisanim adresama i portovima.
-\item Testovi nad klasterom u oblaku - Testiraju osnovne funkcionalnosti servisa u produkcionom okruženju.
+\item Testovi integracije unutar komponenti,
+\item Testovi integracije celih komponenti.
+\end{enumerate} 
+
+Testovi integracije unutar komponenti testiraju međusobne zavisnosti podkomponenti CtrlN i CmpN. Na primer, zavisnost FE i DO u okviru CtrlN.
+
+Testovi integracije celih komponenti CtrlN i CmpN se pokreću nad lokalnim okruženjem, i očekuju da je okruženje pripremljeno za njihovo izvšavanje. U okviru kontejnera Doker potrebno je pokrenuti jednu CtrlN aplikaciju, kao i jednu CmpN aplikaciju, sa ranije definisanim adresama i portovima. Koristi se automatski generisana klijentska klasa \emph{DistributedCalculationSystemClient} nastala korišćenjem alata \emph{Swagger} u toku komipacije projekta sa testovima. Ovaj klijent šalje zahteve servisu CtrlN, a u telu testova se proverava da li je odgovor od sistema očekivan.
+
+\subsection{Testovi nad klasterom}
+
+Testovi nad klasterom testiraju sistem iz ugla korisnika u produkcionom okruženju. Oni se pokreću nad klasterom u oblaku, i u njima se takođe koristi generisani klijent. Dele se na nekoliko grupa:
+\begin{enumerate}
+\item Funkcionalni testovi - Testiraju osnovne funkcionalnosti servisa u produkcionom okruženju.
 \item Stres-testovi - Skup testova koji se izvršavaju kako bi se analiziralo i unapredilo ponašanje sistema pod opterećenjem. 
 \item Testovi performansi - Skup testova koji se pokreću nad servisom pokrenutim u oblaku, sa fokusom na praćenje vremena potrebnog da sistem odradi očekivani posao. Cilj ovog testiranja je uvid u performanse sistema u odnosu na resurse dodeljene klasteru.
 \end{enumerate}
 
+Na slici \ref{fig:teste2e} se nalazi primer koji testira funkcionalnost sistema od početka do kraja: zakazivanje posla, preuzimanje statusa, i provera rezultata.
+
+\begin{figure}[h!]
+\centering
+\begin{lstlisting}
+[Fact]
+public async void RunJob_Success()
+{
+	var inputData = new Collection<AtomicJobRequestData>()
+	{
+		new AtomicJobRequestData() { InputData ="42" },
+		new AtomicJobRequestData() { InputData ="142" },
+	};
+	string expectedTotalSum = "13";
+
+	var request = new JobRequestData()
+	{
+		JobType = JobType.CalculateSumOfDigits,
+		InputData = inputData
+	};
+
+	// Create job.
+	var job = await _client.CreateAsync(request);
+	Assert.NotNull(job);
+
+	// Verify job is created.
+	var jobFromSystem = await _client.JobsAsync(job.JobId);
+	Assert.NotNull(jobFromSystem);
+
+	// Poll and verify job state until it's successfully completed.
+	await TestUtils.PollUntilSatisfied(
+		job.JobId,
+		(jobId) =>
+		{
+			var jobFromSys = _client.JobsAsync(jobId).GetAwaiter().GetResult();
+			return jobFromSys.State == JobState.Succeeded;
+		},
+		timeout: defaultTimeout);
+
+	// Verify aggregated result
+	var jobResult = await _client.JobResultsAsync(job.JobId);
+	Assert.Equal(string.Empty, jobResult.Error);
+	Assert.Equal(expectedTotalSum, jobResult.Result);
+	Assert.Equal(JobState.Succeeded, jobResult.State);
+
+	// Delete job
+	await _client.DeleteAsync(job.JobId);
+
+	// Now getting job should throw 404.
+	var exception = Assert.ThrowsAsync<ApiException>(async () => await _client.JobsAsync(job.JobId));
+	Assert.Equal<int>((int)HttpStatusCode.NotFound, exception.Result.StatusCode);
+}
+\end{lstlisting}
+\caption{Primer funkcionalnog testa}
+\label{fig:teste2e}
+\end{figure}
+
 Stres-testovi i testovi performansi ispituju granice sistema. Oni su neophodni kako bi se na vreme razumela i unapredila uska grla sistema, kao i da bi se razumele mogućnosti sistema u skladu sa dodeljenim resursima.
-
-TODO evaluacija kada budem imala ove testove u zadovoljavajućoj formi
-
-TODO Test koji ukljucuje neki kompleksniji posao
--- na primer, obrada foldera sa slikama i output koji ukljucuje primenjeni filter nad slikama.
 
 \subsubsection{Testovi performansi nad klasterom sa različitim konfiguracijama}
 TODO
