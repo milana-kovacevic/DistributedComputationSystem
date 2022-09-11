@@ -10,7 +10,7 @@ namespace IntegrationTests
     /// This is end to end test scenario.
     /// In order to run these tests, local setup must be created.
     /// There should be:
-    ///     1. Frontend service running locally at http://host.docker.internal:8081
+    ///     1. ControlNode service running locally at http://host.docker.internal:8081
     ///         a. It must have environment variable COMPUTENODE_SERVICE_HOST set to host.docker.internal
     ///     2. ComputeNode service running at corresponding port (8080).
     /// </summary>
@@ -39,14 +39,15 @@ namespace IntegrationTests
                 InputData = inputData
             };
 
+            // Create job.
             var job = await _client.CreateAsync(request);
             Assert.NotNull(job);
 
-            // Verify job
+            // Verify job is created.
             var jobFromSystem = await _client.JobsAsync(job.JobId);
             Assert.NotNull(jobFromSystem);
 
-            // Poll and verify job state
+            // Poll and verify job state until it's successfully completed.
             await TestUtils.PollUntilSatisfied(
                 job.JobId,
                 (jobId) =>
@@ -58,7 +59,7 @@ namespace IntegrationTests
 
             // Verify aggregated result
             var jobResult = await _client.JobResultsAsync(job.JobId);
-            Assert.Null(jobResult.Error);
+            Assert.Equal(string.Empty, jobResult.Error);
             Assert.Equal("12", jobResult.Result);
             Assert.Equal(JobState.Succeeded, jobResult.State);
 

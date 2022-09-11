@@ -34,14 +34,12 @@ namespace FunctionalTests
         [Fact]
         public async void RunJob_Success()
         {
-            int i = 1;
             var inputData = new Collection<AtomicJobRequestData>()
             {
-                new AtomicJobRequestData() { InputData =$"{i++}" },
-                new AtomicJobRequestData() { InputData =$"{i++}" },
-                new AtomicJobRequestData() { InputData =$"{i++}" },
-                new AtomicJobRequestData() { InputData =$"{i++}" },
+                new AtomicJobRequestData() { InputData ="42" },
+                new AtomicJobRequestData() { InputData ="142" },
             };
+            string expectedTotalSum = "13";
 
             var request = new JobRequestData()
             {
@@ -49,14 +47,15 @@ namespace FunctionalTests
                 InputData = inputData
             };
 
+            // Create job.
             var job = await _client.CreateAsync(request);
             Assert.NotNull(job);
 
-            // Verify job
+            // Verify job is created.
             var jobFromSystem = await _client.JobsAsync(job.JobId);
             Assert.NotNull(jobFromSystem);
 
-            // Poll and verify job state.
+            // Poll and verify job state until it's successfully completed.
             await TestUtils.PollUntilSatisfied(
                 job.JobId,
                 (jobId) =>
@@ -68,8 +67,8 @@ namespace FunctionalTests
 
             // Verify aggregated result
             var jobResult = await _client.JobResultsAsync(job.JobId);
-            Assert.Null(jobResult.Error);
-            Assert.Equal("10", jobResult.Result);
+            Assert.Equal(string.Empty, jobResult.Error);
+            Assert.Equal(expectedTotalSum, jobResult.Result);
             Assert.Equal(JobState.Succeeded, jobResult.State);
 
             // Delete job
