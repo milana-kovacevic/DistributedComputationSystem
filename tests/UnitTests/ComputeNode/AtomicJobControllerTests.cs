@@ -2,6 +2,7 @@
 using ComputeNode.Models;
 using Microsoft.Extensions.DependencyInjection;
 using TestCommons;
+using Xunit;
 
 namespace UnitTests.ComputeNode
 {

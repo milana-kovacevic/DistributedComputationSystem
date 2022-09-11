@@ -1,10 +1,11 @@
 ﻿using ControlNode.Frontend;
 using ControlNode.Frontend.Controllers;
+using ControlNode.Frontend.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using TestCommons;
-using ControlNode.Frontend.Entities;
+using Xunit;
 
 namespace UnitTests.ControlNode
 {

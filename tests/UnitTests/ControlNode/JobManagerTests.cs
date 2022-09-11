@@ -1,6 +1,7 @@
 ﻿using ControlNode.DCS.Core.Managers;
 using Microsoft.Extensions.DependencyInjection;
 using TestCommons;
+using Xunit;
 
 namespace UnitTests.ControlNode
 {

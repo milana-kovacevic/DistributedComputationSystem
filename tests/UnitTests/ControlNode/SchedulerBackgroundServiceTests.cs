@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using TestCommons;
+using Xunit;
 
 namespace UnitTests.ControlNode
 {
