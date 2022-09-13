@@ -50,7 +50,7 @@
 % Strana sa podacima o mentoru i članovima komisije
 \komisija
 % Strana sa posvetom (u odabranom pismu)
-\posveta{Porodici i najbližima za strpljenje i podršku tokom studiranja}
+\posveta{Porodici i najbližima \\ za strpljenje i podršku tokom studiranja}
 % Strana sa podacima o disertaciji na srpskom jeziku
 \apstrakt
 % Sadržaj teze
@@ -68,52 +68,61 @@ Uvod TODO
 
 \section{Distriburani sistemi}
 
-Distribuirani sistemi se sastoje od skupa fizički odvojenih mašina koje su međusobno povezane mrežom. Na ovim mašinama su pokrenute softverske jedinice koje međusobno dele odgovornost, poslove, komuniciraju i sinhronizuju se.
+Distribuirani sistemi se sastoje od skupa fizički odvojenih mašina, tzv. čvorova, koje su međusobno povezane mrežom. Na ovim mašinama su pokrenute softverske jedinice koje međusobno dele odgovornost, poslove, komuniciraju i sinhronizuju se.
+
+TODO reference na literaturu.
 
 Prednosti ovako struktuiranog softvera su značajne. Neke od njih su:
 \begin{enumerate}
-\item Mogućnost postizanja visokog nivao paralelizacije prilikom raspodele poslova na mašine,
+\item Postizanje visokog nivoa paralelizacije prilikom raspodele poslova na mašine,
 \item Deljenje resursa,
-\item Prevazilaženje problema jednog mesta otkazivanja sistema (eng. \emph{single point of failure}). Ovim se povećava dostupnost softvera i njegova otpornost na greške,
-\item Mogućnost skaliranja broja mašina uključenih u sistem, čime se sistem  može prilagoditi potrebama.
-\item 
-\item 
+\item Pouzdanost postignuta prevazilaženjem problema jednog mesta otkazivanja sistema (eng. \emph{single point of failure}). Ovim se takođe povećava dostupnost softvera i njegova otpornost na greške,
+\item Skalabilnost postignuta promenom broja mašina uključenih u sistem, čime se sistem može prilagoditi potrebama.
+\item Geo-distribuiranje povezivanjem mašina putem interneta.
 \end{enumerate}
 
-Glavna mana distribuiranih sistema je se oni oslanjaju na transport poruka kroz mrežu. Prezasićenjem mreže može se doći do povećanog kašnjenja prilikom transporta informacije od jednog dela sistema do drugog. Dodatna mana predstavlja kako obezbediti sistem, što je teže uraditi nego na sistemima sa jednom mašinom. Na kraju, implementacija i održavanje distribuiranih sistema su načelno kompleksniji nego rad sa aotmičnim sistemima.
+Glavna mana distribuiranih sistema je oslanjanje na transport poruka kroz mrežu. Prezasićenjem mreže se može doći do povećanog kašnjenja prilikom transporta informacije od jednog dela sistema do drugog. Dodatna mana je što je značajno teže obezbediti sistem nego što je to slučaj sa sistemina sa jednom mašinom. Na kraju, implementacija i održavanje distribuiranih sistema su načelno kompleksniji nego rad sa atomičnim sistemima.
 
-Distribuirani sistemi se mogu razvrstati u zavisnosti od načina povezivanja njegovih mašina. Postoje dva tipa arhitekture:
+Distribuirani sistemi se mogu razvrstati u zavisnosti od načina povezivanja mašina. Postoje dva tipa arhitekture:
 \begin{enumerate}
-\item Klijent-server - TODO
-\item Peer-to-peer - TODO
+\item Klijent-server - Arhitektura u kojoj postoji jasna podela poslova između servera, koji je snabdevač resursa ili servisa, i klijenta, koji šalje zahteve serveru.
+\item Peer-to-peer - Arhitektura u kojoj su sve mašine u sistemu su jednake. Ne postoji centralna jedinica, već mašine međusobno komuniciraju i dele poslove i resurse. Svaka mašina pokreće isti softver. Primer sistema koji koristi peer-to-peer arhitekturu je \emph{Torrent}.
+\item \emph{Middleware} - TODO
+\item Troslojne arhitekture - TODO
+\item Višeslojne arhitekture - TODO
 \end{enumerate}
 
+Vrste distribuiranih sistema prema nameni:
+\begin{enumerate}
+\item Distribuirani sistemi za izračunavanje
+\item Distribuirani informacioni sistemi
+\item ...
+\item ...
+\end{enumerate}
 
-%Тиме се добија софтвер који успешно враћа тражени резултат и над великим и захтевним улазима – што повећава његову употребљивост и трајност. 
-
-\section{Distriburano izračunavanje}
+\section{Sistemi za distriburano izračunavanje}
 
 Količina podataka u svetu kao i broj zahteva za njegovo obrađivanje neprekidno rastu. Obrada velikih podataka su postala potreba svakodnevnice. Međutim, često zbog fizičkih ograničenja nije moguće izvršiti izračunavanje u najednoj mašini, ili, ukoliko je to moguće, ono ne zadovoljava očekivane performanse. Sistemi za distribuirano izračunavanje predstavljaju rešenje za obradu velike količine podataka i potražnja za njima raste u koraku sa globalnom količinom podataka.
 
-\section{Analiza postojećih sistema}
-\label{sec:postojeca_resenja}
+\subsection{Pregled postojećih sistema}
+\label{sub:postojeca_resenja}
 
-Analiza postojećih sistema TODO
+Danas postoji više sistema za obradu podataka koji koriste distribuiranu arhitekturu. Svaki od servisa ima prednosti i mane, a u zavisnosti od potreba korisnika, neki sistem je bolji ili lošiji izbor.
 
-Spark \cite{Spark}
+Jedan od sistema za distribuirano izračunavanje je Apache Spark \cite{Spark}. Spark je sistem za obradu podataka otvorenog koda, i deo je ekosistema Hadoop koji pruža korisnicima skup servisa za obradu velike količine podataka. Servis Databricks \cite{Databricks} predstavlja dodatnu nadogradnju sistema Spark.
 
-Azure Functions pregled
+Snowflake \cite{Snowflake} je softver kao servis rešenje za obradu podataka, koji u poslednje vreme stiče sve veću popularnost.
 
-neko rešenje u AWS?
+Azure Functions \cite{AzureFunctions} je \emph{serverless} rešenje za obradu podataka. \emph{Serverless} znači da korisnik nema uvid u resurse koje koristi Azure Functions, već ga koristi po potrebi, na zahtev korisnika. Korisnik definiše logiku u blokovima koda koji se nazivaju funkcije, koje se po potrebi pokreću nad prosleđenim ulaznim podacima. Sistem automatski skalira resurse potrebne za izvršavanje funkcija. Analogno rešenje na \emph{AWS} platformi je \emph{AWS Lambda}.
 
 \section{Opis korišćenih tehnologija i alata}
 
-U ovom podpoglavlju biće opisane tehnologije i alati korišćenih prilikom programske realizacije sistema.
+U ovom odeljku su opisane tehnologije i alati korišćeni prilikom programske realizacije sistema.
 
 \subsection{Platforma Doker}
 \label{subs:docker_platform}
 
-Za pokretanje aplikacija je korišćena platforma Doker (eng. \emph{Docker}) \cite{Docker}. Prednosti korišćenja ove platforme su monogstuke. Za početak, ona razdvaja razvijanje aplikacije od infrastrukture na kojoj će biti pokrenuta. Aplikacija je spakovana u izolovano okruženje koje se naziva kontejner (eng. \emph{container}). Kontejneri sadrže sve (a u idealnom slučaju, samo) ono što je neophodno za pokretanje aplikacije, u vidu strukture koja se naziva slika (eng. \emph{image}). To čini da su kontejneri lagani za prenošenje, za razliku od virtuelnih mašina koje u teoriji mogu pružiti istu funkcionalnost. Spakovana aplikacija može biti pokrenuta neograničeni broj puta, u različitim okruženjima: prilikom ručnog i automatskog testiranja, u produkciji, itd. Prilikom pokretanja kontejnera, može se dodatno specificirati njegova konfiguracija (na primer, mapiranje portova).
+Za pokretanje aplikacija je korišćena platforma Doker (eng. \emph{Docker}) \cite{Docker}. Prednosti korišćenja ove platforme su monogstuke. Za početak, ona razdvaja razvijanje aplikacije od infrastrukture na kojoj će biti pokrenuta. Aplikacija je spakovana u izolovano okruženje koje se naziva kontejner (eng. \emph{container}). Kontejneri sadrže sve ono što je neophodno za pokretanje aplikacije, a u idealnom slučaju samo ono što je neophodno, u vidu strukture koja se naziva slika (eng. \emph{image}). To čini da su kontejneri lagani za prenošenje, za razliku od virtuelnih mašina, koje mogu da pruže istu funkcionalnost. Spakovana aplikacija može biti pokrenuta neograničeni broj puta, u različitim okruženjima: prilikom ručnog i automatskog testiranja, u produkciji, itd. Prilikom pokretanja kontejnera, može se dodatno specificirati njegova konfiguracija (na primer, mapiranje portova).
 
 Arhitektura platforme je predstavljena na slici \ref{fig:dockerarch}, preuzetoj iz zvanične dokumentacije \cite{DockerArch}. 
 
@@ -124,11 +133,11 @@ Arhitektura platforme je predstavljena na slici \ref{fig:dockerarch}, preuzetoj 
   \label{fig:dockerarch}
 \end{figure}
 
-Koraci potrebni da se napravi slika aplikacije se definišu u \emph{Dockerfile} datoteci. Svaka instrukcija u ovom fajlu kreira sloj slike (eng. \emph{layer}). U sličaju \emph{.NET Core} aplikacija, prvi korak je učitavanje željenog radnog okvira, zatim, (primera radi) pokretanje kompilacije izvornog koda i smeštanje izvršnog koda na željenu lokaciju. Krajnji korak je uglavnom definisanje komande za pokretanje aplikacije. Bitno je naglasiti da tokom razvijanja aplikacije, Doker prepoznaje koji slojevi slike koji su se promenili, te ponovo kreira samo njih i njihove naredne slojeve. Ovo čini generisanje slike efikasnom i brzom operacijom koja ne usporava programera, koji najčeće menja samo delove aplikacije. Kreirane slike se čuvaju u registru slika koji može biti lokalni ili negde u oblaku.
+Koraci potrebni da se napravi slika aplikacije se definišu u datoteci \emph{Dockerfile}. Svaka instrukcija u ovom fajlu kreira po jedan sloj slike (eng. \emph{layer}). U slučaju \emph{.NET Core} aplikacija, prvi korak je učitavanje željenog radnog okvira, zatim, (primera radi) pokretanje kompajliranja izvornog koda i smeštanje izvršnog koda na željenu lokaciju. Krajnji korak je uglavnom definisanje komande za pokretanje aplikacije. Bitno je naglasiti da tokom razvijanja aplikacije, Doker prepoznaje koji slojevi slike su se promenili, te ponovo kreira samo njih i njihove naredne slojeve. Ovo čini generisanje slike efikasnom i brzom operacijom koja ne usporava programera, koji najčeće menja samo neke delove aplikacije. Kreirane slike se čuvaju u registru slika koji može biti lokalni ili negde u oblaku.
 
-Kontejner sadrži specifikaciju operativnog sistema na kojem se pokreće slika, i on može biti \emph{Windows}, \emph{Mac} i \emph{Linux}.
+Kontejner sadrži specifikaciju operativnog sistema na kojem se pokreće slika, i on može biti \emph{Windows}, \emph{Mac} i \emph{Linux}. Kontejneri koji odgovaraju drugom operativnom sistemu se pokreću u odgovarajućoj virtuelnoj mašini.
 
-Korišćeno okruženje za lokalno kreiranje i pokretanje kontejnera je \emph{Docker Desktop} prikazan na slici \ref{fig:dockerdesktop}.
+Korišćeno okruženje za lokalno kreiranje i pokretanje kontejnera je \emph{Docker Desktop} \cite{DockerDesktop} prikazan na slici \ref{fig:dockerdesktop}. \emph{Docker Desktop} u sebi sadrži \emph{Linux} virtuelnu mašinu u okviru koje se pokreću kontejneri \emph{Linux}, postupkom koji se naziva virtuelizacija.
 
 \begin{figure}[!ht]
   \centering
@@ -145,7 +154,7 @@ Pokretanje sistema na praktičan i skalabilan način, omogućila je platforma \e
 
 Kubenetes omogućava:
 \begin{enumerate}
-\item Pronalaženje servisa koristeći DNS ime ili IP adresu,
+\item Pronalaženje servisa koristeći \emph{DNS} ime ili \emph{IP} adresu,
 \item Balansiranje saobraćaja kroz mrežu u zavisnosti od opterećenosti,
 \item Korišćenje diska i drugih skladišta podataka,
 \item Automatsko ažuriranje (eng. \emph{update}) verzija aplikacije kao i vraćanje na prethodnu verziju,
@@ -154,7 +163,7 @@ Kubenetes omogućava:
 \item Upravljanje konfiguracijom, šiframa, sertifikatima i drugim osetljivim informacijama - uz samostalno ažuriranje bez potrebe za promenom slike kontejnera.
 \end{enumerate}
 
-Na slici \ref{fig:kubernetesarh} prikazana je arhitektura Kubernetes klastera, preuzeta iz zvanične dokumentacije \cite{KubernetesArchitecture}.
+Na slici \ref{fig:kubernetesarh} prikazana je arhitektura klastera Kubernetes, preuzeta iz zvanične dokumentacije \cite{KubernetesArchitecture}.
 
 \begin{figure}[!ht]
   \centering
@@ -163,9 +172,9 @@ Na slici \ref{fig:kubernetesarh} prikazana je arhitektura Kubernetes klastera, p
   \label{fig:kubernetesarh}
 \end{figure}
 
-Kubernetes klaster se sastoji iz dve celine: kontrolnog dela i skupa radnih mašina (eng. \emph{nodes}). Radne mašine na sebi pokreću \emph{mahune} (eng. \emph{pod}) u okviru kojih je smešten jedan ili više kontejner, u okviru kojih se nalazi aplikacija. Mahuna je najmanja jedinica koju je moguće kreirati i pokrenuti na klasteru, a kontejneri unutar njega imaju istu specifikaciju i dele lokalnu mrežu.
+Klaster Kubernetes se sastoji iz dve celine: kontrolnog dela i skupa radnih mašina (eng. \emph{nodes}). Radne mašine na sebi pokreću \emph{mahune} (eng. \emph{pod}) u okviru kojih je smešten jedan ili više kontejner, a u okviru svakog se nalazi aplikacija. Mahuna je najmanja jedinica koju je moguće kreirati i pokrenuti na klasteru, a kontejneri unutar njega imaju istu specifikaciju i dele lokalnu mrežu.
 
-Kako bi pokrenute aplikacije bile dostupne na mreži, kreira se apstrakcija koja se naziva \emph{Servis}. Ova apstrakcija povezuje grupu mahuna i definiše način na koji im se pristupa: koristeći jedinstveno DNS ime ili IP adresu (eng. \emph{Service endpoints}). Slanjem poruka na ovu adresu, Kubernetes sam usmerava i balansira saobraćaj ka mahunama, od kojih svaka ima jedinstvenu IP adresu.
+Kako bi pokrenute aplikacije bile dostupne na mreži, kreira se apstrakcija koja se naziva \emph{Servis}. Ova apstrakcija povezuje grupu mahuna i definiše način na koji im se pristupa: koristeći jedinstveno \emph{DNS} ime ili \emph{IP} adresu (eng. \emph{Service endpoints}). Slanjem poruka na ovu adresu, Kubernetes sam usmerava i balansira saobraćaj ka mahunama, od kojih svaka ima jedinstvenu \emph{IP} adresu.
 
 U okviru svake radne mašine je pokrenuto još nekoliko sistemskih procesa: 
 \begin{enumerate}
@@ -184,7 +193,7 @@ Kontrolni deo klastera služi za upravljanje klasterom, a funkcionalnosti su obe
 	\item \emph{node-controller} - Omogućava reagovanje u slučajevima kada mašine postanu nedostupne.
 	\item \emph{job-controller} - Izvšava dodatne poslove na klasteru.
 	\item \emph{endpoints-controller} - Podešava endpointe, tj. omogućava pronalaženje servisa i mahuna koje obuhvata. Ažurira adrese u slučaju promena (dodavanja i brisanja mahuna).
-	\item \emph{Servce Account \& Token Controller} - Resursi u okviru klastera se mogu podeliti po imenskim prostorima (eng. \emph{namespace}). Ovi kontroleri omogućavaju podešavaju prava pristupa u okviru imenskih prostora.
+	\item \emph{Service Account \& Token Controller} - Resursi u okviru klastera se mogu podeliti po imenskim prostorima (eng. \emph{namespace}). Ovi kontroleri omogućavaju podešavaju prava pristupa u okviru imenskih prostora.
 	\end{enumerate}
 \item \emph{cloud-controller-manager} - Predstavlja vezu između klastera i snabdevača resursa u oblaku (eng.\emph{cloud provider}).
 \end{enumerate}
@@ -199,13 +208,13 @@ Za komunikaciju sa kontrolnim delom Kubernetes klastera se koristi kilijent \emp
 \begin{verbatim}
 // Opšti oblik komande
 kubectl [command] [TYPE] [NAME] [flags]
-// Kreiranje resursa i njihovih specifikacija definisane u deploy.yaml
+// Pravljenje resursa i njihovih specifikacija
 kubectl apply -f deploy.yaml
 // Izlistavanje servisa na klasteru
 kubectl get svc
-// Izlistavanje podova
+// Izlistavanje mahuna
 kubectl get pods
-// Pristup bash konzoli na mašini u okviru koje je pokrenut pod
+// Pristup bash konzoli na mašini u okviru koje je pokrenuta mahuna
 kubectl exec mypod-m96mk -it mypod-m96mk  -- /bin/bash
 // Podešava automatsko skaliranje broja mahuna
 kubectl autoscale deployment computenode --cpu-percent=50 --min=1 --max=10
@@ -218,22 +227,24 @@ Programska implementacija sistema je uključila njegovo pokretanje u oblaku, a z
 
 Najrelevantniji resursi korišćeni za pokretanje sistema u na \emph{Azure} platformi su:
 \begin{enumerate}
-\item \emph{Azure Kubernetes Service} (skr. AKS) \cite{AKS} - Resurs koji predstavlja \emph{Kubernetes} klaster.
+\item \emph{Azure Kubernetes Service} (skr. AKS) \cite{AKS} - Resurs koji predstavlja klaster \emph{Kubernetes}.
 \item \emph{Azure SQL Database} (skr. AzureSQLDB) \cite{AzureSQLDB} - Resurs koji predstavlja relacionu bazu podataka.
 \item \emph{Azure Active Directory} \cite{AAD}  (skr. AAD)- Resurs koji omogućava kreiranje identiteta (npr. korisnike, grupe) i njihovo njegovo podešavanje (prava pristupa, login...).
-\item \emph{Azure Monitor} (skr. AM) \cite{AzureMonitor} - Skup propratnih funkcionalnosti koje pružaju uvid u ponašanje Azure resursa. Sakuplja logove i metrike, daje alate za njihovo analiziranje, kao i mogućnost uzbunjivanja (eng. \emph{alerts}) i reagovanja na dešavanja od interesa. Ima podršku i za tehnike mašinskog učenja nad sakupljenim podacima. Više o integraciji sa \emph{Azure Monitor}-om se nalazu u poglavlju \ref{chp:pracenjemetrika}.
+\item \emph{Azure Monitor} (skr. AM) \cite{AzureMonitor} - Skup propratnih funkcionalnosti koje pružaju uvid u ponašanje Azure resursa. Sakuplja logove i metrike, daje alate za njihovo analiziranje, kao i mogućnost uzbunjivanja (eng. \emph{alerts}) i reagovanja na dešavanja od interesa. Ima podršku i za tehnike mašinskog učenja nad sakupljenim podacima. Opis integracije sa servisom \emph{Azure Monitor} se nalazu u odeljku \ref{chp:pracenjemetrika} - Praćenje rada sistema.
 \end{enumerate}
 
 \subsection{Dodatni alati}
+\label{sub:dodatnialati}
 
 \subsubsection{Swagger / OpenAPI}
 
 \emph{OpenAPI} \cite{OpenAPI} je specifikacija \emph{REST API}-a (eng. \emph{Application Programming Interface}) koja ne zavisi od programskog jezika. \emph{Swagger} \cite{Swagger} predstavlja skup alata koji koriste \emph{OpenAPI} specifikaciju.
 
-Korišćenjem skupa alata \emph{Swagger}, moguće je dokumentovati serverski web \emph{REST API} u standardizovanom formatu, u datoteci \emph{json}. Za pravljenje ove specifikacije, koristi se alat \emph{Swashbuckle} \cite{Swashbuckle}.
+Korišćenjem skupa alata \emph{Swagger}, moguće je dokumentovati serverski \emph{web REST API} u standardizovanom formatu, u datoteci \emph{json}. Za pravljenje ove specifikacije, koristi se alat \emph{Swashbuckle} \cite{Swashbuckle}.
 
-Za generisanje klijenta u rednom okviru \emph{.NET Core}, koristi se alat \emph{NSwag} \cite{NSwag}. Na osnovu prethodno generisane \emph{json} datoteke, on generiše klasu koja sadriži \emph{HTTP} klijenta i potrebnu dokumentaciju. Ovo je praktičan i efikasan način da se automatski generiše kod klijenta pomoću kojeg se šalju zahtevi serveru.
+Za generisanje klijenta u radnom okviru \emph{.NET Core}, koristi se alat \emph{NSwag} \cite{NSwag}. Na osnovu prethodno generisane datoteke \emph{json}, on generiše klasu koja sadriži \emph{HTTP} klijenta i potrebnu dokumentaciju. Ovo je praktičan i efikasan način da se automatski generiše kod klijenta pomoću kojeg se šalju zahtevi serveru.
 
+Opis korišćenja skupa alata \emph{Swagger} se nalazi u odeljcima \ref{sec:implementacija} - Implementacija i \ref{sec:testiranjesistema} - Okvir za testiranje.
 
 
 % ------------------------------------------------------------------------------
@@ -486,20 +497,21 @@ Arhitektura sistema je prikazana na slici \ref{fig:arhitektura}.
 
 Arhutekturalni obrazac korišćen prilikom razvoja sistema je u Prezentacija-Apstrakcija-Kontrola (eng. \emph{Presentation-Abstraction-Control}, skr. PAC). Sistem je hijerarhijski podeljen na agente CtrlN i CmpN. CtrlN je agent višeg novoa, koji je pozvezan sa CmpN agentima. Ovakvom arhitekturom se uvodi podela odgovornosti različitih delova servisa.
 
-PAC je slojevita arhitektura, te svaki od agenata CtrlN i CmpN ima PAC slojeve. Prvi sloj aplikacija je \emph{prezenter} koji predstavlja REST API. Ovaj sloj aplikacije je okrenut ka spolja i definiše interfejs za komunikaciju sa servisom. U slučaju CtrlN je to API preko kog prima korisnikove zahteve, a u slučaju CmpN je to API preko kog prima on zahteve od CtrlN. Drugi sloj aplikacija je \emph{kontroler} koji predstavlja centralni deo agenta gde je glavna logika. Treći sloj aplikacija je \emph{apstrakcija} i predstavlja model podataka i interfejs prema bazi podataka. 
+PAC je slojevita arhitektura, te svaki od agenata CtrlN i CmpN ima PAC slojeve. Prvi sloj aplikacija je \emph{prezenter} koji predstavlja \emph{REST API}. Ovaj sloj aplikacije je okrenut ka spolja i definiše interfejs za komunikaciju sa servisom. U slučaju CtrlN je to \emph{API} preko kog prima korisnikove zahteve, a u slučaju CmpN je to \emph{API} preko kog prima on zahteve od CtrlN. Drugi sloj aplikacija je \emph{kontroler} koji predstavlja centralni deo agenta gde je glavna logika. Treći sloj aplikacija je \emph{apstrakcija} i predstavlja model podataka i interfejs prema bazi podataka. 
 
 
 % ------------------------------------------------------------------------------
 \section{Implementacija}
+\label{sec:implementacija}
 % ------------------------------------------------------------------------------
 
-Sistem DCS je javno dostupan na servisu GitHub na adresi \href{https://github.com/milana-kovacevic/DistributedComputationSystem}{https://github.com/milana-kovacevic/DistributedComputationSystem}\label{githubdsc}. Za implementaciju je korišćen programski jezik C\#, i radni okvir \emph{.NET Core 6.0}. Korišćeno je razvojno okruženje \emph{Microsoft Visual Studio Community 2022} i operativni sistem \emph{Windows 10}.
+Sistem DCS je javno dostupan na servisu \emph{GitHub} na adresi \href{https://github.com/milana-kovacevic/DistributedComputationSystem}{https://github.com/milana-kovacevic/DistributedComputationSystem}\label{githubdsc}. Za implementaciju je korišćen programski jezik C\#, i radni okvir \emph{.NET Core 6.0}. Korišćeno je razvojno okruženje \emph{Microsoft Visual Studio Community 2022} i operativni sistem \emph{Windows 10}.
 
 Glavna logika distribuiranog izvršavanja nalazi se u okviru kontrolne jedinice. Jedinice za izvršavanje su jednostavni servisi koji imaju jasan cilj koji podrazumeva izvršavanje atomičnog posla i vraćanje rezultata izvršavanja. U nastavku, razrađuje se implementacija CtrlN komponente (ukoliko nije naglašeno drugačije).
 
-Kontrolna jedinica se sastoji od dve komponente koje se nazivaju: Frontend (skr. FE) i Distribuirani orkestrator (skr. DO). Detaljnije, zaduženja CtrlN su, redom:
+Kontrolna jedinica se sastoji od dve komponente koje se nazivaju: \emph{Frontend} (skr. FE) i Distribuirani orkestrator (skr. DO). Detaljnije, zaduženja CtrlN su, redom:
 \begin{enumerate}
-\item Frontend
+\item \emph{Frontend}
 	\begin{enumerate}
 	\item Autentifikacija klijenta,
 	\item Primanje i validacija zahteva,
@@ -523,7 +535,7 @@ Moguća stanja kroz koja prolazi posao su prikazana na slici \ref{fig:stanjaposl
 
 Kada je FE primio i evidentirao zahtev za izvršavanje posla, on ubacuje posao u red za izvršavanje. U slučaju da je sistem zauzet obradom drugih poslova, novi zahtev će čekati dok sistem ne postane spreman da ga obradi. Za implementaciju reda za čekanje, korišćeno je postojeće rešenje bezbedno pri radu sa nitima \emph{BlockingCollection} \cite{BlockingCollection}. Posebna nit aplikacije uzima poslove iz reda i šalje ih jednog po jednog na dalju obradu komponenti DO.
 
-Navedena zaduženja \ref{podela_planiranje} i \ref{orkestriranje} uključuju glavni deo logike distribuiranog izvršavanja. Pre nego što se počne sa izvršavanjem, neophodno je podeliti posao na potposlove i definisati njihove zavisnosti. Rezultat ovoga je predstavljen u vidu stabla u kojem listovi predstavljaju početne atomične poslove, unutrašnji čvorovi agregacije podrezultata, a grane prenos međurezultata. Koren predstavlja krajnje rešenje. U slučaju da korisnikov zahtev već sadrži niz atomičnih poslova, podela početnog zahteva je trivijalna. Na osnovu stabla zavisnosti, pravi se plan izvršavanja. Sličan način planiranja koriste baze podataka \cite{SQLServerInternals}, kao i sistemi poput Sparka \cite{Spark} predstavljen u odeljku \ref{sec:postojeca_resenja}. Plan izvršavanja zavisi od tipa posla, a u slučaju \emph{map-reduce} funkcionalnosti podrazumeva se da se svaki atomični posao nezavisno obrađuje (funkcijom \emph{map}), a krajnje rešenje se dobija definisanom agregacijom atomičnih rezultata (funkcijom \emph{reduce}). Na osnovu plana izvršavanja, komponenta DO sprovodi dalje izvršavanje posla: šalje atomične poslove preko mreže do izabranih CmpN na izvršavanje. Zakazivanje i izvršavanje atomičnih poslova se dešava asinhrono i ono ne blokira DO da uzme naredni posao iz reda i započne njegovu obradu. Dobijeni rezultati se šalju odvojenoj komponenti koja zna da agregara rezultate na osnovu plana izvršavanja. U zavisnosti od kompleksnosti agregacije, i ona može da se prosledi CmpN na izračunavanje.
+Navedena zaduženja \ref{podela_planiranje} i \ref{orkestriranje} uključuju glavni deo logike distribuiranog izvršavanja. Pre nego što se počne sa izvršavanjem, neophodno je podeliti posao na potposlove i definisati njihove zavisnosti. Rezultat ovoga je predstavljen u vidu stabla u kojem listovi predstavljaju početne atomične poslove, unutrašnji čvorovi agregacije podrezultata, a grane prenos međurezultata. Koren predstavlja krajnje rešenje. U slučaju da korisnikov zahtev već sadrži niz atomičnih poslova, podela početnog zahteva je trivijalna. Na osnovu stabla zavisnosti, pravi se plan izvršavanja. Sličan način planiranja koriste baze podataka \cite{SQLServerInternals}, kao i sistemi poput Sparka \cite{Spark} predstavljen u odeljku \ref{sub:postojeca_resenja}. Plan izvršavanja zavisi od tipa posla, a u slučaju \emph{map-reduce} funkcionalnosti podrazumeva se da se svaki atomični posao nezavisno obrađuje (funkcijom \emph{map}), a krajnje rešenje se dobija definisanom agregacijom atomičnih rezultata (funkcijom \emph{reduce}). Na osnovu plana izvršavanja, komponenta DO sprovodi dalje izvršavanje posla: šalje atomične poslove preko mreže do izabranih CmpN na izvršavanje. Klijent korišćen za komunikaciju između komponenti je generisan pomoću skupa alata \emph{Swagger} opisanih u odeljku \ref{sub:dodatnialati}. Zakazivanje i izvršavanje atomičnih poslova se dešava asinhrono i ono ne blokira DO da uzme naredni posao iz reda i započne njegovu obradu. Dobijeni rezultati se šalju odvojenoj komponenti koja zna da agregara rezultate na osnovu plana izvršavanja. U zavisnosti od kompleksnosti agregacije, i ona može da se prosledi CmpN na izračunavanje.
 
 DO dodatno prati uspešnost izvršavanja poslova i u slučaju uspešnog završetka, upisuje rezultat u bazu. Ukoliko dođe do greške prilikom izvršavanja, posao može da se ponovi ili da se evidentira greška u krajnjem rezultatu. Ponovno pokretanje poslova je potrebno kako bi se povećao stepen pouzdanosti izvršavanja. U distribuiranim sistemima treba imati u vidu da često može doći do problema u komunikaciji među servisima, bilo zbog preopterećenosti mreže ili eventualnih restarta individualnih aplikacija. Ovo može uzrokovati prolaznu grešku, koju je moguće prevazići novim pokušajem. Ukoliko i nakon ponovnog izvršavanja dođe do greške, posao se završava i kao krajnji rezultat se upisuje greška.
 
@@ -548,11 +560,11 @@ ER (eng. \emph{Entity-Relation}) dijagram modela posla je prikazan na slici \ref
 
 \subsection{Autentifikacija}
 
-Za autentifikaciju klijenta je korišćen servis AAD \cite{AAD} opisan u uvodnom poglavlju u odeljku \ref{sub:azureplatform}. Korisniku su dodeljena prava korišćenja servisa time što je njegov identitet član grupe korisnika definisane u okviru servisa AAD.
+Za autentifikaciju klijenta je korišćen servis \emph{AAD} \cite{AAD} opisan u uvodnom poglavlju u odeljku \ref{sub:azureplatform}. Korisniku su dodeljena prava korišćenja servisa time što je njegov identitet član grupe korisnika definisane u okviru servisa AAD.
 
-Proces autentikacije je prikazan na slici \ref{fig:autentifikacija}. Korisnik pre kontaktiranja sistema DSC šalje zahtev servisu AAD kako bi preuzeo token za autentifikaciju. Ovaj token ima rok trajanja (uobičajeno je 60 minuta) i specifičan je za autentifikaciju na DSC sistem. Kada klijent ima token, prosleđuje ga u \emph{header} delu HTTP zahteva u polju za autentifikaciju. Sistem DCS prima zahtev i pre nego što počne da ga obrađuje, izvrši validaciju AAD tokena. Token sadrži otisak (eng. \emph{thumbprint}) koji garantuje njegovu validnost. Ukoliko je token ispravan, nastavlja se sa obradom zahteva, a ukoliko nije, korisnikov zahtev se odbija uz odgovarajuću grešku.
+Proces autentikacije je prikazan na slici \ref{fig:autentifikacija}. Korisnik pre kontaktiranja sistema DSC šalje zahtev servisu \emph{AAD} kako bi preuzeo token za autentifikaciju. Ovaj token ima rok trajanja (uobičajeno je 60 minuta) i specifičan je za autentifikaciju na DSC sistem. Kada klijent ima token, prosleđuje ga u \emph{header} delu \emph{http} zahteva u polju za autentifikaciju. Sistem DCS prima zahtev i pre nego što počne da ga obrađuje, izvrši validaciju \emph{AAD} tokena. Token sadrži otisak (eng. \emph{thumbprint}) koji garantuje njegovu validnost. Ukoliko je token ispravan, nastavlja se sa obradom zahteva, a ukoliko nije, korisnikov zahtev se odbija uz odgovarajuću grešku.
 
-Za bezbednu komunikaciju u produkcionom okruženju, forsiran je protokol HTTPS.
+Za bezbednu komunikaciju u produkcionom okruženju, forsiran je protokol \emph{https}.
 
 \begin{figure}[!ht]
   \centering
@@ -564,11 +576,11 @@ Za bezbednu komunikaciju u produkcionom okruženju, forsiran je protokol HTTPS.
 
 \section{Pokretanje u oblaku}
 
-Opisana implementacija dobija smisao i punu moć pokretanjem sistema DCS na klasteru Kubernetes predstavljenom u uvodu u delu \ref{subs:kubernetes_platform}. Komponente Control Node i Compute Node se pokreću u okviru kontejnera Doker (uvodni deo, odeljak \ref{subs:docker_platform}). Izbor radnog okvira \emph{.NET Core} omogućava pokretanje servisa na različitim platformama \emph{Windows}, \emph{Mac} i \emph{Linux}, bez izmena izvornog koda. Za izradu sistema su korišćeni kontejneri Doker sa operativnim sistemom \emph{Linux}. Za pokretanje sistema DCS u oblaku je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Za upravljanje i pristup resursima u okviru ove platforme koristi se portal \emph{Azure} \cite{AzurePortal}.
+Opisana implementacija dobija smisao i punu moć pokretanjem sistema DCS na klasteru Kubernetes predstavljenom u uvodu u delu \ref{subs:kubernetes_platform}. Komponente \emph{Control Node} i \emph{Compute Node} se pokreću u okviru kontejnera Doker (uvodni deo, odeljak \ref{subs:docker_platform}). Izbor radnog okvira \emph{.NET Core} omogućava pokretanje servisa na različitim platformama \emph{Windows}, \emph{Mac} i \emph{Linux}, bez izmena izvornog koda. Za izradu sistema su korišćeni kontejneri Doker sa operativnim sistemom \emph{Linux}. Za pokretanje sistema DCS u oblaku je korišćena platforma \emph{Microsoft Azure} \cite{Azure}. Za upravljanje i pristup resursima u okviru ove platforme koristi se portal \emph{Azure} \cite{AzurePortal}.
 
-Na adresi projekta na servisu GitHub \ref{githubdsc} se nalaze datoteke potrebne za kreiranje i konfigurisanje servisa pokrenutih u okviru klastera Kubernetes, kao i pomoćne skripte koje automatizuju proces postavljanja nove verzije aplikacija na klaster.
+Na adresi projekta na servisu \emph{GitHub} \ref{githubdsc} se nalaze datoteke potrebne za kreiranje i konfigurisanje servisa pokrenutih u okviru klastera Kubernetes, kao i pomoćne skripte koje automatizuju proces postavljanja nove verzije aplikacija na klaster.
 
-U nastavku, na slici \ref{fig:controlnode_yaml} je prikazana datoteka yaml  koja definiše kreiranje aplikacije Control Node na klasteru Kubernetes.
+U nastavku, na slici \ref{fig:controlnode_yaml} je prikazana datoteka yaml  koja definiše kreiranje aplikacije \emph{Control Node} na klasteru Kubernetes.
 
 \begin{figure}[h!]
 \centering
@@ -629,13 +641,13 @@ spec:
     app: controlnode
   internalTrafficPolicy: Local
 \end{lstlisting}
-\caption{Definisanje deploymenta servisa Control Node}
+\caption{Definisanje deploymenta servisa \emph{Control Node}}
 \label{fig:controlnode_service_yaml}
 \end{figure}
 
-Specifikacije za aplikaciju i servis komponente Compute Node su analogne, s tim da on može imati i više od jedne replike. Kreiranjem servisa CmpN, omogućava se da CtrlN komunicira prema njemu koristeći samo poznatu IP adresu servisa. Ova adresa se ne menja tokom postojanja servisa, a klaster Kubernetes automatski usmerava zahteve prema dostupnim, odgovarajućim mahunama, tj. kontejnerima. Više o ovome se nalazi u odeljku \ref{subs:kubernetes_platform}. Na ovaj način, sistem DCS se oslanja na postojeći mehanizan balansiranja saobraćaja u okviru klastera. Iz ugla CtrlN, on uvek šalje zahteve na jednu adresu CmpN, a tu adresu čita iz promenljive postavljene u okruženje (eng. \emph{environment variable}).
+Specifikacije za aplikaciju i servis komponente \emph{Control Node} su analogne, s tim da on može imati i više od jedne replike. Kreiranjem servisa CmpN, omogućava se da CtrlN komunicira prema njemu koristeći samo poznatu \emph{IP} adresu servisa. Ova adresa se ne menja tokom postojanja servisa, a klaster Kubernetes automatski usmerava zahteve prema dostupnim, odgovarajućim mahunama, tj. kontejnerima. Više o ovome se nalazi u odeljku \ref{subs:kubernetes_platform}. Na ovaj način, sistem DCS se oslanja na postojeći mehanizan balansiranja saobraćaja u okviru klastera. Iz ugla CtrlN, on uvek šalje zahteve na jednu adresu CmpN, a tu adresu čita iz promenljive postavljene u okruženje (eng. \emph{environment variable}).
 
-Servisi su definisani tako da primaju samo lokalni saobraćaj, odnosno saobraćaj u okviru mreže klastera. Koriste lokalni port 80, što je standardni port za http protokol, a smatra se da je komunikacija unutar klastera bezbedna. CtrlN je potrebno otvoriti prema korisniku putem interneta, odnosno, dodeliti mu javnu IP adresu, što je moguće uraditi na više načina. Jedan od načina je kreiranjem servisa tipa LoadBalanser, koji mu automatski dodeljuje eksternu IP adresu. Međutim, ovaj način dodeljivanja adrese komplikuje podešavanja bezbednosnog protokola https, koji zahteva instalaciju sertifikata TLS na serverskoj mašini. Zbog ovoga je kreiran dodatni API objekat koji se naziva \emph{Ingress}, a način njegovog kreiranja je prikazan na slici \ref{fig:controlnode_ingress_yaml}. Ovaj objekat predstavlja vezu između spoljašnjosti i unutrašnjosti klastera. Dodeljena mu je statička IP adresa sa uvezanim DNS imenom, koji su prethodno kreirani preko portala. Ovaj objekat takođe usmerava zahteve ka željenim servisima na osnovu definisanih pravila. U sučaju DCS, sve zahteve (označene prefiksom /) usmerava na CtrlN. Za instaliranje i automatsko rotiranje sertifikata, kreiran je i objekat \emph{ClusterIssuer}, koji koristi javnog snabdevača TLS sertifikatima, \emph{Let\'s encrypt} \cite{letsencrypt}. Uz ovakvo podešavanje, produkcionom sistemu DCS se može pristupiti preko javno dostupne adrese \emph{matf-distr-comp-sys.westeurope.cloudapp.azure.com} koristeći https protokol.
+Servisi su definisani tako da primaju samo lokalni saobraćaj, odnosno saobraćaj u okviru mreže klastera. Koriste lokalni port 80, što je standardni port za http protokol, a smatra se da je komunikacija unutar klastera bezbedna. CtrlN je potrebno otvoriti prema korisniku putem interneta, odnosno, dodeliti mu javnu \emph{IP} adresu, što je moguće uraditi na više načina. Jedan od načina je kreiranjem servisa tipa \emph{LoadBalanser}, koji mu automatski dodeljuje eksternu \emph{IP} adresu. Međutim, ovaj način dodeljivanja adrese komplikuje podešavanja bezbednosnog protokola \emph{https}, koji zahteva instalaciju sertifikata \emph{TLS} na serverskoj mašini. Zbog ovoga je kreiran dodatni \emph{API} objekat koji se naziva \emph{Ingress}, a način njegovog kreiranja je prikazan na slici \ref{fig:controlnode_ingress_yaml}. Ovaj objekat predstavlja vezu između spoljašnjosti i unutrašnjosti klastera. Dodeljena mu je statička \emph{IP} adresa sa uvezanim \emph{DNS} imenom, koji su prethodno kreirani preko portala. Ovaj objekat takođe usmerava zahteve ka željenim servisima na osnovu definisanih pravila. U sučaju DCS, sve zahteve (označene prefiksom /) usmerava na CtrlN. Za instaliranje i automatsko rotiranje sertifikata, kreiran je i objekat \emph{ClusterIssuer}, koji koristi javnog snabdevača \emph{TLS} sertifikatima, \emph{Let\'s encrypt} \cite{letsencrypt}. Uz ovakvo podešavanje, produkcionom sistemu DCS se može pristupiti preko javno dostupne adrese \emph{matf-distr-comp-sys.westeurope.cloudapp.azure.com} koristeći \emph{https} protokol.
 
 \begin{figure}[h!]
 \centering
@@ -655,6 +667,7 @@ spec:
     - matf-distr-comp-sys.westeurope.cloudapp.azure.com
     secretName: tls-secret
   rules:
+  - host: matf-distr-comp-sys.westeurope.cloudapp.azure.com
   - http:
       paths:
       - path: /
@@ -665,7 +678,7 @@ spec:
             port:
               number: 80
 \end{lstlisting}
-\caption{Kreiranje objekta ingress za pristup CtrlN preko DNS imena i https protokola}
+\caption{Kreiranje objekta ingress za pristup CtrlN preko \emph{DNS} imena i \emph{https} protokola}
 \label{fig:controlnode_ingress_yaml}
 \end{figure}
 
@@ -678,12 +691,12 @@ kubectl autoscale deployment computenode --cpu-percent=60 --min=2 --max=7 \
 
 % ------------------------------------------------------------------------------
 \section{Okvir za testiranje}
-\label{chp:testiranjesistema}
+\label{sec:testiranjesistema}
 % ------------------------------------------------------------------------------
 
 Za izradu testova korišćen je radni okvir \emph{XUnit} \cite{XUnit}.
 
-Svi testovi se nalaze na GitHub adresi projekta u poddirektorijumu \href{https://github.com/milana-kovacevic/DistributedComputationSystem/tree/main/tests}{tests}.
+Svi testovi se nalaze na servisu \emph{GitHub} na adresi projekta u poddirektorijumu \href{https://github.com/milana-kovacevic/DistributedComputationSystem/tree/main/tests}{tests}.
 
 Radni okvir \emph{XUnit} ima podršku za pisanje dva tipa testova: činjenice (eng. \emph{Fact}) i teorije (eng. \emph{Theory}). Činjenice su testovi koji ne primaju argumente, dok teorije predstavljaju paremetrizovane testove. Specifikacijom atributa iznad tela funkcije teorijskog testa, definišu se ulazi nad kojima se test pokreće, što značajno olakšava generisanje testova sa različitim ulazima.
 
@@ -759,7 +772,7 @@ Postoje dva tipa integracionih testova:
 
 Testovi integracije unutar komponenti testiraju međusobne zavisnosti podkomponenti CtrlN i CmpN. Na primer, zavisnost FE i DO u okviru CtrlN.
 
-Testovi integracije celih komponenti CtrlN i CmpN se pokreću nad lokalnim okruženjem, i očekuju da je okruženje pripremljeno za njihovo izvšavanje. U okviru kontejnera Doker potrebno je pokrenuti jednu CtrlN aplikaciju, kao i jednu CmpN aplikaciju, sa ranije definisanim adresama i portovima. Koristi se automatski generisana klijentska klasa \emph{DistributedCalculationSystemClient} nastala korišćenjem alata \emph{Swagger} u toku komipacije projekta sa testovima. Ovaj klijent šalje zahteve servisu CtrlN, a u telu testova se proverava da li je odgovor od sistema očekivan.
+Testovi integracije celih komponenti CtrlN i CmpN se pokreću nad lokalnim okruženjem, i očekuju da je okruženje pripremljeno za njihovo izvšavanje. U okviru kontejnera Doker potrebno je pokrenuti jednu CtrlN aplikaciju, kao i jednu CmpN aplikaciju, sa ranije definisanim adresama i portovima. Koristi se automatski generisana klijentska klasa \emph{DistributedCalculationSystemClient} nastala korišćenjem alata \emph{Swagger} u toku kompajliranja projekta sa testovima. Ovaj klijent šalje zahteve servisu CtrlN, a u telu testova se proverava da li je odgovor od sistema očekivan.
 
 \subsection{Testovi nad klasterom}
 
@@ -869,12 +882,12 @@ Logovi predstavljaju informacije o radu sistema koje ispisuju pokrenuti servisi 
 
 Za pregled logova korišćen je alat \emph{Azure Log Analytics} dostupan u okviru servisa \emph{Azure Monitor}. Ovaj alat pruža moćan deskriptivni jezik kojim se mogu pretraživati, filtrirati, sortirati i analizirati logovi. Rezultate upita je takođe moguće vizuelizovati u vidu grafikona.
 
-Na slici \ref{fig:computenodelogs} se nalazi prikaz stranice za pregled logova kontejnera koji sadrži Frontend aplikaciju.
+Na slici \ref{fig:computenodelogs} se nalazi prikaz stranice za pregled logova kontejnera koji sadrži aplikaciju \emph{Control Node}.
 
 \begin{figure}[!ht]
   \centering
   \frame{\includegraphics[width=1\textwidth]{./images/computenode_logs.png}}
-  \caption{Pregled logova komponente ComputeNode}
+  \caption{Pregled logova komponente \emph{Compute Node}}
   \label{fig:computenodelogs}
 \end{figure}
 
@@ -903,22 +916,34 @@ Na slici \ref{fig:alertmemory} nalazi primer aktivnog opšteg upozorenja u sluč
 
 
 % ------------------------------------------------------------------------------
-\chapter{Diskusija i zaključak}
-\label{chp:diskusijaizakljucak}
+\chapter{Rezultati}
+\label{chp:rezultati}
 % ------------------------------------------------------------------------------
+
+\section{Implementirani poslovi}
+
+TODO sta je implementirano
+
+
+
+
+\section{Analiza performansi}
+TODO rezultat merenja vremena izvrsavanja: sekvencijalno, integraciono i klaster
++ tablica sa rezultatima
+
+\section{Dalji razvoj sistema}
+
+U ovom poglavlju je predloženo nekoliko ideja u kojem smeru bi predstavljeni sistem za izračunavanje mogao da se razvija.
 
 TODO par opstih recenica Pravci daljeg razvoja sistema
 
-U inicijalnoj verziji servisa, samo CtrlN ima direktnu komunikaciju sa bazom.
-Otkazivanje zakazanih poslova nije podržano u inicijalnoj verziji.
-
-Prva verzija sistema DSC implementira \emph{map-reduce} funkcionalnost u kojom računa ukupan zbir cifara brojeva niza, gde svaki broj predstavlja jedan ulazni podatak za atomični posao. U naprednoj verziji sistema, plan bi bio predstavljan u vidu stabla u kojem listovi predstavljaju početne atomične poslove, unutrašnji čvorovi agregacije, a grane prenos međurezultata kroz mrežu. Ovakve planove koriste sistemi poput Sparka \cite{Spark} predstavljeni u uvodu \ref{sec:postojeca_resenja}.
+Prva verzija sistema DSC implementira \emph{map-reduce} funkcionalnost u kojom računa ukupan zbir cifara brojeva niza, gde svaki broj predstavlja jedan ulazni podatak za atomični posao. U naprednoj verziji sistema, plan bi bio predstavljan u vidu stabla u kojem listovi predstavljaju početne atomične poslove, unutrašnji čvorovi agregacije, a grane prenos međurezultata kroz mrežu. Ovakve planove koriste sistemi poput Sparka \cite{Spark} predstavljeni u uvodu \ref{sub:postojeca_resenja}.
 
 Tip posla može i da preusmeri pisanje rezultata na proizvoljnu lokaciju.
 Ukoliko su ulazni podaci ili rezultat veliki, te ih nije praktično čuvati u bazi podataka, DCS je moguće proštiriti kako bi koristio neko drugo skladište za pristup ulaznim podacima i za čuvanje rezultata.
 
-\section{Dalji razvoj sistema}
-U ovom poglavlju je predloženo nekoliko ideja u kojem smeru bi predstavljeni sistem za izračunavanje mogao da se razvija.
+U inicijalnoj verziji servisa, samo CtrlN ima direktnu komunikaciju sa bazom.
+Otkazivanje zakazanih poslova nije podržano u inicijalnoj verziji.
 
 \subsection{Generalizacija tipa poslova}
 
