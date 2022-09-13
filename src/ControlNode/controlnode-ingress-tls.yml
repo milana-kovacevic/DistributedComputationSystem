@@ -1,7 +1,7 @@
 ﻿apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: controlnode-tls
+  name: cn-tls
   namespace: distributed-system-dev-ns
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
@@ -10,10 +10,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - controlnode-tls.matf-distr-comp-sys.westeurope.cloudapp.azure.com
+    - matf-distr-comp-sys.westeurope.cloudapp.azure.com
     secretName: tls-secret
   rules:
-  - host: controlnode-tls.matf-distr-comp-sys.westeurope.cloudapp.azure.com
+  - host: matf-distr-comp-sys.westeurope.cloudapp.azure.com
   - http:
       paths:
       - path: /

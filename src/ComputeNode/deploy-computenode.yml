@@ -35,6 +35,7 @@ metadata:
   labels:
     app: computenode
 spec:
+  type: ClusterIP
   ports:
   - port: 80
     protocol: TCP
