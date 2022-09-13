@@ -42,13 +42,19 @@ namespace ComputeNode.Executors
             return false;
         }
 
+        // Calculates sum of digits of all numbers from 1 to number.
         private static long CalculateSumOfDigits(long number)
         {
             long sumOfDigits = 0;
-            while (number > 0)
+
+            for (int i = 1; i <= number; i++)
             {
-                sumOfDigits += number % 10;
-                number /= 10;
+                int currentNumber = i;
+                while (currentNumber > 0)
+                {
+                    sumOfDigits += currentNumber % 10;
+                    currentNumber /= 10;
+                }
             }
 
             return sumOfDigits;

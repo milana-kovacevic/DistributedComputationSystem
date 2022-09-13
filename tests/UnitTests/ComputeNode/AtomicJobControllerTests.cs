@@ -1,6 +1,9 @@
 ﻿using ComputeNode.Controllers;
+using ComputeNode.Exceptions;
+using ComputeNode.Executors;
 using ComputeNode.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using TestCommons;
 using Xunit;
 
@@ -32,7 +35,7 @@ namespace UnitTests.ComputeNode
 
             Assert.IsType<AtomicJobResult>(result);
             Assert.Equal(AtomicJobState.Succeeded, result.State);
-            Assert.Equal("6", result.Result);
+            Assert.Equal("1038", result.Result);
         }
 
         [Fact]
@@ -46,26 +49,34 @@ namespace UnitTests.ComputeNode
 
         [Fact]
         public async Task PostJob_UnhandledException()
-        {/*
-            Mock<IJobExecutor> mockedExecutor = new Mock<IJobExecutor>();
+        {
+            string testErrorMsg = "Unhandled exception from test!";
+            Mock<ISpecificJobExecutor> mockedExecutor = new Mock<ISpecificJobExecutor>();
 
-            // Setup mocked scheduler.
-            mockedExecutor.Setup(s => s.(It.IsAny<Job>()))
-                .Throws(Task.CompletedTask);
-            services.AddScoped<IJobExecutor>((services) => mockedExecutor.Object);
+            // Setup mocked executor.
+            mockedExecutor.Setup(s => s.ExecuteAsync(It.IsAny<AtomicJob>()))
+                .Throws(new Exception(testErrorMsg));
+            services.AddScoped<ISpecificJobExecutor>((services) => mockedExecutor.Object);
 
-            serviceProvider = services.BuildServiceProvider();
+            // Setup mocked executor factory.
+            Mock<ISpecificJobExecutorFactory> mockedExecutorFactory = new Mock<ISpecificJobExecutorFactory>();
+            mockedExecutorFactory.Setup(s => s.BuildAsync(It.IsAny<AtomicJobType>()))
+                .Returns(Task.FromResult(mockedExecutor.Object));
+            services.AddSingleton<ISpecificJobExecutorFactory>((services) => mockedExecutorFactory.Object);
 
-            serviceProvider.addser.AddScoped<IJobExecutor, AtomicJobExecutor>();
+            var serviceProviderMockedExecutor = services.BuildServiceProvider();
+            var controllerMockedExecutor = serviceProviderMockedExecutor.GetService<AtomicJobController>();
 
-            mockedExecutor.Setup(s => s.ScheduleJobAsync(It.IsAny<Job>()))
-                .Returns(Task.CompletedTask);
-            services.AddScoped<IScheduler>((services) => mockedExecutor.Object);
+            // Run atomic job.
+            int jobId = 1;
+            int atomicJobId = 1;
+            var result = await controllerMockedExecutor.PostJob(jobId, atomicJobId, "1");
 
-            var result = await controller.PostJob(1, 1, "aaa");
-
+            // Verify result.
             Assert.IsType<AtomicJobResult>(result);
-            Assert.Equal(AtomicJobState.Failed, result.State);*/
+            Assert.Equal(AtomicJobState.Failed, result.State);
+            Assert.Contains(string.Format(ExceptionMessages.UnhandledException, jobId, atomicJobId, string.Empty).Split('.')[0], result.Error);
+            Assert.Contains(testErrorMsg, result.Error);
         }
     }
 }

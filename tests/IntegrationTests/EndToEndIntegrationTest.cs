@@ -30,9 +30,10 @@ namespace IntegrationTests
         {
             var inputData = new Collection<AtomicJobRequestData>()
             {
-                new AtomicJobRequestData() { InputData ="123" },
+                new AtomicJobRequestData() { InputData ="24" },
                 new AtomicJobRequestData() { InputData ="42" }
             };
+            string expectedResult = "375";
 
             var request = new JobRequestData() {
                 JobType = JobType.CalculateSumOfDigits,
@@ -60,7 +61,7 @@ namespace IntegrationTests
             // Verify aggregated result
             var jobResult = await _client.JobResultsAsync(job.JobId);
             Assert.Equal(string.Empty, jobResult.Error);
-            Assert.Equal("12", jobResult.Result);
+            Assert.Equal(expectedResult, jobResult.Result);
             Assert.Equal(JobState.Succeeded, jobResult.State);
 
             // Delete job

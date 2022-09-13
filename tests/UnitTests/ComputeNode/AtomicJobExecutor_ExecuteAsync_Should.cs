@@ -24,9 +24,9 @@ namespace UnitTests.ComputeNode
         [Theory]
         [InlineData(0, 0)]
         [InlineData(1, 1)]
-        [InlineData(42, 6)]
-        [InlineData(1001, 2)]
-        [InlineData(-2, 2)]
+        [InlineData(42, 255)]
+        [InlineData(1001, 13503)]
+        [InlineData(-2, 3)]
         public async Task ExecuteAsync_ValidInput_ReturnsSuccess(long inputData, int expected)
         {
             var atomicJob = GetDummyAtomicJob(inputData.ToString());

@@ -1,4 +1,5 @@
 ﻿using DistributedCalculationSystem;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Net;
 using TestCommons;
@@ -11,9 +12,11 @@ namespace FunctionalTests
         private const string baseUrl = "https://matf-distr-comp-sys.westeurope.cloudapp.azure.com/";
         private DistributedCalculationSystemClient _client = null;
         private TimeSpan defaultTimeout = TimeSpan.FromSeconds(300);
+        private Random randNum;
 
         public StressClusterTests()
         {
+            this.randNum = new Random(42);
             this._client = new DistributedCalculationSystemClient(baseUrl, new HttpClient());
         }
 
@@ -49,6 +52,8 @@ namespace FunctionalTests
             Assert.Equal(expectedResult, jobResult.Result);
             Assert.Equal(JobState.Succeeded, jobResult.State);
 
+            Console.WriteLine(jobResult);
+
             await CleanupJob(job.JobId);
         }
 
@@ -64,13 +69,12 @@ namespace FunctionalTests
             Assert.Equal<int>((int)HttpStatusCode.NotFound, exception.Result.StatusCode);
         }
 
-        private void GenerateJobRequestData(int maxNumberOfAtomicJobs, out JobRequestData jobRequest, out string expectedResult)
+        private void GenerateJobRequestData(int numberOfAtomicJobs, out JobRequestData jobRequest, out string expectedResult)
         {
             Console.WriteLine("Generating request...");
 
             // Generate input data and expected result.
-            Random randNum = new ();
-            int[] numbers = GenerateRendomNumbers(randNum.Next(1, maxNumberOfAtomicJobs));
+            int[] numbers = GenerateRandomNumbers(numberOfAtomicJobs);
 
             expectedResult = numbers.Select(n => CalculateSumOfDigits(n))
                 .Aggregate(0, (acc, x) => acc + x)
@@ -90,11 +94,10 @@ namespace FunctionalTests
             };
         }
 
-        private int[] GenerateRendomNumbers(int numberOfNumbers)
+        private int[] GenerateRandomNumbers(int numberOfNumbers)
         {
-            int Min = 0;
+            int Min = 1000;
             int Max = 10000;
-            Random randNum = new Random();
 
             return Enumerable
                 .Repeat(0, numberOfNumbers)
@@ -102,13 +105,19 @@ namespace FunctionalTests
                 .ToArray();
         }
 
+        // Calculate sum of digits for all numbers from 1 to number.
         private static int CalculateSumOfDigits(int number)
         {
             int sumOfDigits = 0;
-            while (number > 0)
+
+            for (int i = 1; i <= number; i++)
             {
-                sumOfDigits += number % 10;
-                number /= 10;
+                int current = i;
+                while (current > 0)
+                {
+                    sumOfDigits += current % 10;
+                    current /= 10;
+                }
             }
 
             return sumOfDigits;
