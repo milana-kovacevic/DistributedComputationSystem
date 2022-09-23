@@ -1,21 +1,29 @@
 ﻿using DistributedCalculationSystem;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Net;
 using TestCommons;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace FunctionalTests
 {
     public class StressClusterTests
     {
+        private readonly ITestOutputHelper _testOutputHelper;
         private const string baseUrl = "https://matf-distr-comp-sys.westeurope.cloudapp.azure.com/";
         private DistributedCalculationSystemClient _client = null;
         private TimeSpan defaultTimeout = TimeSpan.FromSeconds(300);
         private Random randNum;
 
-        public StressClusterTests()
+        private int NumbersToGenerate = 1000;
+        private int MinGenerated = 400000;
+        private int MaxGenerated = 450000;
+
+        public StressClusterTests(ITestOutputHelper testOutputHelper)
         {
+            _testOutputHelper = testOutputHelper;
             this.randNum = new Random(42);
             this._client = new DistributedCalculationSystemClient(baseUrl, new HttpClient());
         }
@@ -23,9 +31,9 @@ namespace FunctionalTests
         [Fact]
         public async void RunHeavyJob_Success()
         {
-            GenerateJobRequestData(500, out JobRequestData request, out string expectedResult);
+            GenerateJobRequestData(NumbersToGenerate, out JobRequestData request, out string expectedResult);
 
-            Console.WriteLine("Running request...");
+            _testOutputHelper.WriteLine("Running request...");
 
             // Create job.
             var job = await _client.CreateAsync(request);
@@ -45,7 +53,7 @@ namespace FunctionalTests
                 },
                 timeout: defaultTimeout);
 
-            Console.WriteLine("Verifying result...");
+            _testOutputHelper.WriteLine("Verifying result...");
             // Verify aggregated result
             var jobResult = await _client.JobResultsAsync(job.JobId);
             Assert.Equal(string.Empty, jobResult.Error);
@@ -54,12 +62,15 @@ namespace FunctionalTests
 
             Console.WriteLine(jobResult);
 
+            // Log execution time on cluster
+            _testOutputHelper.WriteLine($"Elapsed execution time on cluster: '{jobResult.EndTime - jobResult.StartTime}'.");
+
             await CleanupJob(job.JobId);
         }
 
         private async Task CleanupJob(int jobId)
         {
-            Console.WriteLine("Cleaning up state in DCS...");
+            _testOutputHelper.WriteLine("Cleaning up state in DCS...");
 
             // Delete job
             await _client.DeleteAsync(jobId);
@@ -71,14 +82,21 @@ namespace FunctionalTests
 
         private void GenerateJobRequestData(int numberOfAtomicJobs, out JobRequestData jobRequest, out string expectedResult)
         {
-            Console.WriteLine("Generating request...");
+            _testOutputHelper.WriteLine("Generating request...");
 
             // Generate input data and expected result.
             int[] numbers = GenerateRandomNumbers(numberOfAtomicJobs);
 
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
+
             expectedResult = numbers.Select(n => CalculateSumOfDigits(n))
                 .Aggregate(0, (acc, x) => acc + x)
                 .ToString();
+
+            stopwatch.Stop();
+
+            _testOutputHelper.WriteLine($"Elapsed execution time needed to generate request: '{stopwatch.Elapsed}'.");
 
             // Generate request.
             var inputData = new Collection<AtomicJobRequestData>();
@@ -96,12 +114,9 @@ namespace FunctionalTests
 
         private int[] GenerateRandomNumbers(int numberOfNumbers)
         {
-            int Min = 1000;
-            int Max = 10000;
-
             return Enumerable
                 .Repeat(0, numberOfNumbers)
-                .Select(i => randNum.Next(Min, Max))
+                .Select(i => randNum.Next(MinGenerated, MaxGenerated))
                 .ToArray();
         }
 

@@ -37,7 +37,7 @@ namespace FunctionalTests
                 new AtomicJobRequestData() { InputData ="42" },
                 new AtomicJobRequestData() { InputData ="142" },
             };
-            string expectedTotalSum = "13";
+            string expectedTotalSum = "1453";
 
             var request = new JobRequestData()
             {
