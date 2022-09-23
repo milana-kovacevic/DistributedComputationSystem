@@ -21,6 +21,7 @@ namespace Frontend
             services.AddSingleton<IComputeNodeClientWrapper, ComputeNodeClientWrapper>();
             services.AddSingleton<IScheduler, DistributedScheduler>();
             services.AddSingleton<IAtomicJobScheduler, AtomicJobScheduler>();
+            services.AddSingleton<ComputeNodeJobExecutor>();
             services.AddSingleton<JobExecutionMonitor>();
             services.AddSingleton<DbEntityManager>();
 

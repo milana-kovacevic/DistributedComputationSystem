@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: controlnode-container
-          image: matfmastercr.azurecr.io/controlnode:v0.1
+          image: matfmastercr.azurecr.io/controlnode:v0.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

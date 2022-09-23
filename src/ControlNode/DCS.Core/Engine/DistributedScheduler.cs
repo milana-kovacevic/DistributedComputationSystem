@@ -55,6 +55,9 @@ namespace ControlNode.DCS.Core.Engine
 
                 // Trigger asyncly all atomic jobs.
                 var result = new List<AtomicJobResult>();
+
+                // TODO planer
+
                 foreach (var atomicJobUnit in job.AtomicJobs)
                 {
                     await _atomicJobScheduler.ScheduleAsync(atomicJobUnit);

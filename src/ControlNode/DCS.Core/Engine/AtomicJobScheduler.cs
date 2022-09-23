@@ -1,5 +1,4 @@
-﻿using ControlNode.DCS.Core.ComputeNodeSwaggerClient;
-using ControlNode.DCS.Core.Exceptions;
+﻿using ControlNode.DCS.Core.Exceptions;
 using ControlNode.Abstraction.Data;
 using ControlNode.Abstraction.Models;
 
@@ -9,7 +8,7 @@ namespace ControlNode.DCS.Core.Engine
     {
         private readonly ILogger<AtomicJobScheduler> _logger;
         private readonly IServiceProvider _serviceProvider;
-        private IComputeNodeClientWrapper _computeNodeClientWrapper;
+        private ComputeNodeJobExecutor _computeNodeJobExecutor;
         private JobExecutionMonitor _jobExecutionMonitor;
         private DbEntityManager _dbEntityManager;
 
@@ -17,13 +16,13 @@ namespace ControlNode.DCS.Core.Engine
         public AtomicJobScheduler(
             ILogger<AtomicJobScheduler> logger,
             IServiceProvider serviceProvider,
-            IComputeNodeClientWrapper computeNodeClientWrapper,
+            ComputeNodeJobExecutor computeNodeJobExecutor,
             JobExecutionMonitor jobExecutionMonitor,
             DbEntityManager dbEntityManager)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
-            _computeNodeClientWrapper = computeNodeClientWrapper;
+            _computeNodeJobExecutor = computeNodeJobExecutor;
             _jobExecutionMonitor = jobExecutionMonitor;
             _dbEntityManager = dbEntityManager;
         }
@@ -41,7 +40,6 @@ namespace ControlNode.DCS.Core.Engine
                     State = AtomicJobState.InProgress
                 };
 
-                // TODO Execute with retry
                 try
                 {
                     var unit = (AtomicJob)obj;
@@ -52,12 +50,8 @@ namespace ControlNode.DCS.Core.Engine
                     // Update atomic job state
                     _dbEntityManager.UpdateAtomicJobState(unit.JobId, unit.AtomicJobId, AtomicJobState.InProgress);
 
-                    // Run the job
-                    result = await _computeNodeClientWrapper.RunAsync(
-                            job.AtomicJobId,
-                            job.JobId,
-                            job.JobType,
-                            job.InputData);
+                    // Run the job with retry.
+                    result = await _computeNodeJobExecutor.ExecuteWithRetryAsync(job);
 
                     // Update atomic job result in database.
                     _dbEntityManager.UpdateAtomicJobResult(unit.JobId, unit.AtomicJobId, result);
@@ -68,7 +62,7 @@ namespace ControlNode.DCS.Core.Engine
                 }
                 catch (Exception e)
                 {
-                    var errorMessage = string.Format(DCSCoreExceptionMessages.UnhandledException, e.Message);
+                    var errorMessage = string.Format(DCSCoreExceptionMessages.UnhandledExceptionRetry, e.Message);
                     _logger.LogError(e, errorMessage);
 
                     result = new AtomicJobResult()
