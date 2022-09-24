@@ -4,7 +4,7 @@ using System.Net;
 using TestCommons;
 using Xunit;
 
-namespace FunctionalTests
+namespace ClusterTests
 {
     public class EndToEndFunctionalClusterTests
     {
