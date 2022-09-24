@@ -76,6 +76,7 @@ namespace UnitTests.ControlNode
             await TestUtils.PollUntilSatisfied(
                 executeTask,
                 (task) => task.Status == TaskStatus.RanToCompletion,
-                timeout: timeout);
+                timeout: timeout,
+                pollingInterval: TimeSpan.FromSeconds(1));
     }
 }

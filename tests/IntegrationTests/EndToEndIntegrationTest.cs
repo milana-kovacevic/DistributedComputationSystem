@@ -56,7 +56,8 @@ namespace IntegrationTests
                     var jobFromSys = _client.JobsAsync(jobId).GetAwaiter().GetResult();
                     return jobFromSys.State == JobState.Succeeded;
                 },
-                timeout: defaultTimeout);
+                timeout: defaultTimeout,
+                pollingInterval: TimeSpan.FromSeconds(2));
 
             // Verify aggregated result
             var jobResult = await _client.JobResultsAsync(job.JobId);

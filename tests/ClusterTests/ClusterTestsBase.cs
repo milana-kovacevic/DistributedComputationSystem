@@ -16,6 +16,7 @@ namespace ClusterTests
         protected DistributedCalculationSystemClient _client = null;
         protected TimeSpan defaultTimeout = TimeSpan.FromSeconds(300);
         protected Random randNum;
+        protected TimeSpan defaultPollingInterval = TimeSpan.FromSeconds(3);
 
         public ClusterTestsBase(ITestOutputHelper testOutputHelper)
         {
@@ -42,10 +43,19 @@ namespace ClusterTests
                 jobId,
                 (jobId) =>
                 {
-                    var jobFromSys = _client.JobsAsync(jobId).GetAwaiter().GetResult();
-                    return jobFromSys.State == JobState.Succeeded;
+                    try
+                    {
+                        var jobFromSys = _client.JobsAsync(jobId).GetAwaiter().GetResult();
+                        return jobFromSys.State == JobState.Succeeded;
+                    }
+                    catch (Exception)
+                    {
+                        // case when system returns 502
+                        return false;
+                    }
                 },
-                timeout: defaultTimeout);
+                timeout: defaultTimeout,
+                pollingInterval: defaultPollingInterval);
         }
 
         protected async Task<JobResult> GetAndVerifyJobResultSuccess(int jobId, string expectedResult)

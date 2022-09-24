@@ -5,14 +5,18 @@ namespace TestCommons
 {
     public class TestUtils
     {
-        public static async Task PollUntilSatisfied<T>(T pollingObject, Func<T, bool> successCondition, TimeSpan timeout)
+        public static async Task PollUntilSatisfied<T>(
+            T pollingObject,
+            Func<T, bool> successCondition,
+            TimeSpan timeout,
+            TimeSpan pollingInterval)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
             while (stopwatch.Elapsed < timeout && !successCondition(pollingObject))
             {
-                await Task.Delay(500);
+                await Task.Delay(pollingInterval);
             }
 
             if (!successCondition(pollingObject))
