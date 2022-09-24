@@ -947,7 +947,7 @@ Na slici \ref{fig:alertmemory} nalazi primer aktivnog opšteg upozorenja u sluč
 
 \section{Implementirani poslovi}
 
-Prva verzija sistema DCS implementira \emph{map-reduce} funkcionalnost nad nizom brojeva. Rezultat izračunavanja je ukupan zbit cifara brojeva od 1 do svakog elementa niza pojedinačno. Svaki element niza predstavlja jedan ulazni podatak za atomični posao. Ovaj primer veštački pravi zahtevan posao koji treba obraditi, ali je dovoljan da pokaže smislenost sistema.
+Prva verzija sistema DCS implementira \emph{map-reduce} funkcionalnost nad nizom brojeva. Rezultat izračunavanja je ukupan zbir cifara brojeva od 1 do svakog elementa niza pojedinačno. Svaki element niza predstavlja jedan ulazni podatak za atomični posao. Ovaj primer veštački pravi zahtevan posao koji treba obraditi, ali je dovoljan da dokaže koncept i smislenost sistema.
 
 \emph{Primer.}
 
@@ -957,35 +957,41 @@ Izlaz: 55 = (1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + (1 + 0) + (1 + 1)) + (1 + 2 + 3
 
 Otkazivanje zakazanih poslova nije podržano u inicijalnoj verziji.
 
-%U inicijalnoj verziji servisa, samo CtrlN ima direktnu komunikaciju sa bazom.
-
 \section{Analiza performansi}
 
-Za ispitivanje performansi sistema, izvršeno je merenje dužine trajanje obrade posla u tri okruženja: sekvencijalno na jednoj mašini, na integracionom lokalnom okruženju, kao i nad klasterom.
+Za ispitivanje performansi sistema, izvršeno je merenje dužine trajanje obrade posla u nekoliko okruženja: sekvencijalno na jednoj mašini, nad klasterom u oblaku koji se sastoji od 1, 5, odnosno 10 jedinica za izračunavanje. Rezultati su prikazani u tabeli \ref{tbl:rezultati}. Veličina ulaza predstavlja broj elemenata niza generisanih na slučajan način. Generisani brojevi se nalaze u rasponu od 400000 do 450000. Ovaj raspon je izabran empirijski, jer se nad velikim brojevima primećuje dovoljno povećanje vremena izvršavanja. Rezultati merenja su predstavljeni u sekundama, zaokruženi na drugu decimalu.
 
-TODO rezultati merenja u tablici
-
+\begin{table}
+\centering
 \begin{center}
 \begin{tabular}{ |c||c|c|c|c| } 
  \hline
-  & sekvencijalno & integraciono & klaster 1 cmpN & klaster 5 cmpN \\ 
+  veličina ulaza & lokalno, sekvencijalno & DCS 1 cmpN & DCS 5 cmpN & DCS 10 cmpN \\ 
  \hline
- Primer 1 & x & x & x & x \\ 
- Primer 2 & x & x & x & x \\ 
- Primer 3 & x & x & x & x \\ 
+ 50 & 1.09 & 1.39 & 0.58 & 0.69 \\ 
+ 100 & 2.36 & 2.43 & 2.19 & 2.67 \\ 
+ 500 & 12.05 & 9.51 & 8.65 & 9.02 \\ 
+ 1000 & 26.71 & 20.30 & 21.53 & 26.92 \\ 
+ 3000 & 78.16 & 57.13 & 50.92 & 49.40 \\ 
  \hline
 \end{tabular}
+\caption{Rezultati izvršavanja u različitim okruženjima}
+\label{tbl:rezultati}
 \end{center}
+\end{table}
+
+Iz navedenih rezultata se vidi poboljšanje vremena izvršavanja. Dodavanjem jedinica za izvršavanje, smanjuje se vreme izvršavanja, što je i očekivano, s obzirom na povećanje nivoa paralelizma. Međutim, poboljšanje nije veliko koliko bi se očekivalo, jer je korišćen klaster sa ograničenim resursima. Klaster u oblaku ima ograničenja poput količine podataka i zahteva koji idu kroz mrežu, koja usporavaju rad sistema. Takođe, pripadajuća baza podataka takođe ima ograničenja potrošnje resursa i broja zahteva koje obrađuje, te može početi da odbija zahteve koji dolaze od DCS.
 
 \section{Dalji razvoj sistema}
 
-U ovom odeljku je predloženo nekoliko ideja u kojem smeru bi sistem DCS mogao da se razvija.
+U ovom odeljku je predloženo nekoliko ideja u kojem smeru bi sistem DCS mogao da se razvija. Neki od pravaca daljeg razvoja su:
+\begin{enumerate}
+\item Generalizacija tipa poslova,
+\item Podrška za različite frontende,
+\item Napredno rutiranje zahteva ka jedinicama za izvršavanje.
+\end{enumerate}
 
-Napredna verzija sistema bi uključila pametnije planiranje izvršavanja poslova, kao i primanje kompleksnijih poslova od korisnika, koje je potrebno podeliti na više manjih.
-
-Tip posla može i da preusmeri pisanje rezultata na proizvoljnu lokaciju.
-Ukoliko su ulazni podaci ili rezultat veliki, te ih nije praktično čuvati u bazi podataka, DCS je moguće proširiti kako bi koristio neko drugo skladište za pristup ulaznim podacima i za čuvanje rezultata.
-
+Pored navedenih mogućnosti, sistem bi mogao da preusmeri pisanje rezultata na proizvoljnu lokaciju, na osnovu tipa posla. Ukoliko su ulazni podaci ili rezultat veliki, te ih nije praktično čuvati u bazi podataka, DCS je moguće proširiti kako bi koristio neko drugo skladište za pristup ulaznim podacima i za čuvanje rezultata.
 
 \subsection{Generalizacija tipa poslova}
 
@@ -993,8 +999,7 @@ Prikazani sistem u inicijalnoj implementaciji može da obrađuje samo poslove ko
 
 Potpunu generalizaciju obrade atomičnih jedinica posla moguće je izvesti proširivanjem korisničkog interfejsa za zakazivanje posla, tj. proširenjem interfejsa da mu ulazni parametar bude izvorni kod funkcije koju je potrebno izvršiti nad atomičnim poslovima. Tada bi korisnik, pored ulaznih podataka, prosledio i deo koda koji želi da se izvrši nad atomičnim poslovima na sistemu. Za podršku ovog slučaja upotrebe, potrebno je da sistem zna da prevede izvorni kod funkcije i rezultujuću funkciju prosledi jedinici za izvršavanje. Ovaj pristup podrazumeva bezbednosne provere unetog koda, kako bi se osigurali od napada na klaster. Razvoj sistema u ovom pravcu bi naginjao ka postojećem rešenju \emph{Azure Functions} \ref{azurefunctions} spomenutog u odeljku \ref{sub:postojeca_resenja}.
 
-Dalja unapređenja bi mogla da uključe obradu poslova koji nisu nužno specificirani nizom svojih atomičnih podjedinica. Ovo podrazumeva da programer razume suštinu izvršavanja novog tipa posla, te generiše plan za distribuirano izvršavanje. Plan može da uključuje i agregaciju podrezultata zbog eventualnih zavisnosti potposlova. Razvoj sistema u ovom pravcu bi naginjao ga sistemima poput Sparka \ref{Spark} spomenutog u odeljku \ref{sub:postojeca_resenja}.
-
+Dalja unapređenja bi mogla da uključe obradu poslova koji nisu nužno specificirani nizom svojih atomičnih podjedinica. Ovo podrazumeva da programer razume suštinu izvršavanja novog tipa posla, te generiše plan za distribuirano izvršavanje. Kompleksni posao od korisnika bi prvo trebalo podeliti na više manjih, dok plan izvršavanja može da uključuje i agregaciju podrezultata zbog eventualnih zavisnosti potposlova. Razvoj sistema u ovom pravcu bi naginjao ga sistemima poput Sparka \cite{Spark} spomenutog u odeljku \ref{sub:postojeca_resenja}.
 
 \subsection{Podrška za različite frontende}
 
@@ -1004,14 +1009,14 @@ Sistem je moguće proširiti, tako da uključuje podršku i za druge tipove aute
 
 Navedena poboljšanja bi dosta opteretila postojeću implementaciju frontenda. Sa daljim razvojem u ovom delu servisa, trebalo bi razdvojiti implementaciju Frontend servisa od komponente za distribuirano zakazivanje, i nastaviti razvoj imajući u vidu pristup razvijanja kroz mikro-servise. To bi uključilo izradu drugih Frontend servisa koji bi komunicirali sa svojim klijentima, a poslove slali na centralni servis zadužen za distribuirano orkestriranje.
 
-\subsection{Napredno zakazivanje poslova}
+
+\subsection{Napredno rutiranje zahteva ka jedinicama za izvršavanje}
 
 Urađena implementacija se, prilikom izvršavanja atomičnih jedinica posla na jedinicama za izvršavanje, oslanja na Kubernetes podršku za balansiranje zahteva koji idu kroz mrežu do servisa. Drugi, samostalniji način zakazivanja poslova bi uključio prepoznavanje adresa jedinica za izvršavanje (tj. njihovih mahuna), a zatim bi tu informaciju iskoristio za proizvoljno, pametnije usmeravanje poslova na izvršavanje na tim adresama. U kalkulacije bi uključio i procene kompleksnosti posla, kao i dostupne resurse.
 
 Ova implementacija je zahtevnija, ali pruža priliku za bolje performanse. Međutim, pre početka same implementacije, potrebno je izvršiti opsežno testiranje i analiziranje postojućeg sistema kako bi se opravdala potreba za novim orkestratorom distribuiranog izvršavanja. Ukoliko osnovna varijanta algoritma za orkestriranje ne zadovoljava kriterijume performansi, onda ima smisla raditi ovakva unapređenja.
 
-Ukoliko je unapređenje opravdano, za početak, potrebno je napraviti infrastrukturu za pronalaženje adresa u okviru komponente koja vrši zakazivanje poslova. Dodatno, treba implementirati algoritam koji procenjuje kompleksnost posla u vidu potrebnih resursa za njegovo izračunavanje. Na kraju, potrebno je i implementirati novi orkestrator. Nakon svega ovoga, potrebno je uraditi testiranje sistema sa novom implementacijom, kao i testiranje sistema \emph{AB} kako bi se doneli zaključci koji je princip bolji i zašto.
-
+Ukoliko je unapređenje opravdano, za početak, potrebno je napraviti infrastrukturu za pronalaženje adresa u okviru komponente koja vrši zakazivanje poslova. Dodatno, treba implementirati algoritam koji procenjuje kompleksnost posla u vidu potrebnih resursa za njegovo izračunavanje. Na kraju, potrebno je i implementirati novi orkestrator. Nakon svega ovoga, potrebno je uraditi testiranje sistema sa novom implementacijom, kao i testiranje \emph{AB} sistema kako bi se doneli zaključci koji je princip bolji i zašto.
 
 \section{Zaključak}
 U radu je predstavljen sistem za dristribuirano izračunavanje DCS. Opisani su detalji sistema koji uključujući mehanizam za primanje zahteva za obradu poslova, zakazivanje posla, distribuirano izvršavanje i praćenje poslova.
@@ -1020,7 +1025,7 @@ Nadogradnje sistema ne zahtevaju veću refaktorizaciju, jer je sistem projektova
 
 Implementirani sistem DCS pokazuje značajno ubrzanje u odnosu na izvršavanje na jednoj mašini. Pokretanjem sistema u oblaku, on je veoma skalabilan i prilagodljiv potrebama korisnika.
 
-Postoji više pravaca u kojem je moguće dalje razvijati sistem, a za definisanje pravog pravca je potrebno izvršiti ispitivanja potreba korisnika i tržišta. Na osnovu analiza dostupnih metrika i logova, biće donete odluke u koje delove sistema je potrebno ulagati kako bi se dodatno poboljšale performanse.
+Postoji više pravaca u kojem je moguće dalje razvijati sistem, a za definisanje pravog pravca je potrebno izvršiti ispitivanja potreba korisnika i tržišta. Na osnovu analiza dostupnih metrika i logova, moguće je doneti odluke u koje delove sistema je potrebno ulagati kako bi se dodatno poboljšale performanse.
 
 % ------------------------------------------------------------------------------
 % Literatura
