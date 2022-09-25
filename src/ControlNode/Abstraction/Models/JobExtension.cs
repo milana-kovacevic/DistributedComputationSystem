@@ -13,5 +13,10 @@ namespace ControlNode.Abstraction.Models
                 || jobResult.State == JobState.Queued
                 || jobResult.State == JobState.InProgress;
         }
+        public static bool IsFinalState(this JobState state)
+        {
+            return state == JobState.Succeeded
+                || state == JobState.Failed;
+        }
     }
 }

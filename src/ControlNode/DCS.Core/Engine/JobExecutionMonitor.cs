@@ -27,7 +27,7 @@ namespace ControlNode.DCS.Core.Engine
             // If atomic job failed, mark parent job as failed as well.
             if (atomicJobResult.State == AtomicJobState.Failed)
             {
-                _dbEntityManager.UpdateJobState(jobId, JobState.Failed, error: DCSCoreExceptionMessages.ParentJobFailed);
+                _dbEntityManager.UpdateJobState(jobId, JobState.Failed, error: atomicJobResult.Error);
             }
 
             if (_inProgressTasks.TryGetValue(jobId, out var jobDetails))

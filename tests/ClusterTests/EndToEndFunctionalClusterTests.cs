@@ -1,3 +1,5 @@
+using ControlNode.DCS.Core.Exceptions;
+using ComputeNode.Exceptions;
 using DistributedCalculationSystem;
 using System.Collections.ObjectModel;
 using System.Net;
@@ -76,6 +78,48 @@ namespace ClusterTests
             // Now getting job should throw 404.
             var exception = Assert.ThrowsAsync<ApiException>(async () => await _client.JobsAsync(job.JobId));
             Assert.Equal<int>((int)HttpStatusCode.NotFound, exception.Result.StatusCode);
+        }
+
+        [Fact]
+        public async void RunJob_Failure()
+        {
+            string dummyValue = "dummy_value";
+            var inputData = new Collection<AtomicJobRequestData>()
+            {
+                new AtomicJobRequestData() { InputData = dummyValue },
+                new AtomicJobRequestData() { InputData ="2" },
+            };
+
+            var request = new JobRequestData()
+            {
+                JobType = JobType.CalculateSumOfDigits,
+                InputData = inputData
+            };
+
+            // Create job.
+            var job = await _client.CreateAsync(request);
+            Assert.NotNull(job);
+
+            // Poll and verify job state until it's completed.
+            await TestUtils.PollUntilSatisfied(
+                job.JobId,
+                (jobId) =>
+                {
+                    var jobFromSys = _client.JobsAsync(jobId).GetAwaiter().GetResult();
+                    return jobFromSys.State == JobState.Failed;
+                },
+                timeout: defaultTimeout,
+                pollingInterval: TimeSpan.FromSeconds(2));
+
+            // Verify aggregated result
+            var jobResult = await _client.JobResultsAsync(job.JobId);
+            Assert.Equal(JobState.Failed, jobResult.State);
+            Assert.Contains(DCSCoreExceptionMessages.ParentJobFailed, jobResult.Error);
+            Assert.Contains(string.Format(ExceptionMessages.InvalidInputData, dummyValue), jobResult.Error);
+            Assert.Null(jobResult.Result);
+
+            // Delete job
+            await _client.DeleteAsync(job.JobId);
         }
     }
 }

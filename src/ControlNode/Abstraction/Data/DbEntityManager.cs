@@ -1,4 +1,5 @@
 ﻿using ControlNode.Abstraction.Models;
+using ControlNode.DCS.Core.Exceptions;
 
 namespace ControlNode.Abstraction.Data
 {
@@ -30,8 +31,15 @@ namespace ControlNode.Abstraction.Data
                 if (jobResultFromDb != null)
                 {
                     jobResultFromDb.State = newState;
-                    jobResultFromDb.Error = error;
-                    jobResultFromDb.EndTime = DateTime.UtcNow;
+                    if (!string.IsNullOrWhiteSpace(error))
+                    {
+                        jobResultFromDb.Error = (jobResultFromDb.Error ?? DCSCoreExceptionMessages.ParentJobFailed) + $";{error}";
+                    }
+
+                    if (newState.IsFinalState())
+                    {
+                        jobResultFromDb.EndTime = DateTime.UtcNow;
+                    }
 
                     jobContext.SaveChanges();
                 }
