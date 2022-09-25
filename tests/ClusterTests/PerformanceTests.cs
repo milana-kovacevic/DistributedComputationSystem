@@ -1,4 +1,5 @@
-﻿using DistributedCalculationSystem;
+﻿using ControlNode.Abstraction.Models;
+using DistributedCalculationSystem;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -28,20 +29,25 @@ namespace ClusterTests
             var job = await _client.CreateAsync(request);
             Assert.NotNull(job);
 
-            // Verify job is created.
-            var jobFromSystem = await _client.JobsAsync(job.JobId);
-            Assert.NotNull(jobFromSystem);
+            try
+            {
+                // Verify job is created.
+                var jobFromSystem = await _client.JobsAsync(job.JobId);
+                Assert.NotNull(jobFromSystem);
 
-            // Poll and verify job state until it's successfully completed.
-            await PollJobUntilSuccess(job.JobId);
+                // Poll and verify job state until it's successfully completed.
+                await PollJobUntilSuccess(job.JobId);
 
-            // Verify aggregated result
-            var jobResult = await GetAndVerifyJobResultSuccess(job.JobId, expectedResult);
+                // Verify aggregated result
+                var jobResult = await GetAndVerifyJobResultSuccess(job.JobId, expectedResult);
 
-            // Log execution time on cluster
-            _testOutputHelper.WriteLine($"Execution time (cluster): '{jobResult.EndTime - jobResult.StartTime}'.");
-
-            await CleanupJob(job.JobId);
+                // Log execution time on cluster
+                _testOutputHelper.WriteLine($"Execution time (cluster): '{jobResult.EndTime - jobResult.StartTime}'.");
+            }
+            finally
+            {
+                await CleanupJob(job.JobId);
+            }
         }
     }
 }

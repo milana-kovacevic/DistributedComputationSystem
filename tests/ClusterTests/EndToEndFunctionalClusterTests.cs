@@ -68,7 +68,7 @@ namespace ClusterTests
 
             // Verify aggregated result
             var jobResult = await _client.JobResultsAsync(job.JobId);
-            Assert.Equal(string.Empty, jobResult.Error);
+            Assert.Null(jobResult.Error);
             Assert.Equal(expectedTotalSum, jobResult.Result);
             Assert.Equal(JobState.Succeeded, jobResult.State);
 

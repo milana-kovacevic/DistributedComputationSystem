@@ -61,7 +61,7 @@ namespace ClusterTests
         protected async Task<JobResult> GetAndVerifyJobResultSuccess(int jobId, string expectedResult)
         {
             var jobResult = await _client.JobResultsAsync(jobId);
-            Assert.Equal(string.Empty, jobResult.Error);
+            Assert.Null(jobResult.Error);
             Assert.Equal(expectedResult, jobResult.Result);
             Assert.Equal(JobState.Succeeded, jobResult.State);
 
