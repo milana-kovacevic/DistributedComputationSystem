@@ -963,7 +963,7 @@ Otkazivanje zakazanih poslova nije podržano u inicijalnoj verziji.
 
 \section{Analiza performansi}
 
-Za ispitivanje performansi sistema, izvršeno je merenje dužine trajanje obrade posla u nekoliko okruženja: sekvencijalno na jednoj mašini, nad klasterom u oblaku koji se sastoji od 1, 5, odnosno 10 jedinica za izračunavanje. Rezultati su prikazani u tabeli \ref{tbl:rezultati}, kao prosečna vrednost nakon tri pokretanja izračunavanja. Veličina ulaza predstavlja broj elemenata niza generisanih na slučajan način. Generisani brojevi se nalaze u rasponu od 400000 do 450000. Ovaj raspon je izabran empirijski, jer se nad velikim brojevima primećuje dovoljno povećanje vremena izvršavanja. Rezultati merenja su predstavljeni u sekundama, zaokruženi na drugu decimalu.
+Za ispitivanje performansi sistema, izvršeno je merenje dužine trajanje obrade posla u nekoliko okruženja: sekvencijalno na jednoj mašini, nad klasterom u oblaku koji se sastoji od 1, 5, odnosno 10 jedinica za izračunavanje. Rezultati su prikazani u tabeli \ref{tbl:rezultati}. Veličina ulaza predstavlja broj elemenata niza generisanih na slučajan način. Generisani brojevi se nalaze u rasponu od 400000 do 450000. Ovaj raspon je izabran empirijski, jer se nad velikim brojevima primećuje dovoljno povećanje vremena izvršavanja. Rezultati merenja su predstavljeni u sekundama, zaokruženi na drugu decimalu. Rezultati merenja so prosečna vrednost nakon tri pokretanja izračunavanja sa istim ulaznim podacima.
 
 \begin{table}
 \centering
@@ -972,11 +972,11 @@ Za ispitivanje performansi sistema, izvršeno je merenje dužine trajanje obrade
  \hline
   veličina ulaza & lokalno, sekvencijalno & DCS 1 cmpN & DCS 5 cmpN & DCS 10 cmpN \\ 
  \hline
- 50 & 1.09 & 0.37 & 0.58 & 0.41 \\ 
- 100 & 2.36 & 0.61 & 0.33 & 0.67 \\ 
- 500 & 12.05 & 2.97 & 3.39 & 3.12 \\ 
- 1000 & 23.6 & 8.23 & 6.19 & 8.74 \\ 
- 3000 & 78.16 & 24.17 & 26.12 & 30.84 \\ 
+ 50 & 1.09 & 0.37 & 0.42 & 0.41 \\ 
+ 100 & 2.36 & 0.81 & 0.63 & 0.67 \\ 
+ 500 & 12.05 & 3.97 & 2.99 & 3.12 \\ 
+ 1000 & 23.6 & 8.23 & 6.39 & 6.74 \\ 
+ 3000 & 78.16 & 29.17 & 24.12 & 25.84 \\ 
  \hline
 \end{tabular}
 \caption{Rezultati izvršavanja u različitim okruženjima}
@@ -984,11 +984,13 @@ Za ispitivanje performansi sistema, izvršeno je merenje dužine trajanje obrade
 \end{center}
 \end{table}
 
-Iz navedenih rezultata se vidi poboljšanje vremena izvršavanja. Dodavanjem jedinica za izvršavanje, smanjuje se vreme izvršavanja, što je i očekivano, s obzirom na povećanje nivoa paralelizma. Međutim, u prvoj iteraciji testiranja performansi, poboljšanje nije bilo veliko koliko bi se očekivalo. Korišćen je klaster sa ograničenim resursima. Klaster u oblaku ima ograničenja poput količine podataka i zahteva koji idu kroz mrežu, koja usporavaju rad sistema. Takođe, pripadajuća baza podataka takođe ima ograničenja potrošnje resursa i broja zahteva koje obrađuje, te može početi da odbija zahteve koji dolaze od DCS. Kada je klasteru i bazi podataka dodeljena veća količina resursa, rezultati su se primetno poboljšali.
+Iz navedenih rezultata se vidi poboljšanje vremena izvršavanja. Dodavanjem jedinica za izvršavanje, smanjuje se vreme izvršavanja. Ovo je i očekivano, s obzirom na povećanje nivoa paralelizma. Međutim, dodavanje jedinica za izvršavanje može da ubrza izvršavanje do određene granice. Iz rezultata se vidi da je vreme izvršavanja, prilikom pokretanja poslova nad sistemom sa 5, odnosno 10 jedinica za izvršavanje, veoma slično.
+
+U prvoj iteraciji testiranja performansi, poboljšanje nije bilo veliko koliko bi se očekivalo, u poređenju sa lokalnim, sekvencijalnim pokretanjem algoritma. Korišćen je klaster sa ograničenim resursima. Klaster u oblaku ima ograničenja poput količine podataka i zahteva koji se propuštaju kroz mrežu, i to usporava rad sistema. Takođe, i pripadajuća baza podataka ima ograničenja potrošnje resursa i broja zahteva koje obrađuje, te može početi da odbija zahteve koji dolaze od DCS. Kada je klasteru i bazi podataka dodeljena veća količina resursa, rezultati su se primetno poboljšali. Ovo ide u prilog skalabilnosti sistema, jer su se, kroz jednostavne konfiguracione promene, dobili bolji rezultati.
 
 \section{Dalji razvoj sistema}
 
-U ovom odeljku je predloženo nekoliko ideja u kojem smeru bi sistem DCS mogao da se razvija. Neki od pravaca daljeg razvoja su:
+Predloženo je nekoliko ideja u kojem pravcu bi sistem DCS mogao da se razvija. Neki od pravaca daljeg razvoja su:
 \begin{enumerate}
 \item Generalizacija tipa poslova,
 \item Podrška za različite frontende,
@@ -1007,11 +1009,11 @@ Dalja unapređenja bi mogla da uključe obradu poslova koji nisu nužno specific
 
 \subsection{Podrška za različite frontende}
 
-Implementirani frontend daje korisniku na korišćenje \emph{REST API}. Dalji razvoj servisa bi mogao da podrži i druge klijent - server načine komunikacije, uključujući komunikaciju preko \emph{Web Socketa}. Takođe, moguće je izraditi \emph{Web} platformu i vizuelni korisnički interfejs za lakše korišćenje sistema.
+U okviru implementirane kontrolne jedinice, komponenta \emph{Frontend} daje korisniku na korišćenje \emph{REST API}. Dalji razvoj servisa bi mogao da podrži i druge klijent - server načine komunikacije, uključujući komunikaciju preko \emph{Web Socketa}. Takođe, moguće je izraditi \emph{Web} platformu i vizuelni korisnički interfejs za lakše korišćenje sistema.
 
-Sistem je moguće proširiti, tako da uključuje podršku i za druge tipove autentifikacije. Osnovna autentikacija uključuje integrisanje sa provajderom identiteta \emph{Azure Active Directory}. Ovo je moguće unaprediti dodavanjem odvojene komponente za podršku za druge načine autentikacije (na primer, koriščenjem naloga \emph{Google}).
+Sistem je moguće proširiti, tako da uključuje podršku i za druge tipove autentifikacije. Osnovna autentikacija uključuje integrisanje sa provajderom identiteta \emph{Azure Active Directory}. Ovo je moguće unaprediti dodavanjem odvojene komponente za podršku za druge načine autentifikacije (na primer, koriščenjem \emph{Google} naloga).
 
-Navedena poboljšanja bi dosta opteretila postojeću implementaciju frontenda. Sa daljim razvojem u ovom delu servisa, trebalo bi razdvojiti implementaciju Frontend servisa od komponente za distribuirano zakazivanje, i nastaviti razvoj imajući u vidu pristup razvijanja kroz mikro-servise. To bi uključilo izradu drugih Frontend servisa koji bi komunicirali sa svojim klijentima, a poslove slali na centralni servis zadužen za distribuirano orkestriranje.
+Navedena poboljšanja bi dodatno opteretila postojeću implementaciju kontrolne jedinice. Sa daljim razvojem u ovom delu servisa, trebalo bi razdvojiti implementaciju \emph{Frontend} servisa od orkestratora distribuiranja, i nastaviti razvoj imajući u vidu pristup razvijanja kroz mikro-servise. To bi uključilo izradu drugih \emph{Frontend} servisa koji bi komunicirali sa svojim klijentima, a poslove slali na centralni servis zadužen za distribuirano orkestriranje.
 
 
 \subsection{Napredno rutiranje zahteva ka jedinicama za izvršavanje}
@@ -1023,11 +1025,11 @@ Ova implementacija je zahtevnija, ali pruža priliku za bolje performanse. Među
 Ukoliko je unapređenje opravdano, za početak, potrebno je napraviti infrastrukturu za pronalaženje adresa u okviru komponente koja vrši zakazivanje poslova. Dodatno, treba implementirati algoritam koji procenjuje kompleksnost posla u vidu potrebnih resursa za njegovo izračunavanje. Na kraju, potrebno je i implementirati novi orkestrator. Nakon svega ovoga, potrebno je uraditi testiranje sistema sa novom implementacijom, kao i testiranje \emph{AB} sistema kako bi se doneli zaključci koji je princip bolji i zašto.
 
 \section{Zaključak}
-U radu je predstavljen sistem za dristribuirano izračunavanje DCS. Opisani su detalji sistema, što uključuje mehanizam za primanje zahteva za obradu poslova, zakazivanje posla, distribuirano izvršavanje i praćenje poslova. Opisan je način praćenja rada sistema, kao i načini testiranja.
+U radu je predstavljen sistem za dristribuirano izračunavanje DCS. Opisani su detalji sistema, što uključuje mehanizam za primanje zahteva za obradu poslova, zakazivanje posla, distribuirano izvršavanje i praćenje poslova. Opisan je način praćenja rada sistema, kao i načini njegovog testiranja.
 
-Nadogradnje sistema ne zahtevaju veću refaktorizaciju, jer je sistem projektovan da bude modularan, uspostavljajući svu potrebnu infrastrukturu. Ovo čini da se sistem može lako proširiti, kako bi uveo dodatne funkcionalnosti za obradu novih tipova poslova. Postojeći sistem implementira jednostavnu funkcionalnost, kako bi predstavio prednosti pristupa.
+Nadogradnje sistema ne zahtevaju veću refaktorizaciju, jer je sistem projektovan da bude modularan, uspostavljajući svu potrebnu infrastrukturu. Ovo čini da se sistem može lako proširiti, kako bi uveo dodatne funkcionalnosti za obradu novih tipova poslova. Postojeći sistem implementira jednostavnu funkcionalnost, kako bi predstavio prednosti predloženog pristupa.
 
-Implementirani sistem DCS pokazuje značajno ubrzanje u odnosu na izvršavanje na jednoj mašini. Pokretanjem sistema u oblaku, on je veoma skalabilan i prilagodljiv potrebama korisnika.
+Implementirani sistem DCS pokazuje značajno ubrzanje u odnosu na izvršavanje na jednoj mašini. Pokretanjem sistema u oblaku, on je veoma skalabilan i prilagodljiv potrebama korisnika. Kako bi se dostigle najbolje perfomanse sistema za određeni tip poslova, potrebno je prilagoditi konfiguraciju sistema i njegovih komponenti izvršavanju poslova od interesa.
 
 Postoji više pravaca u kojem je moguće dalje razvijati sistem, a za definisanje pravog pravca je potrebno izvršiti ispitivanja potreba korisnika i tržišta. Na osnovu analiza dostupnih metrika i logova, moguće je doneti odluke u koje delove sistema je potrebno ulagati kako bi se dodatno poboljšale performanse.
 
@@ -1045,9 +1047,9 @@ Postoji više pravaca u kojem je moguće dalje razvijati sistem, a za definisanj
 % Biografija kandidata
 \begin{biografija}
   \textbf{Milana Kovačević} je rođena u Zrenjaninu, 29. novembra 1995. godine. Osnovno i srednje obrazovanje (Zrenjaninska gimnazija, prirodno-matematički smer) završila je u rodnom gradu, uz sticanje diplome "Vuk Karadžić". Takođe je završila nižu muzičku školu, instrument klavir.
-2014. godine je upisala osnovne studije na modulu Informatika na Matematičkom fakultetu Univerziteta u Beogradu. Osnovne studije je završila 2017. godine sa prosečnom ocenom 9.86, kao primalac stipendije Dositeja. Master akademske studije upisala je 2017. godine takođe na Matematičkom fakultetu na modulu Informatika. Položila je sve ispite predviđene planom i programom master akademskih studija sa prosečnom ocenom 9.15.
+2014. godine je upisala osnovne studije na modulu Informatika na Matematičkom fakultetu Univerziteta u Beogradu. Osnovne studije je završila 2017. godine sa prosečnom ocenom 9.86, kao primalac stipendije Dositeja. Master akademske studije je upisala 2017. godine, takođe na Matematičkom fakultetu na modulu Informatika. Položila je sve ispite predviđene planom i programom master akademskih studija sa prosečnom ocenom 9.15.
 
-Nakon završetka osnovnih studija, nastavlja da se paralelno razvija i u industriji, radom u kompaniji Microsoft. Tokom rada se susreće sa sistemima za obradu i čuvanje podataka u okviru Azure plaforme, a radom na jednom od njih stiče i praktično znanje o distribuiranim sistemima i tehnologijama za rad u oblaku.
+Nakon završetka osnovnih studija, nastavlja da se paralelno razvija i u industriji, radom u kompaniji \emph{Microsoft}. Tokom rada se susreće sa sistemima za obradu i čuvanje podataka u okviru platforme \emph{Azure}, a radom na jednom od njih, stiče i praktično znanje o distribuiranim sistemima i tehnologijama za rad u oblaku.
 
 \end{biografija}
 % ------------------------------------------------------------------------------
