@@ -62,7 +62,7 @@ namespace ControlNode.DCS.Core.Engine
                 }
                 catch (Exception e)
                 {
-                    var errorMessage = string.Format(DCSCoreExceptionMessages.UnhandledExceptionRetry, e.Message);
+                    var errorMessage = string.Format(DCSCoreExceptionMessages.UnhandledException, e.Message);
                     _logger.LogError(e, errorMessage);
 
                     result = new AtomicJobResult()

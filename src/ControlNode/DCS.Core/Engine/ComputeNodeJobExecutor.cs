@@ -23,6 +23,8 @@ namespace ControlNode.DCS.Core.Engine
 
         public async Task<AtomicJobResult> ExecuteWithRetryAsync(AtomicJob atomicJob)
         {
+            ExponentialBackoffDelayDriver expBackoffDriver = new();
+
             for (int tryCount = 0; ; tryCount++)
             {
                 try
@@ -50,6 +52,8 @@ namespace ControlNode.DCS.Core.Engine
 
                     var errorMessage = string.Format(DCSCoreExceptionMessages.UnhandledExceptionRetry, tryCount, e.Message);
                     _logger.LogError(e, errorMessage);
+
+                    await expBackoffDriver.Delay();
                 }
             }
         }

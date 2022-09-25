@@ -10,10 +10,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - matf-distr-comp-sys.westeurope.cloudapp.azure.com
+    - cn-tls.matf-distr-comp-sys.westeurope.cloudapp.azure.com
     secretName: tls-secret
   rules:
-  - host: matf-distr-comp-sys.westeurope.cloudapp.azure.com
+  - host: cn-tls.matf-distr-comp-sys.westeurope.cloudapp.azure.com
   - http:
       paths:
       - path: /
