@@ -519,9 +519,9 @@ Arhitektura sistema je prikazana na slici \ref{fig:arhitektura}.
   \label{fig:arhitektura}
 \end{figure}
 
-Arhitekturalni obrazac korišćen prilikom razvoja sistema je u Prezentacija-Apstrakcija-Kontrola (eng. \emph{Presentation-Abstraction-Control}, skr. PAC). Sistem je hijerarhijski podeljen na agente CtrlN i CmpN. CtrlN je agent višeg novoa, koji je pozvezan sa CmpN agentima. Ovakvom arhitekturom se uvodi podela odgovornosti različitih delova servisa.
+Arhitekturalni obrazac korišćen prilikom razvoja sistema je Prezentacija-Apstrakcija-Kontrola (eng. \emph{Presentation-Abstraction-Control}, skr. PAC). Sistem je hijerarhijski podeljen na agente CtrlN i CmpN. CtrlN je agent višeg novoa, koji je pozvezan sa CmpN agentima. Ovakvom arhitekturom se uvodi podela odgovornosti različitih delova servisa.
 
-PAC je slojevita arhitektura, te svaki od agenata CtrlN i CmpN ima PAC slojeve. Prvi sloj aplikacija je \emph{prezenter} koji predstavlja \emph{REST API}. Ovaj sloj aplikacije je okrenut ka spolja i definiše interfejs za komunikaciju sa servisom. U slučaju CtrlN je to \emph{API} preko kog prima korisnikove zahteve, a u slučaju CmpN je to \emph{API} preko kog prima zahteve od CtrlN. Drugi sloj aplikacija je \emph{kontroler} koji predstavlja centralni deo agenta gde je glavna logika. Treći sloj aplikacija je \emph{apstrakcija} i predstavlja model podataka i interfejs prema bazi podataka. 
+PAC je slojevita arhitektura, te svaki od agenata CtrlN i CmpN ima PAC slojeve. Prvi sloj aplikacija je \emph{prezenter} koji predstavlja \emph{REST API}. Ovaj sloj aplikacije je okrenut ka spolja i definiše interfejs za komunikaciju sa servisom. U slučaju CtrlN, to je \emph{API} preko kog prima korisnikove zahteve, a u slučaju CmpN, to je \emph{API} preko kog prima zahteve od CtrlN. Drugi sloj aplikacija je \emph{kontroler} koji predstavlja centralni deo agenta. U okviru kontrolera se nalazi glavna logika. Treći sloj aplikacija je \emph{apstrakcija} i predstavlja model podataka i interfejs prema bazi podataka. 
 
 
 % ------------------------------------------------------------------------------
@@ -564,7 +564,7 @@ Navedena zaduženja \ref{podela_planiranje} i \ref{orkestriranje} uključuju gla
 DO dodatno prati uspešnost izvršavanja poslova i u slučaju uspešnog završetka, upisuje rezultat u bazu. Ukoliko dođe do greške prilikom izvršavanja, posao može da se ponovi ili da se evidentira greška u krajnjem rezultatu. Ponovno pokretanje poslova je potrebno kako bi se povećao stepen pouzdanosti izvršavanja. U distribuiranim sistemima treba imati u vidu da često može doći do problema u komunikaciji među servisima, bilo zbog preopterećenosti mreže ili eventualnih restarta individualnih aplikacija. Ovo može uzrokovati prolaznu grešku, koju je moguće prevazići novim pokušajem. Ukoliko i nakon ponovnog izvršavanja dođe do greške, posao se završava i kao krajnji rezultat se upisuje greška.
 
 Klijent ima mogućnost da otkaže aktivan posao. Ova operacija uključuje i otkazivanje svih njegovih potposlova koji su u procesu izvršavanja ili koji čekaju na izvršavanje, te se ukupno otkazivanje dešava globalno u celom sistemu.
-Kada zahtev za otkazivanje stigne do komponente DO, on proverava status posla i status njegovih potposlova. Ukoliko u tom trenutku postoji barem jedan atomični posao koji čeka na izvršavanje ili se izvršava, DO prekida dalje zakazivanje i asinhrono otkazuje poslove koji su u toku izvršavanja. Tada se ažurira status posla i on čeka da se otkažu svi atomični poslovi. Kada sistem globalno otkaže sva izvršavanja, posao je otkazan i klijentu se vraća potvrda o uspešnosti.
+Kada zahtev za otkazivanje stigne do komponente DO, on proverava status posla i status njegovih potposlova. Ukoliko u tom trenutku postoji barem jedan atomični posao koji čeka na izvršavanje ili se izvršava, DO prekida dalje zakazivanje i asinhrono otkazuje poslove koji su u toku izvršavanja. Tada se ažurira status posla i čeka se da se otkažu svi atomični poslovi. Kada sistem globalno otkaže sva izvršavanja, posao je otkazan i klijentu se vraća potvrda o uspešnosti.
 
 %TODO dijagram klasa DO
 
@@ -588,7 +588,7 @@ Za autentifikaciju klijenta je korišćen servis \emph{AAD} \cite{AAD} opisan u 
 
 Proces autentifikacije je prikazan na slici \ref{fig:autentifikacija}. Korisnik pre kontaktiranja sistema DCS šalje zahtev servisu \emph{AAD} kako bi preuzeo token za autentifikaciju. Ovaj token ima rok trajanja (uobičajeno je 60 minuta) i specifičan je za autentifikaciju na DCS sistem. Kada klijent ima token, prosleđuje ga u \emph{header} delu \emph{http} zahteva u polju za autentifikaciju. Sistem DCS prima zahtev i pre nego što počne da ga obrađuje, izvrši validaciju \emph{AAD} tokena. Token sadrži otisak (eng. \emph{thumbprint}) koji garantuje njegovu validnost. Ukoliko je token ispravan, nastavlja se sa obradom zahteva, a ukoliko nije, korisnikov zahtev se odbija uz odgovarajuću grešku.
 
-Za bezbednu komunikaciju u produkcionom okruženju, forsiran je protokol \emph{https}.
+Za bezbednu komunikaciju u produkcionom okruženju, korišćen je protokol \emph{https}.
 
 \begin{figure}[!ht]
   \centering
@@ -820,7 +820,7 @@ public async void RunJob_Success()
 		new AtomicJobRequestData() { InputData ="42" },
 		new AtomicJobRequestData() { InputData ="142" },
 	};
-	string expectedTotalSum = "13";
+	string expectedTotalSum = "1453";
 
 	var request = new JobRequestData()
 	{
@@ -865,9 +865,6 @@ public async void RunJob_Success()
 \end{figure}
 
 Stres-testovi i testovi performansi ispituju granice sistema. Oni su neophodni kako bi se na vreme razumela i unapredila uska grla sistema, kao i da bi se razumele mogućnosti sistema u skladu sa dodeljenim resursima.
-
-%\subsubsection{Testovi performansi nad klasterom sa različitim konfiguracijama}
-%TODO perf testovi nad klasterom
 
 
 % ------------------------------------------------------------------------------
@@ -915,7 +912,14 @@ Na slici \ref{fig:computenodelogs} se nalazi prikaz stranice za pregled logova k
   \label{fig:computenodelogs}
 \end{figure}
 
-% TODO neki fensi grafik sa brojem poslova kroz vreme?
+Na slici \ref{fig:succeeded_vs_failed_jobs} se nalazi metrika o broju uspešnih i neuspešnih izvršenih poslova u periodu od sat vremena, agregiranih na 10 minuta.
+
+\begin{figure}[!ht]
+  \centering
+  \frame{\includegraphics[width=0.7\textwidth]{./images/succeeded_failed_jobs.png}}
+  \caption{Metrika o broju uspešnih i neuspešnih poslova kroz vreme}
+  \label{fig:succeeded_vs_failed_jobs}
+\end{figure}
 
 \subsection{Uzbunjivači}
 
@@ -959,7 +963,7 @@ Otkazivanje zakazanih poslova nije podržano u inicijalnoj verziji.
 
 \section{Analiza performansi}
 
-Za ispitivanje performansi sistema, izvršeno je merenje dužine trajanje obrade posla u nekoliko okruženja: sekvencijalno na jednoj mašini, nad klasterom u oblaku koji se sastoji od 1, 5, odnosno 10 jedinica za izračunavanje. Rezultati su prikazani u tabeli \ref{tbl:rezultati}. Veličina ulaza predstavlja broj elemenata niza generisanih na slučajan način. Generisani brojevi se nalaze u rasponu od 400000 do 450000. Ovaj raspon je izabran empirijski, jer se nad velikim brojevima primećuje dovoljno povećanje vremena izvršavanja. Rezultati merenja su predstavljeni u sekundama, zaokruženi na drugu decimalu.
+Za ispitivanje performansi sistema, izvršeno je merenje dužine trajanje obrade posla u nekoliko okruženja: sekvencijalno na jednoj mašini, nad klasterom u oblaku koji se sastoji od 1, 5, odnosno 10 jedinica za izračunavanje. Rezultati su prikazani u tabeli \ref{tbl:rezultati}, kao prosečna vrednost nakon tri pokretanja izračunavanja. Veličina ulaza predstavlja broj elemenata niza generisanih na slučajan način. Generisani brojevi se nalaze u rasponu od 400000 do 450000. Ovaj raspon je izabran empirijski, jer se nad velikim brojevima primećuje dovoljno povećanje vremena izvršavanja. Rezultati merenja su predstavljeni u sekundama, zaokruženi na drugu decimalu.
 
 \begin{table}
 \centering
@@ -968,11 +972,11 @@ Za ispitivanje performansi sistema, izvršeno je merenje dužine trajanje obrade
  \hline
   veličina ulaza & lokalno, sekvencijalno & DCS 1 cmpN & DCS 5 cmpN & DCS 10 cmpN \\ 
  \hline
- 50 & 1.09 & 1.39 & 0.58 & 0.69 \\ 
- 100 & 2.36 & 2.43 & 2.19 & 2.67 \\ 
- 500 & 12.05 & 9.51 & 8.65 & 9.02 \\ 
- 1000 & 26.71 & 20.30 & 21.53 & 26.92 \\ 
- 3000 & 78.16 & 57.13 & 50.92 & 49.40 \\ 
+ 50 & 1.09 & 0.37 & 0.58 & 0.41 \\ 
+ 100 & 2.36 & 0.61 & 0.33 & 0.67 \\ 
+ 500 & 12.05 & 2.97 & 3.39 & 3.12 \\ 
+ 1000 & 23.6 & 8.23 & 6.19 & 8.74 \\ 
+ 3000 & 78.16 & 24.17 & 26.12 & 30.84 \\ 
  \hline
 \end{tabular}
 \caption{Rezultati izvršavanja u različitim okruženjima}
@@ -980,7 +984,7 @@ Za ispitivanje performansi sistema, izvršeno je merenje dužine trajanje obrade
 \end{center}
 \end{table}
 
-Iz navedenih rezultata se vidi poboljšanje vremena izvršavanja. Dodavanjem jedinica za izvršavanje, smanjuje se vreme izvršavanja, što je i očekivano, s obzirom na povećanje nivoa paralelizma. Međutim, poboljšanje nije veliko koliko bi se očekivalo, jer je korišćen klaster sa ograničenim resursima. Klaster u oblaku ima ograničenja poput količine podataka i zahteva koji idu kroz mrežu, koja usporavaju rad sistema. Takođe, pripadajuća baza podataka takođe ima ograničenja potrošnje resursa i broja zahteva koje obrađuje, te može početi da odbija zahteve koji dolaze od DCS.
+Iz navedenih rezultata se vidi poboljšanje vremena izvršavanja. Dodavanjem jedinica za izvršavanje, smanjuje se vreme izvršavanja, što je i očekivano, s obzirom na povećanje nivoa paralelizma. Međutim, u prvoj iteraciji testiranja performansi, poboljšanje nije bilo veliko koliko bi se očekivalo. Korišćen je klaster sa ograničenim resursima. Klaster u oblaku ima ograničenja poput količine podataka i zahteva koji idu kroz mrežu, koja usporavaju rad sistema. Takođe, pripadajuća baza podataka takođe ima ograničenja potrošnje resursa i broja zahteva koje obrađuje, te može početi da odbija zahteve koji dolaze od DCS. Kada je klasteru i bazi podataka dodeljena veća količina resursa, rezultati su se primetno poboljšali.
 
 \section{Dalji razvoj sistema}
 
@@ -995,9 +999,9 @@ Pored navedenih mogućnosti, sistem bi mogao da preusmeri pisanje rezultata na p
 
 \subsection{Generalizacija tipa poslova}
 
-Prikazani sistem u inicijalnoj implementaciji može da obrađuje samo poslove koji se sastoje od niza atomičnih poslova. Dodavanje podrške za obradu novih tipova posla je moguća uz sitnije izmene, čija je suština u dodavanju klase koja izvršava specifični atomični posao. Ova klasa implementira \href{https://github.com/milana-kovacevic/DistributedComputationSystem/blob/main/src/ComputeNode/Executors/ISpecificJobExecutor.cs}{\emph{ISpecificJobExecutor} interfejs} u projektu jedinice za izvršavanje. Izbor tipa posla koji će sledeći biti implementiran, zavisi od potražnje na tržištu.
+Prikazani sistem u inicijalnoj implementaciji može da obrađuje samo poslove koji se sastoje od niza atomičnih poslova. Dodavanje podrške za obradu novih tipova poslova je moguća uz sitnije izmene, čija je suština u dodavanju klase koja izvršava specifični atomični posao. Ova klasa implementira \href{https://github.com/milana-kovacevic/DistributedComputationSystem/blob/main/src/ComputeNode/Executors/ISpecificJobExecutor.cs}{\emph{ISpecificJobExecutor} interfejs} u projektu jedinice za izvršavanje. Izbor tipa posla koji bi sledeći bio implementiran, zavisi od potražnje na tržištu.
 
-Potpunu generalizaciju obrade atomičnih jedinica posla moguće je izvesti proširivanjem korisničkog interfejsa za zakazivanje posla, tj. proširenjem interfejsa da mu ulazni parametar bude izvorni kod funkcije koju je potrebno izvršiti nad atomičnim poslovima. Tada bi korisnik, pored ulaznih podataka, prosledio i deo koda koji želi da se izvrši nad atomičnim poslovima na sistemu. Za podršku ovog slučaja upotrebe, potrebno je da sistem zna da prevede izvorni kod funkcije i rezultujuću funkciju prosledi jedinici za izvršavanje. Ovaj pristup podrazumeva bezbednosne provere unetog koda, kako bi se osigurali od napada na klaster. Razvoj sistema u ovom pravcu bi naginjao ka postojećem rešenju \emph{Azure Functions} \ref{azurefunctions} spomenutog u odeljku \ref{sub:postojeca_resenja}.
+Potpunu generalizaciju obrade atomičnih jedinica posla moguće je izvesti proširivanjem korisničkog interfejsa za zakazivanje posla, tj. proširenjem interfejsa tako da mu ulazni parametar bude izvorni kod funkcije koju je potrebno izvršiti nad atomičnim poslovima. Tada bi korisnik, pored ulaznih podataka, prosledio i deo koda koji želi da se izvrši nad atomičnim poslovima na sistemu. Za podršku ovog slučaja upotrebe, potrebno je da sistem zna da prevede izvorni kod funkcije i rezultujuću funkciju prosledi jedinici za izvršavanje. Ovaj pristup podrazumeva bezbednosne provere unetog koda, kako bi se osigurali od napada na klaster. Razvoj sistema u ovom pravcu bi naginjao ka postojećem rešenju \emph{Azure Functions} spomenutog u odeljku \ref{sub:postojeca_resenja} pod rednim brojem \ref{azurefunctions}.
 
 Dalja unapređenja bi mogla da uključe obradu poslova koji nisu nužno specificirani nizom svojih atomičnih podjedinica. Ovo podrazumeva da programer razume suštinu izvršavanja novog tipa posla, te generiše plan za distribuirano izvršavanje. Kompleksni posao od korisnika bi prvo trebalo podeliti na više manjih, dok plan izvršavanja može da uključuje i agregaciju podrezultata zbog eventualnih zavisnosti potposlova. Razvoj sistema u ovom pravcu bi naginjao ga sistemima poput Sparka \cite{Spark} spomenutog u odeljku \ref{sub:postojeca_resenja}.
 
@@ -1019,7 +1023,7 @@ Ova implementacija je zahtevnija, ali pruža priliku za bolje performanse. Među
 Ukoliko je unapređenje opravdano, za početak, potrebno je napraviti infrastrukturu za pronalaženje adresa u okviru komponente koja vrši zakazivanje poslova. Dodatno, treba implementirati algoritam koji procenjuje kompleksnost posla u vidu potrebnih resursa za njegovo izračunavanje. Na kraju, potrebno je i implementirati novi orkestrator. Nakon svega ovoga, potrebno je uraditi testiranje sistema sa novom implementacijom, kao i testiranje \emph{AB} sistema kako bi se doneli zaključci koji je princip bolji i zašto.
 
 \section{Zaključak}
-U radu je predstavljen sistem za dristribuirano izračunavanje DCS. Opisani su detalji sistema koji uključujući mehanizam za primanje zahteva za obradu poslova, zakazivanje posla, distribuirano izvršavanje i praćenje poslova.
+U radu je predstavljen sistem za dristribuirano izračunavanje DCS. Opisani su detalji sistema, što uključuje mehanizam za primanje zahteva za obradu poslova, zakazivanje posla, distribuirano izvršavanje i praćenje poslova. Opisan je način praćenja rada sistema, kao i načini testiranja.
 
 Nadogradnje sistema ne zahtevaju veću refaktorizaciju, jer je sistem projektovan da bude modularan, uspostavljajući svu potrebnu infrastrukturu. Ovo čini da se sistem može lako proširiti, kako bi uveo dodatne funkcionalnosti za obradu novih tipova poslova. Postojeći sistem implementira jednostavnu funkcionalnost, kako bi predstavio prednosti pristupa.
 
