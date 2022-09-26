@@ -970,7 +970,7 @@ Za ispitivanje performansi sistema, izvršeno je merenje dužine trajanje obrade
 \begin{center}
 \begin{tabular}{ |c||c|c|c|c| } 
  \hline
-  veličina ulaza & lokalno, sekvencijalno & DCS 1 cmpN & DCS 5 cmpN & DCS 10 cmpN \\ 
+  veličina ulaza & lokalno, sekvencijalno & 1 cmpN & 5 cmpN & 10 cmpN \\ 
  \hline
  50 & 1.09 & 0.37 & 0.42 & 0.41 \\ 
  100 & 2.36 & 0.81 & 0.63 & 0.67 \\ 
@@ -985,6 +985,16 @@ Za ispitivanje performansi sistema, izvršeno je merenje dužine trajanje obrade
 \end{table}
 
 Iz navedenih rezultata se vidi poboljšanje vremena izvršavanja. Dodavanjem jedinica za izvršavanje, smanjuje se vreme izvršavanja. Ovo je i očekivano, s obzirom na povećanje nivoa paralelizma. Međutim, dodavanje jedinica za izvršavanje može da ubrza izvršavanje do određene granice. Iz rezultata se vidi da je vreme izvršavanja, prilikom pokretanja poslova nad sistemom sa 5, odnosno 10 jedinica za izvršavanje, veoma slično.
+
+
+Na slici \ref{fig:faktor_ubrzanja} se nalazi grafički prikaz faktora ubrzanja distribuiranog izvršavanja, u odnosu na sekvencijalno izvršavanje.
+
+\begin{figure}[!ht]
+  \centering
+  \frame{\includegraphics[width=0.8\textwidth]{./images/perf_faktor_ubrzanja.png}}
+  \caption{Faktor ubrzanja dobijen distribuiranjem}
+  \label{fig:faktor_ubrzanja}
+\end{figure}
 
 U prvoj iteraciji testiranja performansi, poboljšanje nije bilo veliko koliko bi se očekivalo, u poređenju sa lokalnim, sekvencijalnim pokretanjem algoritma. Korišćen je klaster sa ograničenim resursima. Klaster u oblaku ima ograničenja poput količine podataka i zahteva koji se propuštaju kroz mrežu, i to usporava rad sistema. Takođe, i pripadajuća baza podataka ima ograničenja potrošnje resursa i broja zahteva koje obrađuje, te može početi da odbija zahteve koji dolaze od DCS. Kada je klasteru i bazi podataka dodeljena veća količina resursa, rezultati su se primetno poboljšali. Ovo ide u prilog skalabilnosti sistema, jer su se, kroz jednostavne konfiguracione promene, dobili bolji rezultati.
 
